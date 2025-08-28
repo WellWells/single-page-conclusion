@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-08-27 18:58:07Z
+更新日期：2025-08-28 17:37:38Z
 
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
 - [DJI Osmo 360 vs Insta360 X5](https://wellstsai.com/single-page-conclusion/DJI%20Osmo%20360%20vs%20Insta360%20X5.html)
@@ -8,6 +8,7 @@
 - [MCU Bootloader 完整解析](https://wellstsai.com/single-page-conclusion/MCU%20Bootloader%20%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90.html)
 - [Mac遊戲兼容性技術解析](https://wellstsai.com/single-page-conclusion/Mac%E9%81%8A%E6%88%B2%E5%85%BC%E5%AE%B9%E6%80%A7%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
 - [Netflix自由與責任文化指南](https://wellstsai.com/single-page-conclusion/Netflix%E8%87%AA%E7%94%B1%E8%88%87%E8%B2%AC%E4%BB%BB%E6%96%87%E5%8C%96%E6%8C%87%E5%8D%97.html)
+- [Overfitting-Regularization-Occam's Razor](https://wellstsai.com/single-page-conclusion/Overfitting-Regularization-Occam%27s%20Razor.html)
 - [PNG格式演進](https://wellstsai.com/single-page-conclusion/PNG%E6%A0%BC%E5%BC%8F%E6%BC%94%E9%80%B2.html)
 - [Perplexity對決Google Chrome](https://wellstsai.com/single-page-conclusion/Perplexity%E5%B0%8D%E6%B1%BAGoogle%20Chrome.html)
 - [QR碼技術解析](https://wellstsai.com/single-page-conclusion/QR%E7%A2%BC%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
@@ -27,4 +28,5 @@
 - [臺灣鯖魚的市場挑戰與機會](https://wellstsai.com/single-page-conclusion/%E8%87%BA%E7%81%A3%E9%AF%96%E9%AD%9A%E7%9A%84%E5%B8%82%E5%A0%B4%E6%8C%91%E6%88%B0%E8%88%87%E6%A9%9F%E6%9C%83.html)
 - [解構 Facebook 工程引擎：網際網路創業者的戰略藍圖](https://wellstsai.com/single-page-conclusion/%E8%A7%A3%E6%A7%8B%20Facebook%20%E5%B7%A5%E7%A8%8B%E5%BC%95%E6%93%8E%EF%BC%9A%E7%B6%B2%E9%9A%9B%E7%B6%B2%E8%B7%AF%E5%89%B5%E6%A5%AD%E8%80%85%E7%9A%84%E6%88%B0%E7%95%A5%E8%97%8D%E5%9C%96.html)
 - [軟體架構為何重要](https://wellstsai.com/single-page-conclusion/%E8%BB%9F%E9%AB%94%E6%9E%B6%E6%A7%8B%E7%82%BA%E4%BD%95%E9%87%8D%E8%A6%81.html)
+- [過擬合-正規化-奧卡姆剃刀](https://wellstsai.com/single-page-conclusion/%E9%81%8E%E6%93%AC%E5%90%88-%E6%AD%A3%E8%A6%8F%E5%8C%96-%E5%A5%A7%E5%8D%A1%E5%A7%86%E5%89%83%E5%88%80.html)
 - [駕馭職場人臉辨識爭議](https://wellstsai.com/single-page-conclusion/%E9%A7%95%E9%A6%AD%E8%81%B7%E5%A0%B4%E4%BA%BA%E8%87%89%E8%BE%A8%E8%AD%98%E7%88%AD%E8%AD%B0.html)
