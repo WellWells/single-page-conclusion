@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>現代家庭伺服器：MiniPC vs DIY SFF｜效能、功耗與五年TCO比較</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Deep Ocean & Lime -->
+    <!-- Application Structure Plan: The infographic follows a logical narrative flow, designed for top-to-bottom scrolling. It starts with a high-level introduction ("The Modern Dilemma"), introduces the hardware ("The Contenders"), presents the most critical financial data ("5-Year Total Cost"), breaks down a key component of that cost ("The Power Drain"), analyzes non-numerical factors ("Beyond the Numbers"), adds a new detailed "Key Buying Metrics" section, and concludes with actionable advice ("The Verdict"). This structure guides the user from general context to specific data and finally to a conclusion, making the complex report information digestible in a single, linear experience. -->
+    <!-- Visualization & Content Choices: Report Info: TCO table data -> Goal: Compare overall cost and its components -> Viz Method: Stacked Bar Chart (Chart.js/Canvas) -> Justification: A stacked bar is the most effective way to show both the total cost and the individual contributions of CapEx, OpEx, and Risk. Report Info: Power consumption data -> Goal: Compare -> Viz Method: Grouped Bar Chart (Chart.js/Canvas) -> Justification: Clearly shows the significant difference in idle and load power. Report Info: Qualitative factors -> Goal: Organize/Compare -> Viz Method: Styled HTML/CSS Grid with Unicode Icons -> Justification: Provides a quick, scannable visual comparison. All choices support the narrative flow and adhere to the no-SVG/Mermaid constraint. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            /* slate-50 */
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            /* slate-200 */
+            --text-main: #1e293b;
+            /* slate-800 */
+            --text-secondary: #64748b;
+            /* slate-500 */
+            --accent-blue: #2563eb;
+            --accent-lime: #84cc16;
+            --accent-teal: #14b8a6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        .section-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem;
+            color: white;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .keyword {
+            cursor: pointer;
+            color: var(--accent-lime);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .keyword:hover {
+            background-color: rgba(132, 204, 22, 0.1);
+            border-bottom-color: var(--accent-lime);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 40;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .modal-content-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            z-index: 50;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .modal-open {
+            overflow: hidden;
+        }
+
+        .modal-open .modal-backdrop,
+        .modal-open .modal-content-wrapper {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-open .modal-content-wrapper {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="text-slate-800">
+
+    <div class="container mx-auto px-4 py-12 md:py-20">
+
+        <header class="text-center mb-24 fade-in-section">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 gradient-text">現代家庭伺服器的抉擇</h1>
+            <p class="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto">MiniPC 的便利 vs. DIY <span class="keyword"
+                    data-key="sff">SFF</span> 的彈性：一場關於效能、功耗與長期成本的對決。</p>
+        </header>
+
+        <section id="contenders" class="mb-20 fade-in-section">
+            <div class="section-icon">💻</div>
+            <h2 class="text-4xl font-bold text-center mb-12">參賽者介紹</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="content-card p-8 text-center">
+                    <h3 class="text-2xl font-bold mb-2 text-slate-900">Intel N100 MiniPC</h3>
+                    <p class="text-sm text-slate-500 mb-4">極致節能裝置</p>
+                    <p class="text-5xl font-bold text-blue-600 mb-4">NT$ 6,500</p>
+                    <ul class="text-left space-y-2 text-slate-600">
+                        <li><span class="font-bold text-slate-800">CPU:</span> 4核 / 4緒</li>
+                        <li><span class="font-bold text-slate-800">TDP:</span> 僅 6W</li>
+                        <li><span class="font-bold text-slate-800">體積:</span> ~0.6 公升</li>
+                    </ul>
+                </div>
+                <div class="content-card p-8 text-center">
+                    <h3 class="text-2xl font-bold mb-2 text-slate-900">DIY SFF 桌機 (5600G)</h3>
+                    <p class="text-sm text-slate-500 mb-4">模組化工作主力</p>
+                    <p class="text-5xl font-bold text-lime-500 mb-4">NT$ 14,620</p>
+                    <ul class="text-left space-y-2 text-slate-600">
+                        <li><span class="font-bold text-slate-800">CPU:</span> 6核 / 12緒</li>
+                        <li><span class="font-bold text-slate-800">TDP:</span> 65W</li>
+                        <li><span class="font-bold text-slate-800">體積:</span> ~18 公升</li>
+                    </ul>
+                </div>
+                <div class="content-card p-8 text-center">
+                    <h3 class="text-2xl font-bold mb-2 text-slate-900">AMD Ryzen 7 MiniPC</h3>
+                    <p class="text-sm text-slate-500 mb-4">效能密集型選手</p>
+                    <p class="text-5xl font-bold text-teal-500 mb-4">NT$ 20,000</p>
+                    <ul class="text-left space-y-2 text-slate-600">
+                        <li><span class="font-bold text-slate-800">CPU:</span> 8核 / 16緒</li>
+                        <li><span class="font-bold text-slate-800">TDP:</span> 35-54W</li>
+                        <li><span class="font-bold text-slate-800">體積:</span> ~0.7 公升</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="tco" class="mb-20 fade-in-section">
+            <div class="section-icon">💰</div>
+            <h2 class="text-4xl font-bold text-center mb-4">五年期總體擁有成本 (<span class="keyword" data-key="tco">TCO</span>)
+            </h2>
+            <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-12">真正的成本遠不止於購買價格。考慮硬體成本與五年電費支出後，N100
+                方案最經濟，但電費在總成本中的佔比也揭示了不同平台的能耗特性。</p>
+            <div class="content-card p-6">
+                <div class="chart-container">
+                    <canvas id="tcoChart"></canvas>
+                </div>
+                <div class="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-slate-600">
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full mr-2"
+                            style="background-color: var(--accent-blue);"></span><span class="keyword"
+                            data-key="capex">初始成本</span></div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full mr-2"
+                            style="background-color: var(--accent-lime);"></span><span class="keyword"
+                            data-key="opex">五年電費</span></div>
+                    <div class="flex items-center"><span class="w-4 h-4 rounded-full mr-2"
+                            style="background-color: var(--accent-teal);"></span>維護/風險成本</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="power" class="mb-20 fade-in-section">
+            <div class="section-icon">⚡️</div>
+            <h2 class="text-4xl font-bold text-center mb-4">功耗剖析：閒置 vs. 負載</h2>
+            <p class="text-lg text-center text-slate-600 max-w-3xl mx-auto mb-12">對於 24/7
+                運行的設備，閒置功耗是電費的隱形殺手。此處比較各平台基礎系統的功耗表現。</p>
+            <div class="content-card p-6">
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="powerChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="metrics-overview" class="mb-20 fade-in-section">
+            <div class="section-icon">📊</div>
+            <h2 class="text-4xl font-bold text-center mb-12">量化指標總覽</h2>
+            <div class="content-card p-6 overflow-x-auto">
+                <table class="w-full min-w-[700px] text-center">
+                    <thead>
+                        <tr class="border-b border-slate-200">
+                            <th class="py-3 px-2 font-semibold text-slate-900">系統類型</th>
+                            <th class="py-3 px-2 font-semibold text-slate-900">5年總TCO</th>
+                            <th class="py-3 px-2 font-semibold text-slate-900">性能成本比</th>
+                            <th class="py-3 px-2 font-semibold text-slate-900">5年碳排放(kg)</th>
+                            <th class="py-3 px-2 font-semibold text-slate-900">加權評分</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-600">
+                        <tr class="border-b border-slate-100">
+                            <td class="py-4 px-2 font-medium text-blue-600">Intel N100 MiniPC</td>
+                            <td class="py-4 px-2">NT$ 12,121</td>
+                            <td class="py-4 px-2">41.25</td>
+                            <td class="py-4 px-2">357.0</td>
+                            <td class="py-4 px-2">3.8 / 5</td>
+                        </tr>
+                        <tr class="border-b border-slate-100">
+                            <td class="py-4 px-2 font-medium text-lime-600">DIY SFF 桌機 (5600G)</td>
+                            <td class="py-4 px-2">NT$ 26,938</td>
+                            <td class="py-4 px-2">29.7</td>
+                            <td class="py-4 px-2">1282.0</td>
+                            <td class="py-4 px-2">3.45 / 5</td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 px-2 font-medium text-teal-600">AMD Ryzen 7 MiniPC</td>
+                            <td class="py-4 px-2">NT$ 24,057</td>
+                            <td class="py-4 px-2">39.49</td>
+                            <td class="py-4 px-2">669.0</td>
+                            <td class="py-4 px-2">3.75 / 5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="comparison-table" class="mb-20 fade-in-section">
+            <div class="section-icon">⚖️</div>
+            <h2 class="text-4xl font-bold text-center mb-12">MiniPC vs 桌機：全面性比較</h2>
+            <div class="content-card p-6 overflow-x-auto">
+                <table class="w-full min-w-[800px]">
+                    <thead>
+                        <tr class="border-b border-slate-200">
+                            <th class="text-left py-3 px-4 font-semibold text-slate-900">比較面向</th>
+                            <th class="text-left py-3 px-4 font-semibold text-slate-900">MiniPC</th>
+                            <th class="text-left py-3 px-4 font-semibold text-slate-900">桌機 (DIY SFF)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-slate-600">
+                        <tr class="border-b border-slate-100">
+                            <td class="py-3 px-4 font-semibold text-slate-800">體積大小</td>
+                            <td class="py-3 px-4">超小型 (~0.5-1L)，可掛螢幕後</td>
+                            <td class="py-3 px-4">體積較大 (通常 >15L)</td>
+                        </tr>
+                        <tr class="border-b border-slate-100">
+                            <td class="py-3 px-4 font-semibold text-slate-800">擴充性</td>
+                            <td class="py-3 px-4">中等，可擴充 RAM/SSD</td>
+                            <td class="py-3 px-4">高，可加裝獨立顯卡、多硬碟、PCIe 卡</td>
+                        </tr>
+                        <tr class="border-b border-slate-100">
+                            <td class="py-3 px-4 font-semibold text-slate-800">散熱能力</td>
+                            <td class="py-3 px-4">受限，內部空間小</td>
+                            <td class="py-3 px-4">優異，可安裝大型散熱器</td>
+                        </tr>
+                        <tr class="border-b border-slate-100">
+                            <td class="py-3 px-4 font-semibold text-slate-800">維修難易度</td>
+                            <td class="py-3 px-4">困難，結構緊湊，零件特規</td>
+                            <td class="py-3 px-4">容易，零件標準化，DIY 友善</td>
+                        </tr>
+                        <tr class="border-b border-slate-100">
+                            <td class="py-3 px-4 font-semibold text-slate-800">靜音表現</td>
+                            <td class="py-3 px-4">優秀，部分無風扇設計</td>
+                            <td class="py-3 px-4">散熱佳但風扇聲較明顯</td>
+                        </tr>
+                        <tr class="border-b border-slate-100">
+                            <td class="py-3 px-4 font-semibold text-slate-800">功耗</td>
+                            <td class="py-3 px-4">低 (通常 30-90W)</td>
+                            <td class="py-3 px-4">較高 (通常 >100W)</td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 px-4 font-semibold text-slate-800">攜帶性</td>
+                            <td class="py-3 px-4">極佳，可攜帶至多場合使用</td>
+                            <td class="py-3 px-4">固定使用，不適合移動</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="scenarios" class="mb-20 fade-in-section">
+            <div class="section-icon">🚀</div>
+            <h2 class="text-4xl font-bold text-center mb-12">應用場景建議</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="content-card p-8 text-center">
+                    <h3 class="text-xl font-bold text-blue-600 mb-4">Intel N100 MiniPC</h3>
+                    <ul class="text-sm text-left space-y-2 text-slate-600">
+                        <li>✓ 24/7 伺服器應用 (NAS, 媒體伺服器)</li>
+                        <li>✓ 基礎辦公工作 (文書, 網頁瀏覽)</li>
+                        <li>✓ 節能導向專案 (物聯網, 監控)</li>
+                    </ul>
+                </div>
+                <div class="content-card p-8 text-center">
+                    <h3 class="text-xl font-bold text-lime-600 mb-4">DIY SFF 5600G</h3>
+                    <ul class="text-sm text-left space-y-2 text-slate-600">
+                        <li>✓ 創作工作站 (影片剪輯, 圖像處理)</li>
+                        <li>✓ 1080p 遊戲系統 (模擬器, 輕度電競)</li>
+                        <li>✓ 多功能桌機 (兼顧工作與娛樂)</li>
+                    </ul>
+                </div>
+                <div class="content-card p-8 text-center">
+                    <h3 class="text-xl font-bold text-teal-600 mb-4">AMD Ryzen 7 MiniPC</h3>
+                    <ul class="text-sm text-left space-y-2 text-slate-600">
+                        <li>✓ 專業工作負載 (軟體開發, 虛擬化)</li>
+                        <li>✓ 高效能運算 (多核心處理)</li>
+                        <li>✓ 緊湊型高效能系統 (空間受限)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="verdict" class="mt-20 pt-12 border-t border-slate-200 fade-in-section">
+            <div class="section-icon">🏆</div>
+            <h2 class="text-4xl font-bold text-center mb-12">核心結論與建議</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="content-card p-8">
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">推薦使用時機</h3>
+                    <div class="mb-6">
+                        <h4 class="font-bold text-lg text-slate-800 mb-2">選擇 MiniPC 的情況：</h4>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1">
+                            <li>空間極度受限的環境</li>
+                            <li>行動辦公或需要經常搬遷</li>
+                            <li>注重電費節省的低功耗需求</li>
+                            <li>文書、網頁瀏覽、4K 影片播放等基本需求</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-slate-800 mb-2">選擇桌機的情況：</h4>
+                        <ul class="list-disc list-inside text-slate-600 space-y-1">
+                            <li>需要高效能運算 (遊戲、影音剪輯)</li>
+                            <li>重視未來升級彈性和擴充能力</li>
+                            <li>具備自行維修能力或預算充足</li>
+                            <li>重度多工使用需求</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content-card p-8">
+                    <h3 class="text-2xl font-bold mb-4 gradient-text">最終結論</h3>
+                    <p class="text-slate-600 space-y-4">
+                        Intel N100 MiniPC 在極致節能方面無可匹敵，適合對功耗極度敏感的應用，是追求極致節能用戶的最佳選擇。
+                        <br><br>
+                        DIY SFF 5600G 系統雖然功耗較高，但提供了最佳的效能擴展性和自訂彈性，適合需要平衡性能與成本的用戶。
+                        <br><br>
+                        AMD Ryzen 7 MiniPC 則在高性能與相對節能間找到最佳平衡點，特別適合要求高性能且重視系統緊湊性的用戶。
+                        <br><br>
+                        <strong class="text-slate-800">您的最終選擇，應基於空間限制、效能需求、預算考量和使用情境來決定。</strong>
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="mt-20 py-8 bg-slate-100 text-center fade-in-section">
+        <p class="text-slate-500">
+            <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="hover:text-blue-600 transition-colors">
+                Generated by wellstsai.com
+            </a>
+        </p>
+    </footer>
+
+    <div id="modal-backdrop" class="modal-backdrop hidden"></div>
+    <div id="modal-content-wrapper" class="modal-content-wrapper hidden">
+        <div class="content-card w-11/12 max-w-2xl p-8 relative">
+            <button id="modal-close"
+                class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition-colors text-2xl">&times;</button>
+            <h3 id="modal-title" class="text-2xl font-bold mb-4 gradient-text"></h3>
+            <p id="modal-body" class="text-slate-600"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Modal Logic
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContentWrapper = document.getElementById('modal-content-wrapper');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalClose = document.getElementById('modal-close');
+            const keywords = document.querySelectorAll('.keyword');
+
+            const definitions = {
+                sff: {
+                    title: '小型化 (Small Form Factor, SFF)',
+                    body: '指體積小於 20 公升的電腦機殼及其對應的客製化組裝系統。SFF 強調在緊湊的空間內實現高效能與模組化，同時保有使用標準化電腦零組件的彈性，兼顧了體積、效能與未來的擴充性。'
+                },
+                tco: {
+                    title: '總體擁有成本 (Total Cost of Ownership, TCO)',
+                    body: '一項全面的財務評估模型，不僅計算硬體的初始購買價格 (CapEx)，還將長期運營成本 (OpEx)，如電費，以及潛在的維護、升級或重置成本都納入考量。TCO 旨在揭示一項資產在整個生命週期內的真實總支出。'
+                },
+                capex: {
+                    title: '資本支出 (Capital Expenditure, CapEx)',
+                    body: '指企業或個人為取得或升級實體資產（如建築、設備、技術）所進行的投資。在本次分析中，它特指購買電腦硬體所需的初始一次性費用。'
+                },
+                opex: {
+                    title: '營運支出 (Operational Expenditure, OpEx)',
+                    body: '指維持日常運作所需的持續性費用。對於 24/7 運行的伺服器而言，電費是最大宗的營運支出。其他營運支出還可能包括軟體訂閱、網路費用等。'
+                }
+            };
+
+            function openModal(key) {
+                if (!definitions[key]) return;
+                modalTitle.textContent = definitions[key].title;
+                modalBody.textContent = definitions[key].body;
+                document.body.classList.add('modal-open');
+                modalBackdrop.classList.remove('hidden');
+                modalContentWrapper.classList.remove('hidden');
+            }
+
+            function closeModal() {
+                document.body.classList.remove('modal-open');
+                modalBackdrop.classList.add('hidden');
+                modalContentWrapper.classList.add('hidden');
+            }
+
+            keywords.forEach(keyword => {
+                keyword.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openModal(keyword.dataset.key);
+                });
+            });
+
+            modalClose.addEventListener('click', closeModal);
+            modalBackdrop.addEventListener('click', closeModal);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === "Escape" && document.body.classList.contains('modal-open')) {
+                    closeModal();
+                }
+            });
+
+            // Intersection Observer for fade-in animations
+            const sections = document.querySelectorAll('.fade-in-section');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Chart.js Logic
+            Chart.defaults.color = '#475569'; // slate-600
+            Chart.defaults.borderColor = '#e2e8f0'; // slate-200
+
+            const wrapLabel = (label, maxLength = 16) => {
+                if (label.length <= maxLength) return label;
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + word).length > maxLength) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                }
+                lines.push(currentLine.trim());
+                return lines.filter(line => line.length > 0);
+            };
+
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                return Array.isArray(label) ? label.join(' ') : label;
+            };
+
+            const tcoData = {
+                labels: ['N100 MiniPC', 'DIY SFF (5600G)', 'Ryzen 7 MiniPC'].map(l => wrapLabel(l)),
+                datasets: [
+                    { label: '初始成本', data: [6500, 14620, 20000], backgroundColor: 'rgba(37, 99, 235, 0.8)' }, // blue-600
+                    { label: '五年電費', data: [1667, 4904, 2117], backgroundColor: 'rgba(132, 204, 22, 0.8)' }, // lime-500
+                    { label: '維護/風險成本', data: [8505, 10378, 15017], backgroundColor: 'rgba(20, 184, 166, 0.8)' }, // teal-500
+                ]
+            };
+
+            new Chart(document.getElementById('tcoChart').getContext('2d'), {
+                type: 'bar', data: tcoData,
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback,
+                                label: (c) => `${c.dataset.label}: ${new Intl.NumberFormat('zh-TW', { style: 'currency', currency: 'TWD', minimumFractionDigits: 0 }).format(c.parsed.x)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: true, title: { display: true, text: '成本 (新台幣 NT$)' }, grid: { color: '#f1f5f9' } }, // slate-100
+                        y: { stacked: true, grid: { display: false } }
+                    }
+                }
+            });
+
+            const powerData = {
+                labels: ['N100 MiniPC', 'DIY SFF (5600G)', 'Ryzen 7 MiniPC'].map(l => wrapLabel(l)),
+                datasets: [
+                    { label: '閒置功耗', data: [8, 30, 13], backgroundColor: 'rgba(59, 130, 246, 0.8)' }, // blue-500
+                    { label: '負載功耗', data: [25, 100, 90], backgroundColor: 'rgba(163, 230, 53, 0.8)' } // lime-400
+                ]
+            };
+
+            new Chart(document.getElementById('powerChart').getContext('2d'), {
+                type: 'bar', data: powerData,
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                title: tooltipTitleCallback,
+                                label: (c) => `${c.dataset.label}: ${c.parsed.y} W`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { title: { display: true, text: '功耗 (瓦)' }, grid: { color: '#f1f5f9' } }, // slate-100
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

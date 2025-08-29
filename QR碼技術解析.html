@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR 碼技術解析</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #FDFBF5;
+            color: #5D5753;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #C0843E;
+            border-bottom-color: #C0843E;
+        }
+        .section-title {
+            color: #8A623F;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #EAE5D9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+        .btn-primary {
+            background-color: #C0843E;
+            color: #FFFFFF;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #A97136;
+        }
+        .btn-secondary {
+            background-color: #F0EBE0;
+            color: #8A623F;
+            border: 1px solid #DCD3C3;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .btn-secondary:hover, .btn-secondary.active {
+            background-color: #8A623F;
+            color: #FFFFFF;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .qr-anatomy-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+        }
+        .qr-anatomy-zone {
+            position: absolute;
+            border: 2px dashed rgba(192, 132, 62, 0);
+            transition: border-color 0.3s;
+            cursor: pointer;
+        }
+        .qr-anatomy-zone:hover {
+            border-color: rgba(192, 132, 62, 1);
+        }
+        .mask-grid {
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            gap: 1px;
+            width: 240px;
+            height: 240px;
+            background-color: #DCD3C3;
+            border: 1px solid #DCD3C3;
+        }
+        .mask-cell {
+            width: 100%;
+            height: 100%;
+        }
+        .mask-cell.dark { background-color: #5D5753; }
+        .mask-cell.light { background-color: #FFFFFF; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="font-bold text-xl text-[#8A623F]">QR 碼深度解析</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#anatomy" class="nav-link px-3 py-2 rounded-md text-sm font-medium">結構解剖</a>
+                        <a href="#capacity" class="nav-link px-3 py-2 rounded-md text-sm font-medium">數據容量</a>
+                        <a href="#correction" class="nav-link px-3 py-2 rounded-md text-sm font-medium">糾錯機制</a>
+                        <a href="#masking" class="nav-link px-3 py-2 rounded-md text-sm font-medium">數據掩碼</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        
+        <section class="text-center mb-20">
+            <h1 class="text-4xl md:text-5xl font-bold section-title mb-4">解密方寸之間的宇宙</h1>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600">從超市條碼到行動支付，QR 碼已無處不在。但您是否曾想過，這一方塊矩陣中蘊藏著何等精妙的設計？本應用將帶您踏上一段互動旅程，層層剖析QR 碼的結構、原理與自我修復的魔力。</p>
+        </section>
+
+        <!-- Section 1: Anatomy -->
+        <section id="anatomy" class="mb-24 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center section-title mb-4">一、結構解剖：QR 碼的藍圖</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">QR 碼並非隨機的像素點，而是一個高度結構化的系統。每個部分各司其職，共同確保掃描器能快速、準確地讀取資訊。請將滑鼠懸停在下方圖示的不同區域，以了解各組件的功能。</p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12">
+                <div class="qr-anatomy-container flex-shrink-0">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH0AQMAAADxGE3JAAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAABzElEQVR4nO3awZGDMAyFYbkCSnCptEoJVIB3IEKSDbuzMzlkxf7v4CTgz8c3NkTkzcxtyKo3jm/7hc3mlnFuW/B4PP6DfpUQVecgUsPcsg8Sl8Pj8fjkXme48uWW1yKbgdIvh8fj8U/y8afOFTwej/8PXmRqTboUA3g8Hv8k7/HWPBbZs+khWsGwJh6Px+f1Q3wTeQzeml6dHjwej8/r76PV2bQm40vkXwWPx+P/vp+bx0/STfeP9v5405cow4DH4/F5/ZEI/Jout2mJLvunKzwej3+Cj6AbrD+HbHpjwePx+MR+suqcbkp0CdV5Uk3B4/H4zH5+1aToJvKIPj/sjtMx/iYFj8fjP+lbLLxL6s359/L8EI/H41P6u5r0a4u9/6126o3nXzwej0/u1741J9VanXGlpk0az794PB6f1x/pvsUngbV18WeCgsfj8Wn9XbxO99nd+VlsO/lD8Hg8PoOf25CzRPV+DYXZDdqkeDwen9d3R+dh67jP+aY/Kx6Pxz/At1dW9XH/6F3pufQnHo/HP8afPy3lQvF4PP65XmeI/VfwTLWV8Hg8Prn3+CJ2iC7Wmt3/BwWPx+Oz+yFdf0qXu5M0Ho/HZ/Vv5guDny8BL8YihAAAAABJRU5ErkJggg==" alt="QR Code Anatomy Diagram" class="w-full h-full">
+                    <div id="zone-finder" class="qr-anatomy-zone" style="top:0; left:0; width:33.3%; height:33.3%;"></div>
+                    <div class="qr-anatomy-zone" style="top:0; right:0; width:33.3%; height:33.3%;" onmouseover="showAnatomyInfo('finder')" onmouseout="hideAnatomyInfo()"></div>
+                    <div class="qr-anatomy-zone" style="bottom:0; left:0; width:33.3%; height:33.3%;" onmouseover="showAnatomyInfo('finder')" onmouseout="hideAnatomyInfo()"></div>
+                    <div id="zone-alignment" class="qr-anatomy-zone" style="bottom:23.8%; right:23.8%; width:23.8%; height:23.8%;" onmouseover="showAnatomyInfo('alignment')" onmouseout="hideAnatomyInfo()"></div>
+                    <div id="zone-timing" class="qr-anatomy-zone" style="top:0; left:33.3%; width:33.3%; height:9.5%;" onmouseover="showAnatomyInfo('timing')" onmouseout="hideAnatomyInfo()"></div>
+                    <div class="qr-anatomy-zone" style="top:9.5%; left:33.3%; width:9.5%; height:57.2%;" onmouseover="showAnatomyInfo('timing')" onmouseout="hideAnatomyInfo()"></div>
+                    <div id="zone-format" class="qr-anatomy-zone" style="top:38%; left:0; width:42.8%; height:9.5%;" onmouseover="showAnatomyInfo('format')" onmouseout="hideAnatomyInfo()"></div>
+                    <div id="zone-data" class="qr-anatomy-zone" style="top:47.6%; right:0; width:66.7%; height:52.4%;" onmouseover="showAnatomyInfo('data')" onmouseout="hideAnatomyInfo()"></div>
+                </div>
+                <div class="w-full md:w-1/2">
+                    <div id="anatomy-info-card" class="card rounded-lg p-6 min-h-[250px] transition-opacity duration-300 opacity-20">
+                        <h3 id="anatomy-title" class="text-xl font-bold text-[#8A623F] mb-2">請懸停探索</h3>
+                        <p id="anatomy-description" class="text-gray-600">將滑鼠移動到左側 QR 碼的不同區域，即可在此查看該結構的詳細說明。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Capacity -->
+        <section id="capacity" class="mb-24 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center section-title mb-4">二、數據容量：權衡的藝術</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">QR 碼的容量並非固定不變。它取決於版本（尺寸大小）、編碼模式和錯誤校正等級（ECC）三者之間的權衡。更高的糾錯能力意味著更強的韌性，但代價是犧牲部分數據儲存空間。請使用下方的互動圖表探索此關係。</p>
+            <div class="card rounded-lg p-6 md:p-8">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+                    <div>
+                        <label for="qr-version-select" class="block text-sm font-medium text-gray-700 mb-1">QR 碼版本:</label>
+                        <select id="qr-version-select" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <option value="1">版本 1 (21x21)</option>
+                            <option value="3" selected>版本 3 (29x29)</option>
+                            <option value="5">版本 5 (37x37)</option>
+                            <option value="10">版本 10 (57x57)</option>
+                            <option value="25">版本 25 (117x117)</option>
+                            <option value="40">版本 40 (177x177)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">編碼模式:</label>
+                        <div id="encoding-mode-btns" class="flex space-x-2">
+                            <button class="btn-secondary px-3 py-1.5 text-sm rounded-md active" data-mode="numeric">數字</button>
+                            <button class="btn-secondary px-3 py-1.5 text-sm rounded-md" data-mode="alphanumeric">字母數字</button>
+                            <button class="btn-secondary px-3 py-1.5 text-sm rounded-md" data-mode="byte">位元組</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="capacityChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Correction -->
+        <section id="correction" class="mb-24 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center section-title mb-4">三、糾錯機制：數位韌性的核心</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">QR 碼最神奇之處在於其自我修復能力。即使部分污損，資訊依然可讀。這背後的功臣是里德-所羅門（Reed-Solomon）編碼，它將數據錯誤轉化為一個可解的代數問題。這一切運算都在一個名為「伽羅瓦域 GF(2⁸)」的特殊數學世界中進行。</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-[#8A623F] mb-4">伽羅瓦域 GF(2⁸) 運算體驗</h3>
+                    <p class="text-sm text-gray-600 mb-4">在GF(2⁸)這個封閉世界裡，只有256個數字（0-255），且運算規則與我們熟知的不同。加法和減法都等同於位元異或（XOR）運算。試著輸入兩個0-255之間的數字，看看結果如何。</p>
+                    <div class="flex items-center gap-2 mb-4">
+                        <input id="gf-num1" type="number" min="0" max="255" value="90" class="w-full text-center rounded-md border-gray-300 shadow-sm">
+                        <span id="gf-operator" class="text-2xl font-bold text-[#C0843E]">+</span>
+                        <input id="gf-num2" type="number" min="0" max="255" value="123" class="w-full text-center rounded-md border-gray-300 shadow-sm">
+                        <button id="gf-calc-btn" class="btn-primary px-4 py-2 rounded-md font-semibold">=</button>
+                    </div>
+                    <div class="text-center bg-gray-50 rounded p-4">
+                        <p class="text-sm text-gray-500">運算結果</p>
+                        <p id="gf-result" class="text-3xl font-bold text-[#8A623F]">33</p>
+                        <p id="gf-binary-result" class="text-sm font-mono text-gray-500 mt-1">00100001</p>
+                    </div>
+                </div>
+                <div class="card rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-[#8A623F] mb-4">糾錯碼生成流程（簡化）</h3>
+                    <p class="text-sm text-gray-600 mb-4">糾錯碼的生成，本質上是一個多項式除法。系統將原始數據視為一個多項式，用它除以一個標準的「生成多項式」，得到的「餘數」就是糾錯碼。最終，原始數據和糾錯碼組合在一起，形成一個可以被生成多項式「整除」的新數據塊。</p>
+                    <ol class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-[#F0EBE0] text-[#8A623F] font-bold rounded-full mr-3">1</span>
+                            <span>將原始數據（如 "HELLO"）轉換為<strong class="text-[#C0843E]">訊息多項式 M(x)</strong>。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-[#F0EBE0] text-[#8A623F] font-bold rounded-full mr-3">2</span>
+                            <span>用 M(x) 除以一個標準的<strong class="text-[#C0843E]">生成多項式 G(x)</strong>。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-[#F0EBE0] text-[#8A623F] font-bold rounded-full mr-3">3</span>
+                            <span>取除法得到的<strong class="text-[#C0843E]">餘數多項式 P(x)</strong>，這就是糾錯碼。</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-[#F0EBE0] text-[#8A623F] font-bold rounded-full mr-3">4</span>
+                            <span>將原始數據和糾錯碼拼接，得到最終的數據流。</span>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Masking -->
+        <section id="masking" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center section-title mb-4">四、數據掩碼：優化光學識別</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-12">直接生成的 QR 碼圖案可能包含大面積單色塊或類似定位標記的圖案，這會干擾掃描器。為此，系統會應用一個「掩碼」來打亂圖案，使其黑白分佈更均勻。系統會測試8種標準掩碼，並根據一套懲罰規則，選擇得分最低（最優）的一個。</p>
+            <div class="flex flex-col lg:flex-row items-center justify-center gap-8 md:gap-12">
+                <div class="flex-shrink-0">
+                    <div id="mask-grid-container" class="mask-grid"></div>
+                </div>
+                <div class="w-full lg:w-1/2">
+                    <div class="card rounded-lg p-6">
+                        <h3 class="text-xl font-bold text-[#8A623F] mb-4">選擇最優掩碼</h3>
+                        <p class="text-sm text-gray-600 mb-4">點擊下方按鈕，應用不同的掩碼圖案，觀察圖案變化及對應的懲罰分數。分數越低，圖案對掃描器越友好。</p>
+                        <div id="mask-btns" class="grid grid-cols-4 gap-2 mb-4">
+                        </div>
+                        <div class="text-center bg-gray-50 rounded p-4">
+                            <p class="text-sm text-gray-500">當前掩碼總懲罰分數</p>
+                            <p id="mask-score" class="text-3xl font-bold text-[#8A623F]">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+            <p>QR 碼技術解析 &copy; 2025. 內容基於公開的 QR 碼國際標準。</p>
+            <p class="mt-2">
+                Generated by <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer" class="text-[#8A623F] hover:text-[#C0843E] transition-colors">wellstsai.com</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const anatomyData = {
+                finder: {
+                    title: '定位圖案 (Finder Patterns)',
+                    description: '位於左上、右上、左下角的三個「回」字形方塊。它們幫助掃描器快速確定 QR 碼的位置、大小和方向。其獨特的1:1:3:1:1黑白比例是可靠的視覺標記。'
+                },
+                alignment: {
+                    title: '校正圖案 (Alignment Patterns)',
+                    description: '在較大版本的 QR 碼中出現的小型「回」字形方塊。當 QR 碼因傾斜或印在曲面上而變形時，它們提供額外的錨點來校正圖像扭曲。'
+                },
+                timing: {
+                    title: '校時圖案 (Timing Patterns)',
+                    description: '連接三個定位圖案的黑白相間線條。它們像一把尺，幫助掃描器確定網格中每個小方塊（模組）的座標，確保數據被準確採樣。'
+                },
+                format: {
+                    title: '格式資訊 (Format Information)',
+                    description: '儲存了 QR 碼的元數據，包括所使用的錯誤校正等級和數據掩碼圖案。這段資訊自身也帶有糾錯碼，以確保其可靠性。'
+                },
+                data: {
+                    title: '數據與糾錯碼區 (Data & ECC)',
+                    description: '網格中剩餘的所有模組，用於儲存實際的用戶數據和里德-所羅門錯誤校正碼。它們按照特定的Z形路徑被填充。'
+                }
+            };
+
+            const anatomyCard = document.getElementById('anatomy-info-card');
+            const anatomyTitle = document.getElementById('anatomy-title');
+            const anatomyDescription = document.getElementById('anatomy-description');
+
+            window.showAnatomyInfo = function(key) {
+                const data = anatomyData[key];
+                if (data) {
+                    anatomyTitle.textContent = data.title;
+                    anatomyDescription.textContent = data.description;
+                    anatomyCard.classList.remove('opacity-20');
+                }
+            }
+
+            window.hideAnatomyInfo = function() {
+                anatomyTitle.textContent = '請懸停探索';
+                anatomyDescription.textContent = '將滑鼠移動到左側 QR 碼的不同區域，即可在此查看該結構的詳細說明。';
+                anatomyCard.classList.add('opacity-20');
+            }
+            
+            document.getElementById('zone-finder').onmouseover = () => showAnatomyInfo('finder');
+            document.getElementById('zone-finder').onmouseout = hideAnatomyInfo;
+
+            const capacityData = {
+                numeric: { 1: 41, 3: 117, 5: 255, 10: 707, 25: 2869, 40: 7089 },
+                alphanumeric: { 1: 25, 3: 77, 5: 154, 10: 395, 25: 1531, 40: 4296 },
+                byte: { 1: 17, 3: 53, 5: 106, 10: 271, 25: 1050, 40: 2953 }
+            };
+            const eccFactors = { L: 1.0, M: 0.78, Q: 0.62, H: 0.45 };
+            
+            let capacityChart;
+            const ctx = document.getElementById('capacityChart').getContext('2d');
+            
+            function renderCapacityChart() {
+                const version = document.getElementById('qr-version-select').value;
+                const mode = document.querySelector('#encoding-mode-btns .active').dataset.mode;
+                const baseCapacity = capacityData[mode][version];
+                
+                const chartData = {
+                    labels: ['等級 L (7%)', '等級 M (15%)', '等級 Q (25%)', '等級 H (30%)'],
+                    datasets: [{
+                        label: '可儲存字符數',
+                        data: [
+                            Math.round(baseCapacity * eccFactors.L),
+                            Math.round(baseCapacity * eccFactors.M),
+                            Math.round(baseCapacity * eccFactors.Q),
+                            Math.round(baseCapacity * eccFactors.H)
+                        ],
+                        backgroundColor: ['#AED581', '#FFD54F', '#FFB74D', '#E57373'],
+                        borderColor: ['#8BC34A', '#FFC107', '#FFA726', '#F44336'],
+                        borderWidth: 1
+                    }]
+                };
+
+                if (capacityChart) {
+                    capacityChart.data = chartData;
+                    capacityChart.update();
+                } else {
+                    capacityChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false },
+                                title: {
+                                    display: true,
+                                    text: `版本 ${version} (${mode} 模式) 的數據容量`,
+                                    font: { size: 16, family: "'Noto Sans TC', sans-serif" },
+                                    color: '#5D5753'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return ` ${context.raw.toLocaleString()} 個字符`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    title: {
+                                        display: true,
+                                        text: '字符容量',
+                                        color: '#5D5753'
+                                    }
+                                },
+                                x: {
+                                     title: {
+                                        display: true,
+                                        text: '錯誤校正等級 (可恢復數據比例)',
+                                        color: '#5D5753'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                 capacityChart.options.plugins.title.text = `版本 ${version} (${mode} 模式) 的數據容量`;
+                 capacityChart.update();
+            }
+
+            document.getElementById('qr-version-select').addEventListener('change', renderCapacityChart);
+            document.querySelectorAll('#encoding-mode-btns button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelector('#encoding-mode-btns .active').classList.remove('active');
+                    e.target.classList.add('active');
+                    renderCapacityChart();
+                });
+            });
+
+            renderCapacityChart();
+
+            const gfLog = [0, 25, 1, 50, 2, 26, 198, 75, 199, 27, 104, 51, 208, 193, 3, 105, 52, 209, 194, 76, 28, 43, 157, 124, 200, 218, 29, 106, 77, 225, 53, 138, 210, 195, 120, 4, 107, 78, 226, 158, 219, 125, 44, 100, 30, 240, 139, 211, 233, 196, 147, 121, 5, 31, 241, 108, 79, 227, 159, 169, 220, 126, 148, 45, 101, 250, 248, 32, 242, 109, 80, 228, 160, 170, 221, 127, 149, 46, 102, 251, 249, 33, 243, 110, 81, 229, 161, 171, 222, 128, 150, 47, 103, 252, 253, 34, 244, 111, 82, 230, 162, 172, 223, 129, 151, 48, 254, 35, 245, 112, 83, 231, 163, 173, 224, 130, 152, 49, 255, 36, 246, 113, 84, 232, 164, 174, 131, 153, 37, 247, 114, 85, 165, 175, 132, 154, 38, 115, 86, 166, 176, 133, 155, 39, 87, 167, 177, 134, 156, 40, 88, 168, 178, 135, 41, 89, 179, 136, 42, 90, 180, 137, 91, 181, 92, 182, 93, 183, 94, 184, 95, 185, 96, 186, 97, 187, 98, 188, 99, 189, 190, 191, 192, 207, 74, 24, 119, 197, 7, 146, 239, 217, 123, 15, 215, 23, 145, 238, 216, 122, 14, 214, 118, 22, 144, 237, 13, 213, 117, 21, 143, 236, 12, 212, 116, 20, 142, 235, 11, 234, 141, 140, 206, 73, 10, 140, 205, 72, 9, 204, 71, 8, 203, 70, 69, 202, 68, 201, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 224, 130, 152, 49, 255, 36, 246, 113, 84, 232, 164, 174, 131, 153, 37, 247, 114, 85, 165, 175, 132, 154, 38, 115, 86, 166, 176, 133, 155, 39, 87, 167, 177, 134, 156, 40, 88, 168, 178, 135, 41, 89, 179, 136, 42, 90, 180, 137, 91, 181, 92, 182, 93, 183, 94, 184, 95, 185, 96, 186, 97, 187, 98, 188, 99, 189, 190, 191, 192, 207, 74, 24, 119, 197, 7, 146, 239, 217, 123, 15, 215, 23, 145, 238, 216, 122, 14, 214, 118, 22, 144, 237, 13, 213, 117, 21, 143, 236, 12, 212, 116, 20, 142, 235, 11, 234, 141, 140, 206, 73, 10, 140, 205, 72, 9, 204, 71, 8, 203, 70, 69, 202, 68, 201, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 224, 130, 152, 49, 255, 36, 246, 113, 84, 232, 164, 174, 131, 153, 37, 247, 114, 85, 165, 175, 132, 154, 38, 115, 86, 166, 176, 133, 155, 39, 87, 167, 177, 134, 156, 40, 88, 168, 178, 135, 41, 89, 179, 136, 42, 90, 180, 137, 91, 181, 92, 182, 93, 183, 94, 184, 95, 185, 96, 186, 97, 187, 98, 188, 99, 189, 190, 191, 192, 207, 74, 24, 119, 197, 7, 146, 239, 217, 123, 15, 215, 23, 145, 238, 216, 122, 14, 214, 118, 22, 144, 237, 13, 213, 117, 21, 143, 236, 12, 212, 116, 20, 142, 235, 11, 234, 141, 140, 206, 73, 10, 140, 205, 72, 9, 204, 71, 8, 203, 70, 69, 202, 68, 201, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54];
+            const gfExp = [1, 2, 4, 8, 16, 32, 64, 128, 29, 58, 116, 232, 205, 135, 19, 38, 76, 152, 49, 98, 196, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191, 111, 222, 189, 107, 214, 157, 59, 118, 236, 217, 179, 99, 198, 213, 159, 63, 126, 252, 253, 251, 247, 239, 223, 191];
+
+            function gfAdd(a, b) { return a ^ b; }
+            
+            function calculateGf() {
+                const num1 = parseInt(document.getElementById('gf-num1').value) || 0;
+                const num2 = parseInt(document.getElementById('gf-num2').value) || 0;
+                const result = gfAdd(num1, num2);
+                document.getElementById('gf-result').textContent = result;
+                document.getElementById('gf-binary-result').textContent = result.toString(2).padStart(8, '0');
+            }
+            
+            document.getElementById('gf-calc-btn').addEventListener('click', calculateGf);
+            document.getElementById('gf-num1').addEventListener('input', calculateGf);
+            document.getElementById('gf-num2').addEventListener('input', calculateGf);
+            calculateGf();
+
+            const maskGridContainer = document.getElementById('mask-grid-container');
+            const maskBtnsContainer = document.getElementById('mask-btns');
+            const maskScoreEl = document.getElementById('mask-score');
+            const GRID_SIZE = 15;
+            let basePattern = [];
+
+            for (let i = 0; i < GRID_SIZE; i++) {
+                basePattern[i] = [];
+                for (let j = 0; j < GRID_SIZE; j++) {
+                    basePattern[i][j] = Math.random() > 0.5 ? 1 : 0;
+                }
+            }
+
+            function getMaskedValue(mask, i, j, originalValue) {
+                let maskBit = 0;
+                switch (mask) {
+                    case 0: if ((i + j) % 2 === 0) maskBit = 1; break;
+                    case 1: if (i % 2 === 0) maskBit = 1; break;
+                    case 2: if (j % 3 === 0) maskBit = 1; break;
+                    case 3: if ((i + j) % 3 === 0) maskBit = 1; break;
+                    case 4: if ((Math.floor(i / 2) + Math.floor(j / 3)) % 2 === 0) maskBit = 1; break;
+                    case 5: if ((i * j) % 2 + (i * j) % 3 === 0) maskBit = 1; break;
+                    case 6: if (((i * j) % 2 + (i * j) % 3) % 2 === 0) maskBit = 1; break;
+                    case 7: if (((i * j) % 3 + (i + j) % 2) % 2 === 0) maskBit = 1; break;
+                }
+                return originalValue ^ maskBit;
+            }
+
+            function calculatePenalty(grid) {
+                let score = 0;
+                let darkModules = 0;
+                const totalModules = GRID_SIZE * GRID_SIZE;
+
+                for (let i = 0; i < GRID_SIZE; i++) {
+                    for (let j = 0; j < GRID_SIZE; j++) {
+                        if (grid[i][j] === 1) darkModules++;
+                        
+                        if (i < GRID_SIZE - 1 && j < GRID_SIZE - 1) {
+                            if (grid[i][j] === grid[i+1][j] && grid[i][j] === grid[i][j+1] && grid[i][j] === grid[i+1][j+1]) {
+                                score += 3;
+                            }
+                        }
+                    }
+                }
+                
+                for (let i = 0; i < GRID_SIZE; i++) {
+                    let rowCount = 1;
+                    let colCount = 1;
+                    for (let j = 1; j < GRID_SIZE; j++) {
+                        if (grid[i][j] === grid[i][j-1]) rowCount++; else { if(rowCount >= 5) score += 3 + (rowCount - 5); rowCount = 1; }
+                        if (grid[j][i] === grid[j-1][i]) colCount++; else { if(colCount >= 5) score += 3 + (colCount - 5); colCount = 1; }
+                    }
+                    if(rowCount >= 5) score += 3 + (rowCount - 5);
+                    if(colCount >= 5) score += 3 + (colCount - 5);
+                }
+
+                const darkPercent = (darkModules / totalModules) * 100;
+                const prevMultipleOf5 = Math.floor(darkPercent / 5) * 5;
+                const nextMultipleOf5 = Math.ceil(darkPercent / 5) * 5;
+                const deviation = Math.min(Math.abs(prevMultipleOf5 - 50), Math.abs(nextMultipleOf5 - 50));
+                score += (deviation / 5) * 10;
+
+                return Math.round(score);
+            }
+
+            function applyMask(maskIndex) {
+                maskGridContainer.innerHTML = '';
+                let currentGrid = [];
+                for (let i = 0; i < GRID_SIZE; i++) {
+                    currentGrid[i] = [];
+                    for (let j = 0; j < GRID_SIZE; j++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'mask-cell';
+                        const maskedValue = getMaskedValue(maskIndex, i, j, basePattern[i][j]);
+                        currentGrid[i][j] = maskedValue;
+                        cell.classList.add(maskedValue === 1 ? 'dark' : 'light');
+                        maskGridContainer.appendChild(cell);
+                    }
+                }
+                const score = calculatePenalty(currentGrid);
+                maskScoreEl.textContent = score;
+                
+                document.querySelectorAll('#mask-btns button').forEach((btn, index) => {
+                    btn.classList.toggle('active', index === maskIndex);
+                });
+            }
+
+            for (let i = 0; i < 8; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'btn-secondary px-3 py-1.5 text-sm rounded-md';
+                btn.textContent = `掩碼 ${i}`;
+                btn.onclick = () => applyMask(i);
+                maskBtnsContainer.appendChild(btn);
+            }
+
+            applyMask(0);
+            
+            const navLinks = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('main section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => observer.observe(section));
+
+        });
+    </script>
+</body>
+</html>

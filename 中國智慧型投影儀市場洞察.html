@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中國智慧型投影儀市場分析報告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #FDFBF8;
+            /* Warm Neutral Background */
+            color: #4A4A4A;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            color: #C89F91;
+            /* Subtle Accent */
+            border-bottom-color: #C89F91;
+        }
+
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .btn {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn-active {
+            background-color: #A77E71 !important;
+            color: #FFFFFF !important;
+        }
+
+        .tech-table th,
+        .tech-table td {
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .tech-table .highlight {
+            background-color: #F3EBE9;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-[#A77E71]">中國智慧型投影儀市場洞察</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#market-dashboard" class="nav-link active">市場儀表板</a>
+                <a href="#tech-evolution" class="nav-link">技術演進</a>
+                <a href="#competition" class="nav-link">競爭格局</a>
+                <a href="#future-outlook" class="nav-link">未來展望</a>
+            </div>
+            <div class="md:hidden">
+                <select id="mobile-nav" class="bg-white border border-gray-300 rounded-md py-2 px-3 text-gray-700">
+                    <option value="#market-dashboard">市場儀表板</option>
+                    <option value="#tech-evolution">技術演進</option>
+                    <option value="#competition">競爭格局</option>
+                    <option value="#future-outlook">未來展望</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-12">
+
+        <!-- Section 1: Market Dashboard -->
+        <section id="market-dashboard" class="scroll-mt-20 mb-16">
+            <h2 class="text-3xl font-bold text-center mb-4">市場儀表板：從高速增長到結構性轉型</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-10">
+                中國智慧型投影儀市場正經歷一個關鍵的轉折點。銷量雖有反彈，但銷售額卻持續下滑，揭示了由極端價格戰驅動的「量增額減」困境。本儀表板將直觀展示市場規模、平均售價（ASP）及價格結構的變化趨勢。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center">市場規模趨勢 (2022-2024 H1)</h3>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="marketSizeChart"></canvas>
+                    </div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center">平均售價 (ASP) 變化</h3>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="aspChart"></canvas>
+                    </div>
+                </div>
+                <div class="card p-6 md:col-span-2">
+                    <h3 class="text-xl font-semibold mb-4 text-center">價格段結構分析 (2024 H1)</h3>
+                    <div class="flex flex-col md:flex-row items-center justify-center gap-8">
+                        <div class="chart-container h-64 md:h-72 w-full md:w-1/2 max-w-sm">
+                            <canvas id="priceSegmentChart"></canvas>
+                        </div>
+                        <div class="text-gray-700 text-left md:w-1/2">
+                            <h4 class="font-bold text-lg mb-2">低價市場主導</h4>
+                            <p class="mb-4">數據顯示，市場結構已極度向低端傾斜。1000元以下的產品佔據了市場銷量的半壁江山，高達 <span
+                                    class="font-bold text-2xl text-[#A77E71]">53%</span>。這直接導致了行業整體利潤的侵蝕。</p>
+                            <ul class="space-y-2">
+                                <li class="flex items-center"><span
+                                        class="w-4 h-4 rounded-full bg-[#A77E71] mr-3"></span>&lt; 1000元: 53%</li>
+                                <li class="flex items-center"><span
+                                        class="w-4 h-4 rounded-full bg-[#C89F91] mr-3"></span>1000-1999元: 33%</li>
+                                <li class="flex items-center"><span
+                                        class="w-4 h-4 rounded-full bg-[#E4D3CF] mr-3"></span>&gt; 2000元: 14%</li>
+                            </ul>
+                            <p class="mt-4 text-sm text-gray-500">這種極端的價格競爭催生了大量「玩具級」產品，可能對消費者初次體驗造成負面影響，損害行業的長期健康發展。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Technology Evolution -->
+        <section id="tech-evolution" class="scroll-mt-20 mb-16">
+            <h2 class="text-3xl font-bold text-center mb-4">技術演進：供應鏈焦慮下的範式轉移</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-10">
+                從DLP技術的長期主導，到1LCD的迅速崛起，再到LCoS被寄予厚望，其背後是中國投影行業對供應鏈安全的深層焦慮與國產化替代的戰略決心。點擊下方技術標籤，深入了解其優劣勢與市場地位。
+            </p>
+            <div class="card p-6 overflow-x-auto">
+                <table class="w-full text-left border-collapse tech-table">
+                    <thead>
+                        <tr>
+                            <th class="p-4 border-b-2 font-bold">技術類型</th>
+                            <th id="tech-dlp" class="p-4 border-b-2 font-semibold text-center highlight">DLP</th>
+                            <th id="tech-1lcd" class="p-4 border-b-2 font-semibold text-center">1LCD</th>
+                            <th id="tech-lcos" class="p-4 border-b-2 font-semibold text-center">LCoS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="p-4 border-b font-semibold">核心原理</td>
+                            <td class="p-4 border-b text-center">數字微鏡反射</td>
+                            <td class="p-4 border-b text-center">單片液晶透射</td>
+                            <td class="p-4 border-b text-center">矽基液晶反射</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-b font-semibold">市場份額 (2023)</td>
+                            <td class="p-4 border-b text-center font-bold text-red-600">31.9% (下滑)</td>
+                            <td class="p-4 border-b text-center font-bold text-green-600">66.1% (主導)</td>
+                            <td class="p-4 border-b text-center font-bold text-blue-600">新興 (潛力)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-b font-semibold">優點</td>
+                            <td class="p-4 border-b text-center">對比度高、機身小</td>
+                            <td class="p-4 border-b text-center">成本極低、國產化</td>
+                            <td class="p-4 border-b text-center">分辨率/對比度極高</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 border-b font-semibold">缺點</td>
+                            <td class="p-4 border-b text-center">供應商壟斷、彩虹效應</td>
+                            <td class="p-4 border-b text-center">亮度/對比度有瓶頸</td>
+                            <td class="p-4 border-b text-center">早期成本高、工藝複雜</td>
+                        </tr>
+                        <tr>
+                            <td class="p-4 font-semibold">戰略地位</td>
+                            <td class="p-4 text-center">傳統中高端霸主</td>
+                            <td class="p-4 text-center">中低端市場顛覆者</td>
+                            <td class="p-4 text-center">國產高端化希望</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="tech-details" class="mt-6 card p-6 bg-[#F3EBE9]">
+                <h4 id="tech-title" class="text-xl font-bold mb-2 text-[#A77E71]">DLP 技術</h4>
+                <p id="tech-description">長期主導市場，核心DMD晶片由德州儀器(TI)壟斷。全球晶片短缺曾嚴重衝擊其供應，導致市場份額急劇下滑，引發全行業對供應鏈安全的擔憂。</p>
+            </div>
+        </section>
+
+        <!-- Section 3: Competitive Landscape -->
+        <section id="competition" class="scroll-mt-20 mb-16">
+            <h2 class="text-3xl font-bold text-center mb-4">競爭格局：頭部集中與大屏之爭</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-10">
+                市場競爭異常激烈，頭部品牌集中度高但格局微妙變化。同時，來自大尺寸、低價格電視的正面衝擊，正迫使投影儀行業重新思考其差異化價值主張。
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center">主要品牌市場份額 (出貨量)</h3>
+                    <div class="text-center mb-4">
+                        <button id="btn-2023"
+                            class="btn btn-active bg-gray-200 text-gray-700 py-2 px-4 rounded-l-md">2023年</button>
+                        <button id="btn-2024h1" class="btn bg-gray-200 text-gray-700 py-2 px-4 rounded-r-md">2024
+                            H1</button>
+                    </div>
+                    <div class="chart-container h-80">
+                        <canvas id="brandShareChart"></canvas>
+                    </div>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center">投影儀 vs. 大尺寸電視</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-bold text-lg">大尺寸電視 📺</h4>
+                            <p class="text-sm text-green-600 font-semibold">優勢：亮度高、畫質好、不受環境光影響。</p>
+                            <p class="text-sm text-red-600 font-semibold">劣勢：尺寸固定、笨重、不易移動。</p>
+                            <p class="text-xs mt-2 text-gray-500">適合新房裝修、客廳為主的家庭用戶。</p>
+                        </div>
+                        <div class="p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-bold text-lg">智慧型投影儀 🎬</h4>
+                            <p class="text-sm text-green-600 font-semibold">優勢：百吋巨幕、便攜靈活、漫反射護眼。</p>
+                            <p class="text-sm text-red-600 font-semibold">劣勢：受環境光影響大、對遮光有要求。</p>
+                            <p class="text-xs mt-2 text-gray-500">適合租房人群、臥室觀影、影音發燒友。</p>
+                        </div>
+                        <p class="text-center text-gray-600 pt-4">結論：兩者並非零和博弈，而是基於不同場景和需求的 <span
+                                class="font-bold text-[#A77E71]">「按需選擇」</span> 共存格局。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Future Outlook -->
+        <section id="future-outlook" class="scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-4">未來展望：挑戰、突破與新前沿</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-10">
+                面對盈利模式與供應鏈安全的雙重挑戰，行業的未來在於擺脫低價內卷，尋找新的增長曲線。海外市場與車載投影被視為最具潛力的兩大突破口。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card p-8 text-center">
+                    <div class="text-5xl mb-4">🌍</div>
+                    <h3 class="text-2xl font-bold mb-2">海外市場擴張</h3>
+                    <p class="text-gray-600">中國投影市場增速已弱於海外，廣闊的國際市場尚有巨大開發空間。中國品牌在智慧型系統、交互體驗上的創新，有望轉化為全球競爭優勢。</p>
+                </div>
+                <div class="card p-8 text-center">
+                    <div class="text-5xl mb-4">🚗</div>
+                    <h3 class="text-2xl font-bold mb-2">車載投影藍海</h3>
+                    <p class="text-gray-600">隨著汽車智慧化浪潮，車載投影（如AR-HUD、智慧車燈）被視為下一個千億級市場。但從消費電子跨入車規級領域，門檻極高，挑戰與機遇並存。</p>
+                </div>
+            </div>
+            <div class="mt-12 text-center card p-6 bg-white">
+                <h3 class="text-xl font-semibold mb-3">未來三到五年競爭格局預測</h3>
+                <p class="max-w-4xl mx-auto text-gray-700">市場將進一步整合，形成 <span
+                        class="font-bold text-[#A77E71]">「技術領導者、規模跟隨者、垂直創新者」</span>
+                    的三級分化格局。品牌的全球化能力和在新興市場的開拓進度，將成為決定其長期增長天花板的勝負手。</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white mt-16 border-t">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-500">
+            <p>&copy; 2025 智慧型投影儀市場洞察報告. All Rights Reserved.</p>
+            <p class="text-xs mt-2">數據來源：IDC, 洛圖科技 (RUNTO), 公司財報等公開資料。</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const chartColors = {
+                primary: '#A77E71',
+                secondary: '#C89F91',
+                tertiary: '#E4D3CF',
+                text: '#4A4A4A'
+            };
+
+            Chart.defaults.font.family = "'Noto Sans TC', sans-serif";
+            Chart.defaults.color = chartColors.text;
+
+            function wrapText(context, text, x, y, maxWidth, lineHeight) {
+                const words = text.split(' ');
+                let line = '';
+                for (let n = 0; n < words.length; n++) {
+                    let testLine = line + words[n] + ' ';
+                    let metrics = context.measureText(testLine);
+                    let testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        context.fillText(line, x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                context.fillText(line, x, y);
+            }
+
+            // Market Size Chart
+            const marketSizeCtx = document.getElementById('marketSizeChart').getContext('2d');
+            new Chart(marketSizeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2022', '2023', '2024 H1'],
+                    datasets: [{
+                        label: '總銷量 (萬台)',
+                        data: [617.8, 586.4, 256.8],
+                        backgroundColor: chartColors.secondary,
+                        yAxisID: 'y',
+                        order: 2
+                    }, {
+                        label: '總銷售額 (億元)',
+                        data: [125.3, 103.7, 67.7],
+                        backgroundColor: chartColors.primary,
+                        type: 'line',
+                        yAxisID: 'y1',
+                        borderColor: chartColors.primary,
+                        tension: 0.1,
+                        order: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: { display: true, text: '銷量 (萬台)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: { display: true, text: '銷售額 (億元)' },
+                            grid: { drawOnChartArea: false }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + (context.dataset.yAxisID === 'y' ? ' 萬台' : ' 億元');
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // ASP Chart
+            const aspCtx = document.getElementById('aspChart').getContext('2d');
+            new Chart(aspCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2022', '2023', '2024 H1'],
+                    datasets: [{
+                        label: '平均售價 (元)',
+                        data: [2028, 1768, 2636], // Using a mix of data for trend representation
+                        backgroundColor: [chartColors.primary, chartColors.secondary, chartColors.tertiary],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.dataset.label}: ${context.parsed.y} 元`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: '元' }
+                        }
+                    }
+                }
+            });
+
+            // Price Segment Chart
+            const priceSegmentCtx = document.getElementById('priceSegmentChart').getContext('2d');
+            new Chart(priceSegmentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['< 1000元', '1000-1999元', '> 2000元'],
+                    datasets: [{
+                        data: [53, 33, 14],
+                        backgroundColor: [chartColors.primary, chartColors.secondary, chartColors.tertiary],
+                        borderColor: '#FDFBF8',
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.label}: ${context.parsed}%`
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Brand Share Chart
+            const brandShareData = {
+                '2023': {
+                    labels: ['極米', '堅果', '愛普生', '峰米', '當貝'],
+                    data: [18.5, 8.2, 6.1, 4.5, 3.8] // Example percentages
+                },
+                '2024h1': {
+                    labels: ['極米', '堅果', '小米', '峰米', '愛普生'],
+                    data: [17.9, 7.8, 7.5, 4.2, 3.7] // Example percentages
+                }
+            };
+            const brandShareCtx = document.getElementById('brandShareChart').getContext('2d');
+            const brandShareChart = new Chart(brandShareCtx, {
+                type: 'bar',
+                data: {
+                    labels: brandShareData['2023'].labels,
+                    datasets: [{
+                        label: '市場份額 (%)',
+                        data: brandShareData['2023'].data,
+                        backgroundColor: chartColors.secondary,
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `${context.dataset.label}: ${context.parsed.x}%`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: { display: true, text: '市場份額 (%)' }
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('btn-2023').addEventListener('click', () => updateBrandChart('2023'));
+            document.getElementById('btn-2024h1').addEventListener('click', () => updateBrandChart('2024h1'));
+
+            function updateBrandChart(year) {
+                document.getElementById('btn-2023').classList.toggle('btn-active', year === '2023');
+                document.getElementById('btn-2024h1').classList.toggle('btn-active', year === '2024h1');
+                brandShareChart.data.labels = brandShareData[year].labels;
+                brandShareChart.data.datasets[0].data = brandShareData[year].data;
+                brandShareChart.update();
+            }
+
+            // Technology Table Interaction
+            const techHeaders = document.querySelectorAll('.tech-table th[id^="tech-"]');
+            const techDetails = {
+                'tech-dlp': { title: 'DLP 技術', desc: '長期主導市場，核心DMD晶片由德州儀器(TI)壟斷。全球晶片短缺曾嚴重衝擊其供應，導致市場份額急劇下滑，引發全行業對供應鏈安全的擔憂。' },
+                'tech-1lcd': { title: '1LCD 技術', desc: '憑藉極低的成本和國產化的成熟供應鏈（京東方、華星光電等），迅速佔領中低端市場，市場份額已反超DLP，成為當前市場主流，但也面臨性能天花板。' },
+                'tech-lcos': { title: 'LCoS 技術', desc: '被譽為國產高端化的希望。結合LCD和DLP的優點，在分辨率和對比度上有巨大潛力。華為海思的入局，有望打破TI在高階晶片上的壟斷，重塑高端市場格局。' }
+            };
+
+            techHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    techHeaders.forEach(h => h.classList.remove('highlight'));
+                    header.classList.add('highlight');
+                    const techId = header.id;
+                    document.getElementById('tech-title').textContent = techDetails[techId].title;
+                    document.getElementById('tech-description').textContent = techDetails[techId].desc;
+                });
+            });
+
+            // Smooth Scrolling & Active Nav Link
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => observer.observe(section));
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Mobile navigation
+            document.getElementById('mobile-nav').addEventListener('change', function (e) {
+                const targetId = e.target.value;
+                document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+
+</html>
