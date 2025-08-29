@@ -1,10 +1,10 @@
 # 推薦文章
 
-更新日期：2025-08-29 12:58:53Z
+更新日期：2025-08-29 13:04:35Z
 
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
 - [DJI Osmo 360 vs Insta360 X5](https://wellstsai.com/single-page-conclusion/DJI%20Osmo%20360%20vs%20Insta360%20X5.html)
-- [Git 中文亂碼解決方案](https://wellstsai.com/single-page-conclusion/Git%20%E4%B8%AD%E6%96%87%E4%BA%82%E7%A2%BC%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88.html)
+- [Git for Windows 中文亂碼解決方案總覽](https://wellstsai.com/single-page-conclusion/Git%20for%20Windows%20%E4%B8%AD%E6%96%87%E4%BA%82%E7%A2%BC%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%E7%B8%BD%E8%A6%BD.html)
 - [Grok Code Fast 1 深度分析](https://wellstsai.com/single-page-conclusion/Grok%20Code%20Fast%201%20%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90.html)
 - [MCU Bootloader 完整解析](https://wellstsai.com/single-page-conclusion/MCU%20Bootloader%20%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90.html)
 - [Mac遊戲兼容性技術解析](https://wellstsai.com/single-page-conclusion/Mac%E9%81%8A%E6%88%B2%E5%85%BC%E5%AE%B9%E6%80%A7%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
