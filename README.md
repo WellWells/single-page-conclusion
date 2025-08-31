@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-08-29 13:04:35Z
+更新日期：2025-08-31 16:09:36Z
 
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
 - [DJI Osmo 360 vs Insta360 X5](https://wellstsai.com/single-page-conclusion/DJI%20Osmo%20360%20vs%20Insta360%20X5.html)
