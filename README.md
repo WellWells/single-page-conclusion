@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-08-31 18:59:56Z
+更新日期：2025-09-01 12:13:59Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
@@ -13,8 +13,10 @@
 - [Netflix自由與責任文化指南](https://wellstsai.com/single-page-conclusion/Netflix%E8%87%AA%E7%94%B1%E8%88%87%E8%B2%AC%E4%BB%BB%E6%96%87%E5%8C%96%E6%8C%87%E5%8D%97.html)
 - [Overfitting-Regularization-Occam's Razor](https://wellstsai.com/single-page-conclusion/Overfitting-Regularization-Occam%27s%20Razor.html)
 - [PNG格式演進](https://wellstsai.com/single-page-conclusion/PNG%E6%A0%BC%E5%BC%8F%E6%BC%94%E9%80%B2.html)
+- [Perplexity Comet：代理式瀏覽新時代](https://wellstsai.com/single-page-conclusion/Perplexity%20Comet%EF%BC%9A%E4%BB%A3%E7%90%86%E5%BC%8F%E7%80%8F%E8%A6%BD%E6%96%B0%E6%99%82%E4%BB%A3.html)
 - [Perplexity對決Google Chrome](https://wellstsai.com/single-page-conclusion/Perplexity%E5%B0%8D%E6%B1%BAGoogle%20Chrome.html)
 - [QR碼技術解析](https://wellstsai.com/single-page-conclusion/QR%E7%A2%BC%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
+- [RAM vs VRAM 深度解析](https://wellstsai.com/single-page-conclusion/RAM%20vs%20VRAM%20%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
 - [index](https://wellstsai.com/single-page-conclusion/index.html)
 - [中國智慧型投影儀市場洞察](https://wellstsai.com/single-page-conclusion/%E4%B8%AD%E5%9C%8B%E6%99%BA%E6%85%A7%E5%9E%8B%E6%8A%95%E5%BD%B1%E5%84%80%E5%B8%82%E5%A0%B4%E6%B4%9E%E5%AF%9F.html)
 - [人臉辨識打卡權益資訊圖表](https://wellstsai.com/single-page-conclusion/%E4%BA%BA%E8%87%89%E8%BE%A8%E8%AD%98%E6%89%93%E5%8D%A1%E6%AC%8A%E7%9B%8A%E8%B3%87%E8%A8%8A%E5%9C%96%E8%A1%A8.html)
