@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-09-06 15:52:46Z
+更新日期：2025-09-06 16:17:51Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025全球開發者生態調查](https://wellstsai.com/single-page-conclusion/2025%E5%85%A8%E7%90%83%E9%96%8B%E7%99%BC%E8%80%85%E7%94%9F%E6%85%8B%E8%AA%BF%E6%9F%A5.html)
@@ -37,6 +37,7 @@
 - [台灣出口商關稅儀表板](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E5%87%BA%E5%8F%A3%E5%95%86%E9%97%9C%E7%A8%85%E5%84%80%E8%A1%A8%E6%9D%BF.html)
 - [台灣海底電纜報告](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E6%B5%B7%E5%BA%95%E9%9B%BB%E7%BA%9C%E5%A0%B1%E5%91%8A.html)
 - [台灣產業職涯選擇分析](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E7%94%A2%E6%A5%AD%E8%81%B7%E6%B6%AF%E9%81%B8%E6%93%87%E5%88%86%E6%9E%90.html)
+- [台灣薪資與物價儀表板](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E8%96%AA%E8%B3%87%E8%88%87%E7%89%A9%E5%83%B9%E5%84%80%E8%A1%A8%E6%9D%BF.html)
 - [台灣餐飲業深度分析](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E9%A4%90%E9%A3%B2%E6%A5%AD%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90.html)
 - [夜班保全工作心得分享](https://wellstsai.com/single-page-conclusion/%E5%A4%9C%E7%8F%AD%E4%BF%9D%E5%85%A8%E5%B7%A5%E4%BD%9C%E5%BF%83%E5%BE%97%E5%88%86%E4%BA%AB.html)
 - [工程師職涯架構學：打造你的技術影響力藍圖](https://wellstsai.com/single-page-conclusion/%E5%B7%A5%E7%A8%8B%E5%B8%AB%E8%81%B7%E6%B6%AF%E6%9E%B6%E6%A7%8B%E5%AD%B8%EF%BC%9A%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E6%8A%80%E8%A1%93%E5%BD%B1%E9%9F%BF%E5%8A%9B%E8%97%8D%E5%9C%96.html)
