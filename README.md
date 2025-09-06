@@ -1,10 +1,11 @@
 # 推薦文章
 
-更新日期：2025-09-05 16:49:36Z
+更新日期：2025-09-06 15:52:46Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025全球開發者生態調查](https://wellstsai.com/single-page-conclusion/2025%E5%85%A8%E7%90%83%E9%96%8B%E7%99%BC%E8%80%85%E7%94%9F%E6%85%8B%E8%AA%BF%E6%9F%A5.html)
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
+- [Agile與Fragile發音解析](https://wellstsai.com/single-page-conclusion/Agile%E8%88%87Fragile%E7%99%BC%E9%9F%B3%E8%A7%A3%E6%9E%90.html)
 - [CPU 五次重生史](https://wellstsai.com/single-page-conclusion/CPU%20%E4%BA%94%E6%AC%A1%E9%87%8D%E7%94%9F%E5%8F%B2.html)
 - [DJI Osmo 360 vs Insta360 X5](https://wellstsai.com/single-page-conclusion/DJI%20Osmo%20360%20vs%20Insta360%20X5.html)
 - [FFT實務完整指南-從取樣到頻譜解析](https://wellstsai.com/single-page-conclusion/FFT%E5%AF%A6%E5%8B%99%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97-%E5%BE%9E%E5%8F%96%E6%A8%A3%E5%88%B0%E9%A0%BB%E8%AD%9C%E8%A7%A3%E6%9E%90.html)
@@ -33,6 +34,7 @@
 - [全景相機的奧秘](https://wellstsai.com/single-page-conclusion/%E5%85%A8%E6%99%AF%E7%9B%B8%E6%A9%9F%E7%9A%84%E5%A5%A7%E7%A7%98.html)
 - [前端即時更新技術指南](https://wellstsai.com/single-page-conclusion/%E5%89%8D%E7%AB%AF%E5%8D%B3%E6%99%82%E6%9B%B4%E6%96%B0%E6%8A%80%E8%A1%93%E6%8C%87%E5%8D%97.html)
 - [台灣2025核三廠延役公投分析](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A32025%E6%A0%B8%E4%B8%89%E5%BB%A0%E5%BB%B6%E5%BD%B9%E5%85%AC%E6%8A%95%E5%88%86%E6%9E%90.html)
+- [台灣出口商關稅儀表板](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E5%87%BA%E5%8F%A3%E5%95%86%E9%97%9C%E7%A8%85%E5%84%80%E8%A1%A8%E6%9D%BF.html)
 - [台灣海底電纜報告](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E6%B5%B7%E5%BA%95%E9%9B%BB%E7%BA%9C%E5%A0%B1%E5%91%8A.html)
 - [台灣產業職涯選擇分析](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E7%94%A2%E6%A5%AD%E8%81%B7%E6%B6%AF%E9%81%B8%E6%93%87%E5%88%86%E6%9E%90.html)
 - [台灣餐飲業深度分析](https://wellstsai.com/single-page-conclusion/%E5%8F%B0%E7%81%A3%E9%A4%90%E9%A3%B2%E6%A5%AD%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90.html)
@@ -44,6 +46,7 @@
 - [散熱技術深度解析](https://wellstsai.com/single-page-conclusion/%E6%95%A3%E7%86%B1%E6%8A%80%E8%A1%93%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
 - [機率悖論互動實驗室](https://wellstsai.com/single-page-conclusion/%E6%A9%9F%E7%8E%87%E6%82%96%E8%AB%96%E4%BA%92%E5%8B%95%E5%AF%A6%E9%A9%97%E5%AE%A4.html)
 - [淘寶跨境退貨互動指南](https://wellstsai.com/single-page-conclusion/%E6%B7%98%E5%AF%B6%E8%B7%A8%E5%A2%83%E9%80%80%E8%B2%A8%E4%BA%92%E5%8B%95%E6%8C%87%E5%8D%97.html)
+- [瀏覽器任務排程深度解析](https://wellstsai.com/single-page-conclusion/%E7%80%8F%E8%A6%BD%E5%99%A8%E4%BB%BB%E5%8B%99%E6%8E%92%E7%A8%8B%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
 - [為何手機攝影走向多鏡頭時代](https://wellstsai.com/single-page-conclusion/%E7%82%BA%E4%BD%95%E6%89%8B%E6%A9%9F%E6%94%9D%E5%BD%B1%E8%B5%B0%E5%90%91%E5%A4%9A%E9%8F%A1%E9%A0%AD%E6%99%82%E4%BB%A3.html)
 - [現代分散式系統架構](https://wellstsai.com/single-page-conclusion/%E7%8F%BE%E4%BB%A3%E5%88%86%E6%95%A3%E5%BC%8F%E7%B3%BB%E7%B5%B1%E6%9E%B6%E6%A7%8B.html)
 - [現代家庭伺服器：MiniPC與DIY SFF比較](https://wellstsai.com/single-page-conclusion/%E7%8F%BE%E4%BB%A3%E5%AE%B6%E5%BA%AD%E4%BC%BA%E6%9C%8D%E5%99%A8%EF%BC%9AMiniPC%E8%88%87DIY%20SFF%E6%AF%94%E8%BC%83.html)
@@ -61,5 +64,6 @@
 - [軟體架構為何重要](https://wellstsai.com/single-page-conclusion/%E8%BB%9F%E9%AB%94%E6%9E%B6%E6%A7%8B%E7%82%BA%E4%BD%95%E9%87%8D%E8%A6%81.html)
 - [軟體開發職涯洞察](https://wellstsai.com/single-page-conclusion/%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC%E8%81%B7%E6%B6%AF%E6%B4%9E%E5%AF%9F.html)
 - [過擬合-正規化-奧卡姆剃刀](https://wellstsai.com/single-page-conclusion/%E9%81%8E%E6%93%AC%E5%90%88-%E6%AD%A3%E8%A6%8F%E5%8C%96-%E5%A5%A7%E5%8D%A1%E5%A7%86%E5%89%83%E5%88%80.html)
+- [重構的兩難-程式碼與商業的拉鋸](https://wellstsai.com/single-page-conclusion/%E9%87%8D%E6%A7%8B%E7%9A%84%E5%85%A9%E9%9B%A3-%E7%A8%8B%E5%BC%8F%E7%A2%BC%E8%88%87%E5%95%86%E6%A5%AD%E7%9A%84%E6%8B%89%E9%8B%B8.html)
 - [雷達成像演算法解析](https://wellstsai.com/single-page-conclusion/%E9%9B%B7%E9%81%94%E6%88%90%E5%83%8F%E6%BC%94%E7%AE%97%E6%B3%95%E8%A7%A3%E6%9E%90.html)
 - [駕馭職場人臉辨識爭議](https://wellstsai.com/single-page-conclusion/%E9%A7%95%E9%A6%AD%E8%81%B7%E5%A0%B4%E4%BA%BA%E8%87%89%E8%BE%A8%E8%AD%98%E7%88%AD%E8%AD%B0.html)
