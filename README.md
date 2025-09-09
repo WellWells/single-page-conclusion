@@ -1,13 +1,15 @@
 # 推薦文章
 
-更新日期：2025-09-09 14:19:30Z
+更新日期：2025-09-09 16:43:40Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025全球開發者生態調查](https://wellstsai.com/single-page-conclusion/2025%E5%85%A8%E7%90%83%E9%96%8B%E7%99%BC%E8%80%85%E7%94%9F%E6%85%8B%E8%AA%BF%E6%9F%A5.html)
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
 - [Agile與Fragile發音解析](https://wellstsai.com/single-page-conclusion/Agile%E8%88%87Fragile%E7%99%BC%E9%9F%B3%E8%A7%A3%E6%9E%90.html)
+- [ArrayList.LinkedList.深度剖析](https://wellstsai.com/single-page-conclusion/ArrayList.LinkedList.%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90.html)
 - [CPU 五次重生史](https://wellstsai.com/single-page-conclusion/CPU%20%E4%BA%94%E6%AC%A1%E9%87%8D%E7%94%9F%E5%8F%B2.html)
 - [DJI Osmo 360 vs Insta360 X5](https://wellstsai.com/single-page-conclusion/DJI%20Osmo%20360%20vs%20Insta360%20X5.html)
+- [Dyson.HushJet.Purifier.性能分析](https://wellstsai.com/single-page-conclusion/Dyson.HushJet.Purifier.%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.html)
 - [FFT實務完整指南-從取樣到頻譜解析](https://wellstsai.com/single-page-conclusion/FFT%E5%AF%A6%E5%8B%99%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97-%E5%BE%9E%E5%8F%96%E6%A8%A3%E5%88%B0%E9%A0%BB%E8%AD%9C%E8%A7%A3%E6%9E%90.html)
 - [Git for Windows 中文亂碼解決方案總覽](https://wellstsai.com/single-page-conclusion/Git%20for%20Windows%20%E4%B8%AD%E6%96%87%E4%BA%82%E7%A2%BC%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%E7%B8%BD%E8%A6%BD.html)
 - [Grok Code Fast 1 深度分析](https://wellstsai.com/single-page-conclusion/Grok%20Code%20Fast%201%20%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90.html)
@@ -26,6 +28,7 @@
 - [git-filter-repo 教學指南](https://wellstsai.com/single-page-conclusion/git-filter-repo%20%E6%95%99%E5%AD%B8%E6%8C%87%E5%8D%97.html)
 - [index](https://wellstsai.com/single-page-conclusion/index.html)
 - [一次看懂交保是什麼](https://wellstsai.com/single-page-conclusion/%E4%B8%80%E6%AC%A1%E7%9C%8B%E6%87%82%E4%BA%A4%E4%BF%9D%E6%98%AF%E4%BB%80%E9%BA%BC.html)
+- [並行的假象.從單核切換到多核心實作](https://wellstsai.com/single-page-conclusion/%E4%B8%A6%E8%A1%8C%E7%9A%84%E5%81%87%E8%B1%A1.%E5%BE%9E%E5%96%AE%E6%A0%B8%E5%88%87%E6%8F%9B%E5%88%B0%E5%A4%9A%E6%A0%B8%E5%BF%83%E5%AF%A6%E4%BD%9C.html)
 - [中國智慧型投影儀市場洞察](https://wellstsai.com/single-page-conclusion/%E4%B8%AD%E5%9C%8B%E6%99%BA%E6%85%A7%E5%9E%8B%E6%8A%95%E5%BD%B1%E5%84%80%E5%B8%82%E5%A0%B4%E6%B4%9E%E5%AF%9F.html)
 - [互動式 iPerf3 指令速查表與輸出結果說明](https://wellstsai.com/single-page-conclusion/%E4%BA%92%E5%8B%95%E5%BC%8F%20iPerf3%20%E6%8C%87%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8%E8%88%87%E8%BC%B8%E5%87%BA%E7%B5%90%E6%9E%9C%E8%AA%AA%E6%98%8E.html)
 - [人臉辨識打卡權益資訊圖表](https://wellstsai.com/single-page-conclusion/%E4%BA%BA%E8%87%89%E8%BE%A8%E8%AD%98%E6%89%93%E5%8D%A1%E6%AC%8A%E7%9B%8A%E8%B3%87%E8%A8%8A%E5%9C%96%E8%A1%A8.html)
@@ -45,9 +48,11 @@
 - [夜班保全工作心得分享](https://wellstsai.com/single-page-conclusion/%E5%A4%9C%E7%8F%AD%E4%BF%9D%E5%85%A8%E5%B7%A5%E4%BD%9C%E5%BF%83%E5%BE%97%E5%88%86%E4%BA%AB.html)
 - [工程師職涯架構學：打造你的技術影響力藍圖](https://wellstsai.com/single-page-conclusion/%E5%B7%A5%E7%A8%8B%E5%B8%AB%E8%81%B7%E6%B6%AF%E6%9E%B6%E6%A7%8B%E5%AD%B8%EF%BC%9A%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E6%8A%80%E8%A1%93%E5%BD%B1%E9%9F%BF%E5%8A%9B%E8%97%8D%E5%9C%96.html)
 - [找出您的主力眼](https://wellstsai.com/single-page-conclusion/%E6%89%BE%E5%87%BA%E6%82%A8%E7%9A%84%E4%B8%BB%E5%8A%9B%E7%9C%BC.html)
+- [探索多語言專案的奧秘](https://wellstsai.com/single-page-conclusion/%E6%8E%A2%E7%B4%A2%E5%A4%9A%E8%AA%9E%E8%A8%80%E5%B0%88%E6%A1%88%E7%9A%84%E5%A5%A7%E7%A7%98.html)
 - [揭開熟成的祕密](https://wellstsai.com/single-page-conclusion/%E6%8F%AD%E9%96%8B%E7%86%9F%E6%88%90%E7%9A%84%E7%A5%95%E5%AF%86.html)
 - [散光全面解析](https://wellstsai.com/single-page-conclusion/%E6%95%A3%E5%85%89%E5%85%A8%E9%9D%A2%E8%A7%A3%E6%9E%90.html)
 - [散熱技術深度解析](https://wellstsai.com/single-page-conclusion/%E6%95%A3%E7%86%B1%E6%8A%80%E8%A1%93%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
+- [新加坡外出用餐成本](https://wellstsai.com/single-page-conclusion/%E6%96%B0%E5%8A%A0%E5%9D%A1%E5%A4%96%E5%87%BA%E7%94%A8%E9%A4%90%E6%88%90%E6%9C%AC.html)
 - [旅客搭機困擾數據洞察-航班延誤-行李遺失等五大議題分析](https://wellstsai.com/single-page-conclusion/%E6%97%85%E5%AE%A2%E6%90%AD%E6%A9%9F%E5%9B%B0%E6%93%BE%E6%95%B8%E6%93%9A%E6%B4%9E%E5%AF%9F-%E8%88%AA%E7%8F%AD%E5%BB%B6%E8%AA%A4-%E8%A1%8C%E6%9D%8E%E9%81%BA%E5%A4%B1%E7%AD%89%E4%BA%94%E5%A4%A7%E8%AD%B0%E9%A1%8C%E5%88%86%E6%9E%90.html)
 - [旅平險理賠爭議解析](https://wellstsai.com/single-page-conclusion/%E6%97%85%E5%B9%B3%E9%9A%AA%E7%90%86%E8%B3%A0%E7%88%AD%E8%AD%B0%E8%A7%A3%E6%9E%90.html)
 - [機率悖論互動實驗室](https://wellstsai.com/single-page-conclusion/%E6%A9%9F%E7%8E%87%E6%82%96%E8%AB%96%E4%BA%92%E5%8B%95%E5%AF%A6%E9%A9%97%E5%AE%A4.html)
