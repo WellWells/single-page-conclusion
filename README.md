@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-09-15 15:53:04Z
+更新日期：2025-09-15 15:56:24Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025全球開發者生態調查](https://wellstsai.com/single-page-conclusion/2025%E5%85%A8%E7%90%83%E9%96%8B%E7%99%BC%E8%80%85%E7%94%9F%E6%85%8B%E8%AA%BF%E6%9F%A5.html)
@@ -15,7 +15,7 @@
 - [Dyson.HushJet.Purifier.性能分析](https://wellstsai.com/single-page-conclusion/Dyson.HushJet.Purifier.%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.html)
 - [FFT實務完整指南-從取樣到頻譜解析](https://wellstsai.com/single-page-conclusion/FFT%E5%AF%A6%E5%8B%99%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97-%E5%BE%9E%E5%8F%96%E6%A8%A3%E5%88%B0%E9%A0%BB%E8%AD%9C%E8%A7%A3%E6%9E%90.html)
 - [Git for Windows 中文亂碼解決方案總覽](https://wellstsai.com/single-page-conclusion/Git%20for%20Windows%20%E4%B8%AD%E6%96%87%E4%BA%82%E7%A2%BC%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%E7%B8%BD%E8%A6%BD.html)
-- [GitHub.Copilot.自訂指令治理](https://wellstsai.com/single-page-conclusion/GitHub.Copilot.%E8%87%AA%E8%A8%82%E6%8C%87%E4%BB%A4%E6%B2%BB%E7%90%86.html)
+- [GitHub.Copilot.自訂指令管理](https://wellstsai.com/single-page-conclusion/GitHub.Copilot.%E8%87%AA%E8%A8%82%E6%8C%87%E4%BB%A4%E7%AE%A1%E7%90%86.html)
 - [Grok Code Fast 1 深度分析](https://wellstsai.com/single-page-conclusion/Grok%20Code%20Fast%201%20%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90.html)
 - [MCU Bootloader 完整解析](https://wellstsai.com/single-page-conclusion/MCU%20Bootloader%20%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90.html)
 - [Mac遊戲兼容性技術解析](https://wellstsai.com/single-page-conclusion/Mac%E9%81%8A%E6%88%B2%E5%85%BC%E5%AE%B9%E6%80%A7%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
