@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-09-30 16:27:01Z
+更新日期：2025-09-30 18:42:00Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025全球開發者生態調查](https://wellstsai.com/single-page-conclusion/2025%E5%85%A8%E7%90%83%E9%96%8B%E7%99%BC%E8%80%85%E7%94%9F%E6%85%8B%E8%AA%BF%E6%9F%A5.html)
@@ -12,10 +12,11 @@
 - [AoA演算法-arcsin查表法實作與優化](https://wellstsai.com/single-page-conclusion/AoA%E6%BC%94%E7%AE%97%E6%B3%95-arcsin%E6%9F%A5%E8%A1%A8%E6%B3%95%E5%AF%A6%E4%BD%9C%E8%88%87%E5%84%AA%E5%8C%96.html)
 - [Apple-數位汽車鑰匙-NFC與UWB技術安全解析](https://wellstsai.com/single-page-conclusion/Apple-%E6%95%B8%E4%BD%8D%E6%B1%BD%E8%BB%8A%E9%91%B0%E5%8C%99-NFC%E8%88%87UWB%E6%8A%80%E8%A1%93%E5%AE%89%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [Apple.Awe Dropping.發表會](https://wellstsai.com/single-page-conclusion/Apple.Awe%20Dropping.%E7%99%BC%E8%A1%A8%E6%9C%83.html)
-- [ArrayList.LinkedList.深度剖析](https://wellstsai.com/single-page-conclusion/ArrayList.LinkedList.%E6%B7%B1%E5%BA%A6%E5%89%96%E6%9E%90.html)
+- [ArrayList-vs-LinkedList-比較-效能-使用時機](https://wellstsai.com/single-page-conclusion/ArrayList-vs-LinkedList-%E6%AF%94%E8%BC%83-%E6%95%88%E8%83%BD-%E4%BD%BF%E7%94%A8%E6%99%82%E6%A9%9F.html)
 - [Body-Tea意思-起源與用法](https://wellstsai.com/single-page-conclusion/Body-Tea%E6%84%8F%E6%80%9D-%E8%B5%B7%E6%BA%90%E8%88%87%E7%94%A8%E6%B3%95.html)
 - [CPU 五次重生史](https://wellstsai.com/single-page-conclusion/CPU%20%E4%BA%94%E6%AC%A1%E9%87%8D%E7%94%9F%E5%8F%B2.html)
-- [Casey's.成功秘訣](https://wellstsai.com/single-page-conclusion/Casey%27s.%E6%88%90%E5%8A%9F%E7%A7%98%E8%A8%A3.html)
+- [Caseys成功秘訣-鄉村市場的商業王國](https://wellstsai.com/single-page-conclusion/Caseys%E6%88%90%E5%8A%9F%E7%A7%98%E8%A8%A3-%E9%84%89%E6%9D%91%E5%B8%82%E5%A0%B4%E7%9A%84%E5%95%86%E6%A5%AD%E7%8E%8B%E5%9C%8B.html)
+- [Claude-Sonnet-4.5-代理式AI新紀元](https://wellstsai.com/single-page-conclusion/Claude-Sonnet-4.5-%E4%BB%A3%E7%90%86%E5%BC%8FAI%E6%96%B0%E7%B4%80%E5%85%83.html)
 - [ClickFix駭客騙術-運作方式與防範](https://wellstsai.com/single-page-conclusion/ClickFix%E9%A7%AD%E5%AE%A2%E9%A8%99%E8%A1%93-%E9%81%8B%E4%BD%9C%E6%96%B9%E5%BC%8F%E8%88%87%E9%98%B2%E7%AF%84.html)
 - [DJI Osmo 360 vs Insta360 X5](https://wellstsai.com/single-page-conclusion/DJI%20Osmo%20360%20vs%20Insta360%20X5.html)
 - [DJI-Osmo-Nano-vs-Insta-Go-Ultra-規格優缺點比較](https://wellstsai.com/single-page-conclusion/DJI-Osmo-Nano-vs-Insta-Go-Ultra-%E8%A6%8F%E6%A0%BC%E5%84%AA%E7%BC%BA%E9%BB%9E%E6%AF%94%E8%BC%83.html)
@@ -32,13 +33,13 @@
 - [MCU Bootloader 完整解析](https://wellstsai.com/single-page-conclusion/MCU%20Bootloader%20%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90.html)
 - [Mac遊戲兼容性技術解析](https://wellstsai.com/single-page-conclusion/Mac%E9%81%8A%E6%88%B2%E5%85%BC%E5%AE%B9%E6%80%A7%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
 - [Netflix自由與責任文化指南](https://wellstsai.com/single-page-conclusion/Netflix%E8%87%AA%E7%94%B1%E8%88%87%E8%B2%AC%E4%BB%BB%E6%96%87%E5%8C%96%E6%8C%87%E5%8D%97.html)
-- [Overfitting-Regularization-Occam's Razor](https://wellstsai.com/single-page-conclusion/Overfitting-Regularization-Occam%27s%20Razor.html)
+- [Overfitting-Regularization-and-Occams-Razor](https://wellstsai.com/single-page-conclusion/Overfitting-Regularization-and-Occams-Razor.html)
 - [PCB阻抗控制-原理-設計與測試](https://wellstsai.com/single-page-conclusion/PCB%E9%98%BB%E6%8A%97%E6%8E%A7%E5%88%B6-%E5%8E%9F%E7%90%86-%E8%A8%AD%E8%A8%88%E8%88%87%E6%B8%AC%E8%A9%A6.html)
 - [PNG格式演進](https://wellstsai.com/single-page-conclusion/PNG%E6%A0%BC%E5%BC%8F%E6%BC%94%E9%80%B2.html)
 - [Panasonic-無陽極電池-技術-原理-展望](https://wellstsai.com/single-page-conclusion/Panasonic-%E7%84%A1%E9%99%BD%E6%A5%B5%E9%9B%BB%E6%B1%A0-%E6%8A%80%E8%A1%93-%E5%8E%9F%E7%90%86-%E5%B1%95%E6%9C%9B.html)
 - [Perplexity Comet：代理式瀏覽新時代](https://wellstsai.com/single-page-conclusion/Perplexity%20Comet%EF%BC%9A%E4%BB%A3%E7%90%86%E5%BC%8F%E7%80%8F%E8%A6%BD%E6%96%B0%E6%99%82%E4%BB%A3.html)
 - [Perplexity vs. ChatGPT：終極比較與選擇指南](https://wellstsai.com/single-page-conclusion/Perplexity%20vs.%20ChatGPT%EF%BC%9A%E7%B5%82%E6%A5%B5%E6%AF%94%E8%BC%83%E8%88%87%E9%81%B8%E6%93%87%E6%8C%87%E5%8D%97.html)
-- [Perplexity對決Google Chrome](https://wellstsai.com/single-page-conclusion/Perplexity%E5%B0%8D%E6%B1%BAGoogle%20Chrome.html)
+- [Perplexity挑戰Google-Chrome收購戰與反壟斷風暴](https://wellstsai.com/single-page-conclusion/Perplexity%E6%8C%91%E6%88%B0Google-Chrome%E6%94%B6%E8%B3%BC%E6%88%B0%E8%88%87%E5%8F%8D%E5%A3%9F%E6%96%B7%E9%A2%A8%E6%9A%B4.html)
 - [Pixel 10 Pro XL 耐用度報告](https://wellstsai.com/single-page-conclusion/Pixel%2010%20Pro%20XL%20%E8%80%90%E7%94%A8%E5%BA%A6%E5%A0%B1%E5%91%8A.html)
 - [PyArmor教學-加密保護.授權啟用與部署疑難排解](https://wellstsai.com/single-page-conclusion/PyArmor%E6%95%99%E5%AD%B8-%E5%8A%A0%E5%AF%86%E4%BF%9D%E8%AD%B7.%E6%8E%88%E6%AC%8A%E5%95%9F%E7%94%A8%E8%88%87%E9%83%A8%E7%BD%B2%E7%96%91%E9%9B%A3%E6%8E%92%E8%A7%A3.html)
 - [QR碼技術解析](https://wellstsai.com/single-page-conclusion/QR%E7%A2%BC%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
