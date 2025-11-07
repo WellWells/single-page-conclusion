@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-07 08:42:36Z
+更新日期：2025-11-07 14:43:21Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025-AHA-成人基礎生命支持-BLS-指南](https://wellstsai.com/single-page-conclusion/2025-AHA-%E6%88%90%E4%BA%BA%E5%9F%BA%E7%A4%8E%E7%94%9F%E5%91%BD%E6%94%AF%E6%8C%81-BLS-%E6%8C%87%E5%8D%97.html)
@@ -36,6 +36,7 @@
 - [Dyson.HushJet.Purifier.性能分析](https://wellstsai.com/single-page-conclusion/Dyson.HushJet.Purifier.%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.html)
 - [FFT實務完整指南-從取樣到頻譜解析](https://wellstsai.com/single-page-conclusion/FFT%E5%AF%A6%E5%8B%99%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97-%E5%BE%9E%E5%8F%96%E6%A8%A3%E5%88%B0%E9%A0%BB%E8%AD%9C%E8%A7%A3%E6%9E%90.html)
 - [FR-4高頻電路設計-50歐姆阻抗控制指南](https://wellstsai.com/single-page-conclusion/FR-4%E9%AB%98%E9%A0%BB%E9%9B%BB%E8%B7%AF%E8%A8%AD%E8%A8%88-50%E6%AD%90%E5%A7%86%E9%98%BB%E6%8A%97%E6%8E%A7%E5%88%B6%E6%8C%87%E5%8D%97.html)
+- [GNU-Linux-系統組件-核心-啟動與行程管理](https://wellstsai.com/single-page-conclusion/GNU-Linux-%E7%B3%BB%E7%B5%B1%E7%B5%84%E4%BB%B6-%E6%A0%B8%E5%BF%83-%E5%95%9F%E5%8B%95%E8%88%87%E8%A1%8C%E7%A8%8B%E7%AE%A1%E7%90%86.html)
 - [Game-Achievement-Systems-History-Design-Philosophy](https://wellstsai.com/single-page-conclusion/Game-Achievement-Systems-History-Design-Philosophy.html)
 - [Geedge洩漏事件報告-防火長城技術的全球擴散](https://wellstsai.com/single-page-conclusion/Geedge%E6%B4%A9%E6%BC%8F%E4%BA%8B%E4%BB%B6%E5%A0%B1%E5%91%8A-%E9%98%B2%E7%81%AB%E9%95%B7%E5%9F%8E%E6%8A%80%E8%A1%93%E7%9A%84%E5%85%A8%E7%90%83%E6%93%B4%E6%95%A3.html)
 - [Git for Windows 中文亂碼解決方案總覽](https://wellstsai.com/single-page-conclusion/Git%20for%20Windows%20%E4%B8%AD%E6%96%87%E4%BA%82%E7%A2%BC%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%E7%B8%BD%E8%A6%BD.html)
@@ -81,6 +82,7 @@
 - [UWB汽車技術-數位鑰匙-座艙感測與高解析音訊](https://wellstsai.com/single-page-conclusion/UWB%E6%B1%BD%E8%BB%8A%E6%8A%80%E8%A1%93-%E6%95%B8%E4%BD%8D%E9%91%B0%E5%8C%99-%E5%BA%A7%E8%89%99%E6%84%9F%E6%B8%AC%E8%88%87%E9%AB%98%E8%A7%A3%E6%9E%90%E9%9F%B3%E8%A8%8A.html)
 - [UWB測距技術深度解析：相干與非相干平均的權衡與未來趨勢](https://wellstsai.com/single-page-conclusion/UWB%E6%B8%AC%E8%B7%9D%E6%8A%80%E8%A1%93%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90%EF%BC%9A%E7%9B%B8%E5%B9%B2%E8%88%87%E9%9D%9E%E7%9B%B8%E5%B9%B2%E5%B9%B3%E5%9D%87%E7%9A%84%E6%AC%8A%E8%A1%A1%E8%88%87%E6%9C%AA%E4%BE%86%E8%B6%A8%E5%8B%A2.html)
 - [UWB超寬頻技術-精準定位與雷達感測](https://wellstsai.com/single-page-conclusion/UWB%E8%B6%85%E5%AF%AC%E9%A0%BB%E6%8A%80%E8%A1%93-%E7%B2%BE%E6%BA%96%E5%AE%9A%E4%BD%8D%E8%88%87%E9%9B%B7%E9%81%94%E6%84%9F%E6%B8%AC.html)
+- [UWB雷達心率監測-遷移學習方法](https://wellstsai.com/single-page-conclusion/UWB%E9%9B%B7%E9%81%94%E5%BF%83%E7%8E%87%E7%9B%A3%E6%B8%AC-%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92%E6%96%B9%E6%B3%95.html)
 - [WRT54G-開源傳奇-Linux核心-GPL事件](https://wellstsai.com/single-page-conclusion/WRT54G-%E9%96%8B%E6%BA%90%E5%82%B3%E5%A5%87-Linux%E6%A0%B8%E5%BF%83-GPL%E4%BA%8B%E4%BB%B6.html)
 - [WebAssembly典範轉移-Wasm-2.0與3.0的戰略比較](https://wellstsai.com/single-page-conclusion/WebAssembly%E5%85%B8%E7%AF%84%E8%BD%89%E7%A7%BB-Wasm-2.0%E8%88%873.0%E7%9A%84%E6%88%B0%E7%95%A5%E6%AF%94%E8%BC%83.html)
 - [Why-Everything-Became-a-Gamble-Sports-Apps-Finance](https://wellstsai.com/single-page-conclusion/Why-Everything-Became-a-Gamble-Sports-Apps-Finance.html)
@@ -220,6 +222,7 @@
 - [酷澎台灣市場攻略-資本遊戲與飛輪效應](https://wellstsai.com/single-page-conclusion/%E9%85%B7%E6%BE%8E%E5%8F%B0%E7%81%A3%E5%B8%82%E5%A0%B4%E6%94%BB%E7%95%A5-%E8%B3%87%E6%9C%AC%E9%81%8A%E6%88%B2%E8%88%87%E9%A3%9B%E8%BC%AA%E6%95%88%E6%87%89.html)
 - [重構的兩難-程式碼與商業的拉鋸](https://wellstsai.com/single-page-conclusion/%E9%87%8D%E6%A7%8B%E7%9A%84%E5%85%A9%E9%9B%A3-%E7%A8%8B%E5%BC%8F%E7%A2%BC%E8%88%87%E5%95%86%E6%A5%AD%E7%9A%84%E6%8B%89%E9%8B%B8.html)
 - [針眼整合指南-病因-處置與預防](https://wellstsai.com/single-page-conclusion/%E9%87%9D%E7%9C%BC%E6%95%B4%E5%90%88%E6%8C%87%E5%8D%97-%E7%97%85%E5%9B%A0-%E8%99%95%E7%BD%AE%E8%88%87%E9%A0%90%E9%98%B2.html)
+- [關於人體的50個驚人事實](https://wellstsai.com/single-page-conclusion/%E9%97%9C%E6%96%BC%E4%BA%BA%E9%AB%94%E7%9A%8450%E5%80%8B%E9%A9%9A%E4%BA%BA%E4%BA%8B%E5%AF%A6.html)
 - [阻抗匹配與波德-法諾極限-訊號傳輸原理與物理約束](https://wellstsai.com/single-page-conclusion/%E9%98%BB%E6%8A%97%E5%8C%B9%E9%85%8D%E8%88%87%E6%B3%A2%E5%BE%B7-%E6%B3%95%E8%AB%BE%E6%A5%B5%E9%99%90-%E8%A8%8A%E8%99%9F%E5%82%B3%E8%BC%B8%E5%8E%9F%E7%90%86%E8%88%87%E7%89%A9%E7%90%86%E7%B4%84%E6%9D%9F.html)
 - [阿姆斯壯極限-定義-體液沸騰與生存關鍵](https://wellstsai.com/single-page-conclusion/%E9%98%BF%E5%A7%86%E6%96%AF%E5%A3%AF%E6%A5%B5%E9%99%90-%E5%AE%9A%E7%BE%A9-%E9%AB%94%E6%B6%B2%E6%B2%B8%E9%A8%B0%E8%88%87%E7%94%9F%E5%AD%98%E9%97%9C%E9%8D%B5.html)
 - [降低AI幻覺風險.評估機制改良與信心目標設計](https://wellstsai.com/single-page-conclusion/%E9%99%8D%E4%BD%8EAI%E5%B9%BB%E8%A6%BA%E9%A2%A8%E9%9A%AA.%E8%A9%95%E4%BC%B0%E6%A9%9F%E5%88%B6%E6%94%B9%E8%89%AF%E8%88%87%E4%BF%A1%E5%BF%83%E7%9B%AE%E6%A8%99%E8%A8%AD%E8%A8%88.html)
