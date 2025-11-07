@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-07 14:46:06Z
+更新日期：2025-11-07 15:27:09Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025-AHA-成人基礎生命支持-BLS-指南](https://wellstsai.com/single-page-conclusion/2025-AHA-%E6%88%90%E4%BA%BA%E5%9F%BA%E7%A4%8E%E7%94%9F%E5%91%BD%E6%94%AF%E6%8C%81-BLS-%E6%8C%87%E5%8D%97.html)
@@ -77,6 +77,7 @@
 - [Techno-Frontier-2025-電解電容創新技術戰略分析](https://wellstsai.com/single-page-conclusion/Techno-Frontier-2025-%E9%9B%BB%E8%A7%A3%E9%9B%BB%E5%AE%B9%E5%89%B5%E6%96%B0%E6%8A%80%E8%A1%93%E6%88%B0%E7%95%A5%E5%88%86%E6%9E%90.html)
 - [TypeScript之父Anders-Hejlsberg訪談-10倍Go效能與AI重塑開發](https://wellstsai.com/single-page-conclusion/TypeScript%E4%B9%8B%E7%88%B6Anders-Hejlsberg%E8%A8%AA%E8%AB%87-10%E5%80%8DGo%E6%95%88%E8%83%BD%E8%88%87AI%E9%87%8D%E5%A1%91%E9%96%8B%E7%99%BC.html)
 - [USB-PD-3-2-AVS-快充技術深度解析](https://wellstsai.com/single-page-conclusion/USB-PD-3-2-AVS-%E5%BF%AB%E5%85%85%E6%8A%80%E8%A1%93%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
+- [UWB技術-安全存取-Aliro標準-Time-of-Flight](https://wellstsai.com/single-page-conclusion/UWB%E6%8A%80%E8%A1%93-%E5%AE%89%E5%85%A8%E5%AD%98%E5%8F%96-Aliro%E6%A8%99%E6%BA%96-Time-of-Flight.html)
 - [UWB是什麼-公分級精準定位技術-優勢與應用比較](https://wellstsai.com/single-page-conclusion/UWB%E6%98%AF%E4%BB%80%E9%BA%BC-%E5%85%AC%E5%88%86%E7%B4%9A%E7%B2%BE%E6%BA%96%E5%AE%9A%E4%BD%8D%E6%8A%80%E8%A1%93-%E5%84%AA%E5%8B%A2%E8%88%87%E6%87%89%E7%94%A8%E6%AF%94%E8%BC%83.html)
 - [UWB智慧型手機技術-應用案例分析](https://wellstsai.com/single-page-conclusion/UWB%E6%99%BA%E6%85%A7%E5%9E%8B%E6%89%8B%E6%A9%9F%E6%8A%80%E8%A1%93-%E6%87%89%E7%94%A8%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90.html)
 - [UWB汽車技術-數位鑰匙-座艙感測與高解析音訊](https://wellstsai.com/single-page-conclusion/UWB%E6%B1%BD%E8%BB%8A%E6%8A%80%E8%A1%93-%E6%95%B8%E4%BD%8D%E9%91%B0%E5%8C%99-%E5%BA%A7%E8%89%99%E6%84%9F%E6%B8%AC%E8%88%87%E9%AB%98%E8%A7%A3%E6%9E%90%E9%9F%B3%E8%A8%8A.html)
@@ -236,4 +237,5 @@
 - [馬斯克的五大願景.Optimus.AI.星艦.星鏈與文明未來](https://wellstsai.com/single-page-conclusion/%E9%A6%AC%E6%96%AF%E5%85%8B%E7%9A%84%E4%BA%94%E5%A4%A7%E9%A1%98%E6%99%AF.Optimus.AI.%E6%98%9F%E8%89%A6.%E6%98%9F%E9%8F%88%E8%88%87%E6%96%87%E6%98%8E%E6%9C%AA%E4%BE%86.html)
 - [馬達加斯加-奇幻生態與現實衝擊之旅](https://wellstsai.com/single-page-conclusion/%E9%A6%AC%E9%81%94%E5%8A%A0%E6%96%AF%E5%8A%A0-%E5%A5%87%E5%B9%BB%E7%94%9F%E6%85%8B%E8%88%87%E7%8F%BE%E5%AF%A6%E8%A1%9D%E6%93%8A%E4%B9%8B%E6%97%85.html)
 - [駕馭職場人臉辨識爭議](https://wellstsai.com/single-page-conclusion/%E9%A7%95%E9%A6%AD%E8%81%B7%E5%A0%B4%E4%BA%BA%E8%87%89%E8%BE%A8%E8%AD%98%E7%88%AD%E8%AD%B0.html)
+- [高效衛星鏈路設計-鏈路預算分析實務](https://wellstsai.com/single-page-conclusion/%E9%AB%98%E6%95%88%E8%A1%9B%E6%98%9F%E9%8F%88%E8%B7%AF%E8%A8%AD%E8%A8%88-%E9%8F%88%E8%B7%AF%E9%A0%90%E7%AE%97%E5%88%86%E6%9E%90%E5%AF%A6%E5%8B%99.html)
 - [高雄淹水模式分析](https://wellstsai.com/single-page-conclusion/%E9%AB%98%E9%9B%84%E6%B7%B9%E6%B0%B4%E6%A8%A1%E5%BC%8F%E5%88%86%E6%9E%90.html)
