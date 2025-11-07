@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-06 17:46:28Z
+更新日期：2025-11-07 08:42:36Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025-AHA-成人基礎生命支持-BLS-指南](https://wellstsai.com/single-page-conclusion/2025-AHA-%E6%88%90%E4%BA%BA%E5%9F%BA%E7%A4%8E%E7%94%9F%E5%91%BD%E6%94%AF%E6%8C%81-BLS-%E6%8C%87%E5%8D%97.html)
@@ -74,6 +74,7 @@
 - [Tailscale-Peer-Relays-設定指南-高效能中繼與應用場景](https://wellstsai.com/single-page-conclusion/Tailscale-Peer-Relays-%E8%A8%AD%E5%AE%9A%E6%8C%87%E5%8D%97-%E9%AB%98%E6%95%88%E8%83%BD%E4%B8%AD%E7%B9%BC%E8%88%87%E6%87%89%E7%94%A8%E5%A0%B4%E6%99%AF.html)
 - [Tailscale-Services-介紹-內網的智慧負載均衡](https://wellstsai.com/single-page-conclusion/Tailscale-Services-%E4%BB%8B%E7%B4%B9-%E5%85%A7%E7%B6%B2%E7%9A%84%E6%99%BA%E6%85%A7%E8%B2%A0%E8%BC%89%E5%9D%87%E8%A1%A1.html)
 - [Techno-Frontier-2025-電解電容創新技術戰略分析](https://wellstsai.com/single-page-conclusion/Techno-Frontier-2025-%E9%9B%BB%E8%A7%A3%E9%9B%BB%E5%AE%B9%E5%89%B5%E6%96%B0%E6%8A%80%E8%A1%93%E6%88%B0%E7%95%A5%E5%88%86%E6%9E%90.html)
+- [TypeScript之父Anders-Hejlsberg訪談-10倍Go效能與AI重塑開發](https://wellstsai.com/single-page-conclusion/TypeScript%E4%B9%8B%E7%88%B6Anders-Hejlsberg%E8%A8%AA%E8%AB%87-10%E5%80%8DGo%E6%95%88%E8%83%BD%E8%88%87AI%E9%87%8D%E5%A1%91%E9%96%8B%E7%99%BC.html)
 - [USB-PD-3-2-AVS-快充技術深度解析](https://wellstsai.com/single-page-conclusion/USB-PD-3-2-AVS-%E5%BF%AB%E5%85%85%E6%8A%80%E8%A1%93%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
 - [UWB是什麼-公分級精準定位技術-優勢與應用比較](https://wellstsai.com/single-page-conclusion/UWB%E6%98%AF%E4%BB%80%E9%BA%BC-%E5%85%AC%E5%88%86%E7%B4%9A%E7%B2%BE%E6%BA%96%E5%AE%9A%E4%BD%8D%E6%8A%80%E8%A1%93-%E5%84%AA%E5%8B%A2%E8%88%87%E6%87%89%E7%94%A8%E6%AF%94%E8%BC%83.html)
 - [UWB智慧型手機技術-應用案例分析](https://wellstsai.com/single-page-conclusion/UWB%E6%99%BA%E6%85%A7%E5%9E%8B%E6%89%8B%E6%A9%9F%E6%8A%80%E8%A1%93-%E6%87%89%E7%94%A8%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90.html)
