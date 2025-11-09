@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-08 14:00:41Z
+更新日期：2025-11-09 18:35:23Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025-AHA-成人基礎生命支持-BLS-指南](https://wellstsai.com/single-page-conclusion/2025-AHA-%E6%88%90%E4%BA%BA%E5%9F%BA%E7%A4%8E%E7%94%9F%E5%91%BD%E6%94%AF%E6%8C%81-BLS-%E6%8C%87%E5%8D%97.html)
@@ -136,6 +136,7 @@
 - [品牌命名的語言科學-語音象徵的影響](https://wellstsai.com/single-page-conclusion/%E5%93%81%E7%89%8C%E5%91%BD%E5%90%8D%E7%9A%84%E8%AA%9E%E8%A8%80%E7%A7%91%E5%AD%B8-%E8%AA%9E%E9%9F%B3%E8%B1%A1%E5%BE%B5%E7%9A%84%E5%BD%B1%E9%9F%BF.html)
 - [圓極化天線-原理-測量與關鍵指標](https://wellstsai.com/single-page-conclusion/%E5%9C%93%E6%A5%B5%E5%8C%96%E5%A4%A9%E7%B7%9A-%E5%8E%9F%E7%90%86-%E6%B8%AC%E9%87%8F%E8%88%87%E9%97%9C%E9%8D%B5%E6%8C%87%E6%A8%99.html)
 - [壓縮感知-理論基礎與雷達參數估計](https://wellstsai.com/single-page-conclusion/%E5%A3%93%E7%B8%AE%E6%84%9F%E7%9F%A5-%E7%90%86%E8%AB%96%E5%9F%BA%E7%A4%8E%E8%88%87%E9%9B%B7%E9%81%94%E5%8F%83%E6%95%B8%E4%BC%B0%E8%A8%88.html)
+- [多可比-Dokkaebi是什麼-韓國鬼怪的傳統神話與現代演繹](https://wellstsai.com/single-page-conclusion/%E5%A4%9A%E5%8F%AF%E6%AF%94-Dokkaebi%E6%98%AF%E4%BB%80%E9%BA%BC-%E9%9F%93%E5%9C%8B%E9%AC%BC%E6%80%AA%E7%9A%84%E5%82%B3%E7%B5%B1%E7%A5%9E%E8%A9%B1%E8%88%87%E7%8F%BE%E4%BB%A3%E6%BC%94%E7%B9%B9.html)
 - [夜班保全工作心得分享](https://wellstsai.com/single-page-conclusion/%E5%A4%9C%E7%8F%AD%E4%BF%9D%E5%85%A8%E5%B7%A5%E4%BD%9C%E5%BF%83%E5%BE%97%E5%88%86%E4%BA%AB.html)
 - [天線互耦-MIMO雷達-性能影響](https://wellstsai.com/single-page-conclusion/%E5%A4%A9%E7%B7%9A%E4%BA%92%E8%80%A6-MIMO%E9%9B%B7%E9%81%94-%E6%80%A7%E8%83%BD%E5%BD%B1%E9%9F%BF.html)
 - [天線原理-從電磁波到無線通訊的基礎](https://wellstsai.com/single-page-conclusion/%E5%A4%A9%E7%B7%9A%E5%8E%9F%E7%90%86-%E5%BE%9E%E9%9B%BB%E7%A3%81%E6%B3%A2%E5%88%B0%E7%84%A1%E7%B7%9A%E9%80%9A%E8%A8%8A%E7%9A%84%E5%9F%BA%E7%A4%8E.html)
@@ -152,7 +153,9 @@
 - [工程師職涯架構學：打造你的技術影響力藍圖](https://wellstsai.com/single-page-conclusion/%E5%B7%A5%E7%A8%8B%E5%B8%AB%E8%81%B7%E6%B6%AF%E6%9E%B6%E6%A7%8B%E5%AD%B8%EF%BC%9A%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E6%8A%80%E8%A1%93%E5%BD%B1%E9%9F%BF%E5%8A%9B%E8%97%8D%E5%9C%96.html)
 - [廚房微塑膠風險-科學減量指南](https://wellstsai.com/single-page-conclusion/%E5%BB%9A%E6%88%BF%E5%BE%AE%E5%A1%91%E8%86%A0%E9%A2%A8%E9%9A%AA-%E7%A7%91%E5%AD%B8%E6%B8%9B%E9%87%8F%E6%8C%87%E5%8D%97.html)
 - [影像煉金術-模糊與銳化為何產生圖靈模式](https://wellstsai.com/single-page-conclusion/%E5%BD%B1%E5%83%8F%E7%85%89%E9%87%91%E8%A1%93-%E6%A8%A1%E7%B3%8A%E8%88%87%E9%8A%B3%E5%8C%96%E7%82%BA%E4%BD%95%E7%94%A2%E7%94%9F%E5%9C%96%E9%9D%88%E6%A8%A1%E5%BC%8F.html)
+- [從鎖匠的謎題到公鑰加密](https://wellstsai.com/single-page-conclusion/%E5%BE%9E%E9%8E%96%E5%8C%A0%E7%9A%84%E8%AC%8E%E9%A1%8C%E5%88%B0%E5%85%AC%E9%91%B0%E5%8A%A0%E5%AF%86.html)
 - [微爆流-成因-威脅與台灣應對策略](https://wellstsai.com/single-page-conclusion/%E5%BE%AE%E7%88%86%E6%B5%81-%E6%88%90%E5%9B%A0-%E5%A8%81%E8%84%85%E8%88%87%E5%8F%B0%E7%81%A3%E6%87%89%E5%B0%8D%E7%AD%96%E7%95%A5.html)
+- [快充與電池壽命-長期實測](https://wellstsai.com/single-page-conclusion/%E5%BF%AB%E5%85%85%E8%88%87%E9%9B%BB%E6%B1%A0%E5%A3%BD%E5%91%BD-%E9%95%B7%E6%9C%9F%E5%AF%A6%E6%B8%AC.html)
 - [手機天線演進史-從磚塊到邊框的訊號革命](https://wellstsai.com/single-page-conclusion/%E6%89%8B%E6%A9%9F%E5%A4%A9%E7%B7%9A%E6%BC%94%E9%80%B2%E5%8F%B2-%E5%BE%9E%E7%A3%9A%E5%A1%8A%E5%88%B0%E9%82%8A%E6%A1%86%E7%9A%84%E8%A8%8A%E8%99%9F%E9%9D%A9%E5%91%BD.html)
 - [找出您的主力眼](https://wellstsai.com/single-page-conclusion/%E6%89%BE%E5%87%BA%E6%82%A8%E7%9A%84%E4%B8%BB%E5%8A%9B%E7%9C%BC.html)
 - [探索多語言專案的奧秘](https://wellstsai.com/single-page-conclusion/%E6%8E%A2%E7%B4%A2%E5%A4%9A%E8%AA%9E%E8%A8%80%E5%B0%88%E6%A1%88%E7%9A%84%E5%A5%A7%E7%A7%98.html)
@@ -171,6 +174,7 @@
 - [杏仁酸功效-法規與應用指南](https://wellstsai.com/single-page-conclusion/%E6%9D%8F%E4%BB%81%E9%85%B8%E5%8A%9F%E6%95%88-%E6%B3%95%E8%A6%8F%E8%88%87%E6%87%89%E7%94%A8%E6%8C%87%E5%8D%97.html)
 - [架構師的演進之路-關鍵思維與技能](https://wellstsai.com/single-page-conclusion/%E6%9E%B6%E6%A7%8B%E5%B8%AB%E7%9A%84%E6%BC%94%E9%80%B2%E4%B9%8B%E8%B7%AF-%E9%97%9C%E9%8D%B5%E6%80%9D%E7%B6%AD%E8%88%87%E6%8A%80%E8%83%BD.html)
 - [架構思維-軟體架構師的核心指南](https://wellstsai.com/single-page-conclusion/%E6%9E%B6%E6%A7%8B%E6%80%9D%E7%B6%AD-%E8%BB%9F%E9%AB%94%E6%9E%B6%E6%A7%8B%E5%B8%AB%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8C%87%E5%8D%97.html)
+- [標點符號的演進-從古希臘到數位時代](https://wellstsai.com/single-page-conclusion/%E6%A8%99%E9%BB%9E%E7%AC%A6%E8%99%9F%E7%9A%84%E6%BC%94%E9%80%B2-%E5%BE%9E%E5%8F%A4%E5%B8%8C%E8%87%98%E5%88%B0%E6%95%B8%E4%BD%8D%E6%99%82%E4%BB%A3.html)
 - [機率悖論互動實驗室](https://wellstsai.com/single-page-conclusion/%E6%A9%9F%E7%8E%87%E6%82%96%E8%AB%96%E4%BA%92%E5%8B%95%E5%AF%A6%E9%A9%97%E5%AE%A4.html)
 - [比亞迪Racco-K-Car規格-威脅日本市場](https://wellstsai.com/single-page-conclusion/%E6%AF%94%E4%BA%9E%E8%BF%AARacco-K-Car%E8%A6%8F%E6%A0%BC-%E5%A8%81%E8%84%85%E6%97%A5%E6%9C%AC%E5%B8%82%E5%A0%B4.html)
 - [毫米波傳播特性](https://wellstsai.com/single-page-conclusion/%E6%AF%AB%E7%B1%B3%E6%B3%A2%E5%82%B3%E6%92%AD%E7%89%B9%E6%80%A7.html)
