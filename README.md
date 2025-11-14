@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-12 13:32:50Z
+更新日期：2025-11-14 13:44:07Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025-AHA-成人基礎生命支持-BLS-指南](https://wellstsai.com/single-page-conclusion/2025-AHA-%E6%88%90%E4%BA%BA%E5%9F%BA%E7%A4%8E%E7%94%9F%E5%91%BD%E6%94%AF%E6%8C%81-BLS-%E6%8C%87%E5%8D%97.html)
@@ -158,6 +158,7 @@
 - [寶可夢傳說Z-A-劇情-Mega基格爾德-結局](https://wellstsai.com/single-page-conclusion/%E5%AF%B6%E5%8F%AF%E5%A4%A2%E5%82%B3%E8%AA%AAZ-A-%E5%8A%87%E6%83%85-Mega%E5%9F%BA%E6%A0%BC%E7%88%BE%E5%BE%B7-%E7%B5%90%E5%B1%80.html)
 - [射頻連接器維護-5大關鍵實踐](https://wellstsai.com/single-page-conclusion/%E5%B0%84%E9%A0%BB%E9%80%A3%E6%8E%A5%E5%99%A8%E7%B6%AD%E8%AD%B7-5%E5%A4%A7%E9%97%9C%E9%8D%B5%E5%AF%A6%E8%B8%90.html)
 - [工程師職涯架構學：打造你的技術影響力藍圖](https://wellstsai.com/single-page-conclusion/%E5%B7%A5%E7%A8%8B%E5%B8%AB%E8%81%B7%E6%B6%AF%E6%9E%B6%E6%A7%8B%E5%AD%B8%EF%BC%9A%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E6%8A%80%E8%A1%93%E5%BD%B1%E9%9F%BF%E5%8A%9B%E8%97%8D%E5%9C%96.html)
+- [工程真菌-以香氣誘殺蚊蟲的新世代生物防治](https://wellstsai.com/single-page-conclusion/%E5%B7%A5%E7%A8%8B%E7%9C%9F%E8%8F%8C-%E4%BB%A5%E9%A6%99%E6%B0%A3%E8%AA%98%E6%AE%BA%E8%9A%8A%E8%9F%B2%E7%9A%84%E6%96%B0%E4%B8%96%E4%BB%A3%E7%94%9F%E7%89%A9%E9%98%B2%E6%B2%BB.html)
 - [廚房微塑膠風險-科學減量指南](https://wellstsai.com/single-page-conclusion/%E5%BB%9A%E6%88%BF%E5%BE%AE%E5%A1%91%E8%86%A0%E9%A2%A8%E9%9A%AA-%E7%A7%91%E5%AD%B8%E6%B8%9B%E9%87%8F%E6%8C%87%E5%8D%97.html)
 - [影像煉金術-模糊與銳化為何產生圖靈模式](https://wellstsai.com/single-page-conclusion/%E5%BD%B1%E5%83%8F%E7%85%89%E9%87%91%E8%A1%93-%E6%A8%A1%E7%B3%8A%E8%88%87%E9%8A%B3%E5%8C%96%E7%82%BA%E4%BD%95%E7%94%A2%E7%94%9F%E5%9C%96%E9%9D%88%E6%A8%A1%E5%BC%8F.html)
 - [從鎖匠的謎題到公鑰加密](https://wellstsai.com/single-page-conclusion/%E5%BE%9E%E9%8E%96%E5%8C%A0%E7%9A%84%E8%AC%8E%E9%A1%8C%E5%88%B0%E5%85%AC%E9%91%B0%E5%8A%A0%E5%AF%86.html)
@@ -230,11 +231,13 @@
 - [記憶體完整性強制執行](https://wellstsai.com/single-page-conclusion/%E8%A8%98%E6%86%B6%E9%AB%94%E5%AE%8C%E6%95%B4%E6%80%A7%E5%BC%B7%E5%88%B6%E5%9F%B7%E8%A1%8C.html)
 - [護照申辦-換發-地點-文件-流程全攻略](https://wellstsai.com/single-page-conclusion/%E8%AD%B7%E7%85%A7%E7%94%B3%E8%BE%A6-%E6%8F%9B%E7%99%BC-%E5%9C%B0%E9%BB%9E-%E6%96%87%E4%BB%B6-%E6%B5%81%E7%A8%8B%E5%85%A8%E6%94%BB%E7%95%A5.html)
 - [貓的馴化史-從野性殺手到家中萌寵](https://wellstsai.com/single-page-conclusion/%E8%B2%93%E7%9A%84%E9%A6%B4%E5%8C%96%E5%8F%B2-%E5%BE%9E%E9%87%8E%E6%80%A7%E6%AE%BA%E6%89%8B%E5%88%B0%E5%AE%B6%E4%B8%AD%E8%90%8C%E5%AF%B5.html)
+- [貓科動物全解析-史前巨獸到家貓品種介紹](https://wellstsai.com/single-page-conclusion/%E8%B2%93%E7%A7%91%E5%8B%95%E7%89%A9%E5%85%A8%E8%A7%A3%E6%9E%90-%E5%8F%B2%E5%89%8D%E5%B7%A8%E7%8D%B8%E5%88%B0%E5%AE%B6%E8%B2%93%E5%93%81%E7%A8%AE%E4%BB%8B%E7%B4%B9.html)
 - [赤潮成因-衝擊與治理-改性黏土技術](https://wellstsai.com/single-page-conclusion/%E8%B5%A4%E6%BD%AE%E6%88%90%E5%9B%A0-%E8%A1%9D%E6%93%8A%E8%88%87%E6%B2%BB%E7%90%86-%E6%94%B9%E6%80%A7%E9%BB%8F%E5%9C%9F%E6%8A%80%E8%A1%93.html)
 - [起司選購指南](https://wellstsai.com/single-page-conclusion/%E8%B5%B7%E5%8F%B8%E9%81%B8%E8%B3%BC%E6%8C%87%E5%8D%97.html)
 - [車用座艙內雷達技術指南](https://wellstsai.com/single-page-conclusion/%E8%BB%8A%E7%94%A8%E5%BA%A7%E8%89%99%E5%85%A7%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%8C%87%E5%8D%97.html)
 - [軟體架構為何重要](https://wellstsai.com/single-page-conclusion/%E8%BB%9F%E9%AB%94%E6%9E%B6%E6%A7%8B%E7%82%BA%E4%BD%95%E9%87%8D%E8%A6%81.html)
 - [軟體架構的核心-四大維度與決策](https://wellstsai.com/single-page-conclusion/%E8%BB%9F%E9%AB%94%E6%9E%B6%E6%A7%8B%E7%9A%84%E6%A0%B8%E5%BF%83-%E5%9B%9B%E5%A4%A7%E7%B6%AD%E5%BA%A6%E8%88%87%E6%B1%BA%E7%AD%96.html)
+- [軟體開發-AI泡沫下的真實趨勢](https://wellstsai.com/single-page-conclusion/%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC-AI%E6%B3%A1%E6%B2%AB%E4%B8%8B%E7%9A%84%E7%9C%9F%E5%AF%A6%E8%B6%A8%E5%8B%A2.html)
 - [軟體開發的焦慮與反思-大道至簡](https://wellstsai.com/single-page-conclusion/%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC%E7%9A%84%E7%84%A6%E6%85%AE%E8%88%87%E5%8F%8D%E6%80%9D-%E5%A4%A7%E9%81%93%E8%87%B3%E7%B0%A1.html)
 - [軟體開發職涯洞察](https://wellstsai.com/single-page-conclusion/%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC%E8%81%B7%E6%B6%AF%E6%B4%9E%E5%AF%9F.html)
 - [輝達-Vera-Rubin-超級晶片-剖析次世代-AI-工廠](https://wellstsai.com/single-page-conclusion/%E8%BC%9D%E9%81%94-Vera-Rubin-%E8%B6%85%E7%B4%9A%E6%99%B6%E7%89%87-%E5%89%96%E6%9E%90%E6%AC%A1%E4%B8%96%E4%BB%A3-AI-%E5%B7%A5%E5%BB%A0.html)
@@ -257,6 +260,7 @@
 - [雷達方程式核心概念](https://wellstsai.com/single-page-conclusion/%E9%9B%B7%E9%81%94%E6%96%B9%E7%A8%8B%E5%BC%8F%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5.html)
 - [電到底跑多快-區分漂移速度與訊號傳播](https://wellstsai.com/single-page-conclusion/%E9%9B%BB%E5%88%B0%E5%BA%95%E8%B7%91%E5%A4%9A%E5%BF%AB-%E5%8D%80%E5%88%86%E6%BC%82%E7%A7%BB%E9%80%9F%E5%BA%A6%E8%88%87%E8%A8%8A%E8%99%9F%E5%82%B3%E6%92%AD.html)
 - [電天線與磁天線-理論-進展與展望](https://wellstsai.com/single-page-conclusion/%E9%9B%BB%E5%A4%A9%E7%B7%9A%E8%88%87%E7%A3%81%E5%A4%A9%E7%B7%9A-%E7%90%86%E8%AB%96-%E9%80%B2%E5%B1%95%E8%88%87%E5%B1%95%E6%9C%9B.html)
+- [電腦科學術語考古學-常見用詞的起源](https://wellstsai.com/single-page-conclusion/%E9%9B%BB%E8%85%A6%E7%A7%91%E5%AD%B8%E8%A1%93%E8%AA%9E%E8%80%83%E5%8F%A4%E5%AD%B8-%E5%B8%B8%E8%A6%8B%E7%94%A8%E8%A9%9E%E7%9A%84%E8%B5%B7%E6%BA%90.html)
 - [香蕉市場狂熱-1929年大崩盤始末](https://wellstsai.com/single-page-conclusion/%E9%A6%99%E8%95%89%E5%B8%82%E5%A0%B4%E7%8B%82%E7%86%B1-1929%E5%B9%B4%E5%A4%A7%E5%B4%A9%E7%9B%A4%E5%A7%8B%E6%9C%AB.html)
 - [馬斯克的五大願景.Optimus.AI.星艦.星鏈與文明未來](https://wellstsai.com/single-page-conclusion/%E9%A6%AC%E6%96%AF%E5%85%8B%E7%9A%84%E4%BA%94%E5%A4%A7%E9%A1%98%E6%99%AF.Optimus.AI.%E6%98%9F%E8%89%A6.%E6%98%9F%E9%8F%88%E8%88%87%E6%96%87%E6%98%8E%E6%9C%AA%E4%BE%86.html)
 - [馬達加斯加-奇幻生態與現實衝擊之旅](https://wellstsai.com/single-page-conclusion/%E9%A6%AC%E9%81%94%E5%8A%A0%E6%96%AF%E5%8A%A0-%E5%A5%87%E5%B9%BB%E7%94%9F%E6%85%8B%E8%88%87%E7%8F%BE%E5%AF%A6%E8%A1%9D%E6%93%8A%E4%B9%8B%E6%97%85.html)
