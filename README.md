@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-16 18:53:45Z
+更新日期：2025-11-17 13:19:25Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025-AHA-成人基礎生命支持-BLS-指南](https://wellstsai.com/single-page-conclusion/2025-AHA-%E6%88%90%E4%BA%BA%E5%9F%BA%E7%A4%8E%E7%94%9F%E5%91%BD%E6%94%AF%E6%8C%81-BLS-%E6%8C%87%E5%8D%97.html)
@@ -15,6 +15,7 @@
 - [AI動畫製作-從零到一完整流程教學](https://wellstsai.com/single-page-conclusion/AI%E5%8B%95%E7%95%AB%E8%A3%BD%E4%BD%9C-%E5%BE%9E%E9%9B%B6%E5%88%B0%E4%B8%80%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%E6%95%99%E5%AD%B8.html)
 - [AI審查誤判-Windows 11本機帳號教學影片下架事件](https://wellstsai.com/single-page-conclusion/AI%E5%AF%A9%E6%9F%A5%E8%AA%A4%E5%88%A4-Windows%2011%E6%9C%AC%E6%A9%9F%E5%B8%B3%E8%99%9F%E6%95%99%E5%AD%B8%E5%BD%B1%E7%89%87%E4%B8%8B%E6%9E%B6%E4%BA%8B%E4%BB%B6.html)
 - [AI眼鏡市場-字節跳動動態與競品分析](https://wellstsai.com/single-page-conclusion/AI%E7%9C%BC%E9%8F%A1%E5%B8%82%E5%A0%B4-%E5%AD%97%E7%AF%80%E8%B7%B3%E5%8B%95%E5%8B%95%E6%85%8B%E8%88%87%E7%AB%B6%E5%93%81%E5%88%86%E6%9E%90.html)
+- [AI重塑物理研究-LLM的崛起與應用](https://wellstsai.com/single-page-conclusion/AI%E9%87%8D%E5%A1%91%E7%89%A9%E7%90%86%E7%A0%94%E7%A9%B6-LLM%E7%9A%84%E5%B4%9B%E8%B5%B7%E8%88%87%E6%87%89%E7%94%A8.html)
 - [AI開發-副駕駛與拐杖](https://wellstsai.com/single-page-conclusion/AI%E9%96%8B%E7%99%BC-%E5%89%AF%E9%A7%95%E9%A7%9B%E8%88%87%E6%8B%90%E6%9D%96.html)
 - [AI音樂-Breaking-Rust-事件-真實性-版權與產業挑戰](https://wellstsai.com/single-page-conclusion/AI%E9%9F%B3%E6%A8%82-Breaking-Rust-%E4%BA%8B%E4%BB%B6-%E7%9C%9F%E5%AF%A6%E6%80%A7-%E7%89%88%E6%AC%8A%E8%88%87%E7%94%A2%E6%A5%AD%E6%8C%91%E6%88%B0.html)
 - [Affinity-全面革新-整合三大工作室-永久免費](https://wellstsai.com/single-page-conclusion/Affinity-%E5%85%A8%E9%9D%A2%E9%9D%A9%E6%96%B0-%E6%95%B4%E5%90%88%E4%B8%89%E5%A4%A7%E5%B7%A5%E4%BD%9C%E5%AE%A4-%E6%B0%B8%E4%B9%85%E5%85%8D%E8%B2%BB.html)
@@ -33,12 +34,14 @@
 - [DJI-Osmo-Nano-vs-Insta-Go-Ultra-規格優缺點比較](https://wellstsai.com/single-page-conclusion/DJI-Osmo-Nano-vs-Insta-Go-Ultra-%E8%A6%8F%E6%A0%BC%E5%84%AA%E7%BC%BA%E9%BB%9E%E6%AF%94%E8%BC%83.html)
 - [DNS安全與隱私-威脅與解決方案](https://wellstsai.com/single-page-conclusion/DNS%E5%AE%89%E5%85%A8%E8%88%87%E9%9A%B1%E7%A7%81-%E5%A8%81%E8%84%85%E8%88%87%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88.html)
 - [DOA到達方向估測-演算法原理與比較](https://wellstsai.com/single-page-conclusion/DOA%E5%88%B0%E9%81%94%E6%96%B9%E5%90%91%E4%BC%B0%E6%B8%AC-%E6%BC%94%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%88%87%E6%AF%94%E8%BC%83.html)
+- [DRAM價格飆漲-AI衝擊與DDR4成本反超DDR5](https://wellstsai.com/single-page-conclusion/DRAM%E5%83%B9%E6%A0%BC%E9%A3%86%E6%BC%B2-AI%E8%A1%9D%E6%93%8A%E8%88%87DDR4%E6%88%90%E6%9C%AC%E5%8F%8D%E8%B6%85DDR5.html)
 - [DeFi-踩坑事件分析-三大核心教訓](https://wellstsai.com/single-page-conclusion/DeFi-%E8%B8%A9%E5%9D%91%E4%BA%8B%E4%BB%B6%E5%88%86%E6%9E%90-%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E6%95%99%E8%A8%93.html)
 - [Dolby Vision 2 與 HDR 完整指南](https://wellstsai.com/single-page-conclusion/Dolby%20Vision%202%20%E8%88%87%20HDR%20%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97.html)
 - [Dyson.HushJet.Purifier.性能分析](https://wellstsai.com/single-page-conclusion/Dyson.HushJet.Purifier.%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90.html)
 - [FFT實務完整指南-從取樣到頻譜解析](https://wellstsai.com/single-page-conclusion/FFT%E5%AF%A6%E5%8B%99%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97-%E5%BE%9E%E5%8F%96%E6%A8%A3%E5%88%B0%E9%A0%BB%E8%AD%9C%E8%A7%A3%E6%9E%90.html)
 - [FR-4高頻電路設計-50歐姆阻抗控制指南](https://wellstsai.com/single-page-conclusion/FR-4%E9%AB%98%E9%A0%BB%E9%9B%BB%E8%B7%AF%E8%A8%AD%E8%A8%88-50%E6%AD%90%E5%A7%86%E9%98%BB%E6%8A%97%E6%8E%A7%E5%88%B6%E6%8C%87%E5%8D%97.html)
 - [GNU-Linux-系統組件-核心-啟動與行程管理](https://wellstsai.com/single-page-conclusion/GNU-Linux-%E7%B3%BB%E7%B5%B1%E7%B5%84%E4%BB%B6-%E6%A0%B8%E5%BF%83-%E5%95%9F%E5%8B%95%E8%88%87%E8%A1%8C%E7%A8%8B%E7%AE%A1%E7%90%86.html)
+- [GPT-5-1-實測-基準跑分-vs-開發者體感](https://wellstsai.com/single-page-conclusion/GPT-5-1-%E5%AF%A6%E6%B8%AC-%E5%9F%BA%E6%BA%96%E8%B7%91%E5%88%86-vs-%E9%96%8B%E7%99%BC%E8%80%85%E9%AB%94%E6%84%9F.html)
 - [Game-Achievement-Systems-History-Design-Philosophy](https://wellstsai.com/single-page-conclusion/Game-Achievement-Systems-History-Design-Philosophy.html)
 - [Geedge洩漏事件報告-防火長城技術的全球擴散](https://wellstsai.com/single-page-conclusion/Geedge%E6%B4%A9%E6%BC%8F%E4%BA%8B%E4%BB%B6%E5%A0%B1%E5%91%8A-%E9%98%B2%E7%81%AB%E9%95%B7%E5%9F%8E%E6%8A%80%E8%A1%93%E7%9A%84%E5%85%A8%E7%90%83%E6%93%B4%E6%95%A3.html)
 - [Git for Windows 中文亂碼解決方案總覽](https://wellstsai.com/single-page-conclusion/Git%20for%20Windows%20%E4%B8%AD%E6%96%87%E4%BA%82%E7%A2%BC%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%E7%B8%BD%E8%A6%BD.html)
