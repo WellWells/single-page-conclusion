@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-17 13:19:25Z
+更新日期：2025-11-17 18:19:26Z
 
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
 - [2025-AHA-成人基礎生命支持-BLS-指南](https://wellstsai.com/single-page-conclusion/2025-AHA-%E6%88%90%E4%BA%BA%E5%9F%BA%E7%A4%8E%E7%94%9F%E5%91%BD%E6%94%AF%E6%8C%81-BLS-%E6%8C%87%E5%8D%97.html)
@@ -14,6 +14,7 @@
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
 - [AI動畫製作-從零到一完整流程教學](https://wellstsai.com/single-page-conclusion/AI%E5%8B%95%E7%95%AB%E8%A3%BD%E4%BD%9C-%E5%BE%9E%E9%9B%B6%E5%88%B0%E4%B8%80%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%E6%95%99%E5%AD%B8.html)
 - [AI審查誤判-Windows 11本機帳號教學影片下架事件](https://wellstsai.com/single-page-conclusion/AI%E5%AF%A9%E6%9F%A5%E8%AA%A4%E5%88%A4-Windows%2011%E6%9C%AC%E6%A9%9F%E5%B8%B3%E8%99%9F%E6%95%99%E5%AD%B8%E5%BD%B1%E7%89%87%E4%B8%8B%E6%9E%B6%E4%BA%8B%E4%BB%B6.html)
+- [AI智慧評估的科學-從聰明漢斯到認知科學的啟示](https://wellstsai.com/single-page-conclusion/AI%E6%99%BA%E6%85%A7%E8%A9%95%E4%BC%B0%E7%9A%84%E7%A7%91%E5%AD%B8-%E5%BE%9E%E8%81%B0%E6%98%8E%E6%BC%A2%E6%96%AF%E5%88%B0%E8%AA%8D%E7%9F%A5%E7%A7%91%E5%AD%B8%E7%9A%84%E5%95%9F%E7%A4%BA.html)
 - [AI眼鏡市場-字節跳動動態與競品分析](https://wellstsai.com/single-page-conclusion/AI%E7%9C%BC%E9%8F%A1%E5%B8%82%E5%A0%B4-%E5%AD%97%E7%AF%80%E8%B7%B3%E5%8B%95%E5%8B%95%E6%85%8B%E8%88%87%E7%AB%B6%E5%93%81%E5%88%86%E6%9E%90.html)
 - [AI重塑物理研究-LLM的崛起與應用](https://wellstsai.com/single-page-conclusion/AI%E9%87%8D%E5%A1%91%E7%89%A9%E7%90%86%E7%A0%94%E7%A9%B6-LLM%E7%9A%84%E5%B4%9B%E8%B5%B7%E8%88%87%E6%87%89%E7%94%A8.html)
 - [AI開發-副駕駛與拐杖](https://wellstsai.com/single-page-conclusion/AI%E9%96%8B%E7%99%BC-%E5%89%AF%E9%A7%95%E9%A7%9B%E8%88%87%E6%8B%90%E6%9D%96.html)
@@ -47,6 +48,7 @@
 - [Git for Windows 中文亂碼解決方案總覽](https://wellstsai.com/single-page-conclusion/Git%20for%20Windows%20%E4%B8%AD%E6%96%87%E4%BA%82%E7%A2%BC%E8%A7%A3%E6%B1%BA%E6%96%B9%E6%A1%88%E7%B8%BD%E8%A6%BD.html)
 - [GitHub.Copilot.自訂指令管理](https://wellstsai.com/single-page-conclusion/GitHub.Copilot.%E8%87%AA%E8%A8%82%E6%8C%87%E4%BB%A4%E7%AE%A1%E7%90%86.html)
 - [GitHub黑市-虛假星星與軟體供應鏈安全](https://wellstsai.com/single-page-conclusion/GitHub%E9%BB%91%E5%B8%82-%E8%99%9B%E5%81%87%E6%98%9F%E6%98%9F%E8%88%87%E8%BB%9F%E9%AB%94%E4%BE%9B%E6%87%89%E9%8F%88%E5%AE%89%E5%85%A8.html)
+- [Google-AI-FFmpeg-90天揭露爭議](https://wellstsai.com/single-page-conclusion/Google-AI-FFmpeg-90%E5%A4%A9%E6%8F%AD%E9%9C%B2%E7%88%AD%E8%AD%B0.html)
 - [Grok Code Fast 1 深度分析](https://wellstsai.com/single-page-conclusion/Grok%20Code%20Fast%201%20%E6%B7%B1%E5%BA%A6%E5%88%86%E6%9E%90.html)
 - [IQ取樣詳解-消除雷達相位歧義性的關鍵](https://wellstsai.com/single-page-conclusion/IQ%E5%8F%96%E6%A8%A3%E8%A9%B3%E8%A7%A3-%E6%B6%88%E9%99%A4%E9%9B%B7%E9%81%94%E7%9B%B8%E4%BD%8D%E6%AD%A7%E7%BE%A9%E6%80%A7%E7%9A%84%E9%97%9C%E9%8D%B5.html)
 - [Immich-v2-0-0-自架相片管理-功能-部署與安全](https://wellstsai.com/single-page-conclusion/Immich-v2-0-0-%E8%87%AA%E6%9E%B6%E7%9B%B8%E7%89%87%E7%AE%A1%E7%90%86-%E5%8A%9F%E8%83%BD-%E9%83%A8%E7%BD%B2%E8%88%87%E5%AE%89%E5%85%A8.html)
@@ -133,6 +135,7 @@
 - [共有知識vs公共知識-一句廢話的毀滅性邏輯](https://wellstsai.com/single-page-conclusion/%E5%85%B1%E6%9C%89%E7%9F%A5%E8%AD%98vs%E5%85%AC%E5%85%B1%E7%9F%A5%E8%AD%98-%E4%B8%80%E5%8F%A5%E5%BB%A2%E8%A9%B1%E7%9A%84%E6%AF%80%E6%BB%85%E6%80%A7%E9%82%8F%E8%BC%AF.html)
 - [前端即時更新技術指南](https://wellstsai.com/single-page-conclusion/%E5%89%8D%E7%AB%AF%E5%8D%B3%E6%99%82%E6%9B%B4%E6%96%B0%E6%8A%80%E8%A1%93%E6%8C%87%E5%8D%97.html)
 - [加錯油全解析-92-95-98辛烷值-爆震與補救指南](https://wellstsai.com/single-page-conclusion/%E5%8A%A0%E9%8C%AF%E6%B2%B9%E5%85%A8%E8%A7%A3%E6%9E%90-92-95-98%E8%BE%9B%E7%83%B7%E5%80%BC-%E7%88%86%E9%9C%87%E8%88%87%E8%A3%9C%E6%95%91%E6%8C%87%E5%8D%97.html)
+- [動物方城市2配音爭議-胡尼克換角風波與產業困境](https://wellstsai.com/single-page-conclusion/%E5%8B%95%E7%89%A9%E6%96%B9%E5%9F%8E%E5%B8%822%E9%85%8D%E9%9F%B3%E7%88%AD%E8%AD%B0-%E8%83%A1%E5%B0%BC%E5%85%8B%E6%8F%9B%E8%A7%92%E9%A2%A8%E6%B3%A2%E8%88%87%E7%94%A2%E6%A5%AD%E5%9B%B0%E5%A2%83.html)
 - [卡通渲染(三渲二)技術概覽-輪廓線與賽璐珞光影](https://wellstsai.com/single-page-conclusion/%E5%8D%A1%E9%80%9A%E6%B8%B2%E6%9F%93%28%E4%B8%89%E6%B8%B2%E4%BA%8C%29%E6%8A%80%E8%A1%93%E6%A6%82%E8%A6%BD-%E8%BC%AA%E5%BB%93%E7%B7%9A%E8%88%87%E8%B3%BD%E7%92%90%E7%8F%9E%E5%85%89%E5%BD%B1.html)
 - [即時雷達手勢辨識於邊緣平台之實現](https://wellstsai.com/single-page-conclusion/%E5%8D%B3%E6%99%82%E9%9B%B7%E9%81%94%E6%89%8B%E5%8B%A2%E8%BE%A8%E8%AD%98%E6%96%BC%E9%82%8A%E7%B7%A3%E5%B9%B3%E5%8F%B0%E4%B9%8B%E5%AF%A6%E7%8F%BE.html)
 - [可形變鏡子-自適應光學技術-原理-應用](https://wellstsai.com/single-page-conclusion/%E5%8F%AF%E5%BD%A2%E8%AE%8A%E9%8F%A1%E5%AD%90-%E8%87%AA%E9%81%A9%E6%87%89%E5%85%89%E5%AD%B8%E6%8A%80%E8%A1%93-%E5%8E%9F%E7%90%86-%E6%87%89%E7%94%A8.html)
@@ -164,6 +167,7 @@
 - [射頻連接器維護-5大關鍵實踐](https://wellstsai.com/single-page-conclusion/%E5%B0%84%E9%A0%BB%E9%80%A3%E6%8E%A5%E5%99%A8%E7%B6%AD%E8%AD%B7-5%E5%A4%A7%E9%97%9C%E9%8D%B5%E5%AF%A6%E8%B8%90.html)
 - [工程師職涯架構學：打造你的技術影響力藍圖](https://wellstsai.com/single-page-conclusion/%E5%B7%A5%E7%A8%8B%E5%B8%AB%E8%81%B7%E6%B6%AF%E6%9E%B6%E6%A7%8B%E5%AD%B8%EF%BC%9A%E6%89%93%E9%80%A0%E4%BD%A0%E7%9A%84%E6%8A%80%E8%A1%93%E5%BD%B1%E9%9F%BF%E5%8A%9B%E8%97%8D%E5%9C%96.html)
 - [工程真菌-以香氣誘殺蚊蟲的新世代生物防治](https://wellstsai.com/single-page-conclusion/%E5%B7%A5%E7%A8%8B%E7%9C%9F%E8%8F%8C-%E4%BB%A5%E9%A6%99%E6%B0%A3%E8%AA%98%E6%AE%BA%E8%9A%8A%E8%9F%B2%E7%9A%84%E6%96%B0%E4%B8%96%E4%BB%A3%E7%94%9F%E7%89%A9%E9%98%B2%E6%B2%BB.html)
+- [帶通取樣原理-70MHz中頻與56MHz取樣-頻譜混疊與DDC](https://wellstsai.com/single-page-conclusion/%E5%B8%B6%E9%80%9A%E5%8F%96%E6%A8%A3%E5%8E%9F%E7%90%86-70MHz%E4%B8%AD%E9%A0%BB%E8%88%8756MHz%E5%8F%96%E6%A8%A3-%E9%A0%BB%E8%AD%9C%E6%B7%B7%E7%96%8A%E8%88%87DDC.html)
 - [廚房微塑膠風險-科學減量指南](https://wellstsai.com/single-page-conclusion/%E5%BB%9A%E6%88%BF%E5%BE%AE%E5%A1%91%E8%86%A0%E9%A2%A8%E9%9A%AA-%E7%A7%91%E5%AD%B8%E6%B8%9B%E9%87%8F%E6%8C%87%E5%8D%97.html)
 - [影像煉金術-模糊與銳化為何產生圖靈模式](https://wellstsai.com/single-page-conclusion/%E5%BD%B1%E5%83%8F%E7%85%89%E9%87%91%E8%A1%93-%E6%A8%A1%E7%B3%8A%E8%88%87%E9%8A%B3%E5%8C%96%E7%82%BA%E4%BD%95%E7%94%A2%E7%94%9F%E5%9C%96%E9%9D%88%E6%A8%A1%E5%BC%8F.html)
 - [從鎖匠的謎題到公鑰加密](https://wellstsai.com/single-page-conclusion/%E5%BE%9E%E9%8E%96%E5%8C%A0%E7%9A%84%E8%AC%8E%E9%A1%8C%E5%88%B0%E5%85%AC%E9%91%B0%E5%8A%A0%E5%AF%86.html)
