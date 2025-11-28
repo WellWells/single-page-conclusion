@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-27 12:38:18Z
+更新日期：2025-11-28 09:26:46Z
 
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
@@ -24,6 +24,7 @@
 - [AI重塑物理研究-LLM的崛起與應用](https://wellstsai.com/single-page-conclusion/AI%E9%87%8D%E5%A1%91%E7%89%A9%E7%90%86%E7%A0%94%E7%A9%B6-LLM%E7%9A%84%E5%B4%9B%E8%B5%B7%E8%88%87%E6%87%89%E7%94%A8.html)
 - [AI開發-副駕駛與拐杖](https://wellstsai.com/single-page-conclusion/AI%E9%96%8B%E7%99%BC-%E5%89%AF%E9%A7%95%E9%A7%9B%E8%88%87%E6%8B%90%E6%9D%96.html)
 - [AI音樂-Breaking-Rust-事件-真實性-版權與產業挑戰](https://wellstsai.com/single-page-conclusion/AI%E9%9F%B3%E6%A8%82-Breaking-Rust-%E4%BA%8B%E4%BB%B6-%E7%9C%9F%E5%AF%A6%E6%80%A7-%E7%89%88%E6%AC%8A%E8%88%87%E7%94%A2%E6%A5%AD%E6%8C%91%E6%88%B0.html)
+- [ARM-Cortex-架構-A-R-M系列與車用晶片選型](https://wellstsai.com/single-page-conclusion/ARM-Cortex-%E6%9E%B6%E6%A7%8B-A-R-M%E7%B3%BB%E5%88%97%E8%88%87%E8%BB%8A%E7%94%A8%E6%99%B6%E7%89%87%E9%81%B8%E5%9E%8B.html)
 - [Affinity-全面革新-整合三大工作室-永久免費](https://wellstsai.com/single-page-conclusion/Affinity-%E5%85%A8%E9%9D%A2%E9%9D%A9%E6%96%B0-%E6%95%B4%E5%90%88%E4%B8%89%E5%A4%A7%E5%B7%A5%E4%BD%9C%E5%AE%A4-%E6%B0%B8%E4%B9%85%E5%85%8D%E8%B2%BB.html)
 - [Agile與Fragile發音解析](https://wellstsai.com/single-page-conclusion/Agile%E8%88%87Fragile%E7%99%BC%E9%9F%B3%E8%A7%A3%E6%9E%90.html)
 - [Anthropic-Opus-4.5-評測-程式開發與UI設計實測](https://wellstsai.com/single-page-conclusion/Anthropic-Opus-4.5-%E8%A9%95%E6%B8%AC-%E7%A8%8B%E5%BC%8F%E9%96%8B%E7%99%BC%E8%88%87UI%E8%A8%AD%E8%A8%88%E5%AF%A6%E6%B8%AC.html)
