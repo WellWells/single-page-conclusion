@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-29 12:43:01Z
+更新日期：2025-11-29 13:53:28Z
 
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
@@ -69,6 +69,7 @@
 - [IQ取樣詳解-消除雷達相位歧義性的關鍵](https://wellstsai.com/single-page-conclusion/IQ%E5%8F%96%E6%A8%A3%E8%A9%B3%E8%A7%A3-%E6%B6%88%E9%99%A4%E9%9B%B7%E9%81%94%E7%9B%B8%E4%BD%8D%E6%AD%A7%E7%BE%A9%E6%80%A7%E7%9A%84%E9%97%9C%E9%8D%B5.html)
 - [Immich-v2-0-0-自架相片管理-功能-部署與安全](https://wellstsai.com/single-page-conclusion/Immich-v2-0-0-%E8%87%AA%E6%9E%B6%E7%9B%B8%E7%89%87%E7%AE%A1%E7%90%86-%E5%8A%9F%E8%83%BD-%E9%83%A8%E7%BD%B2%E8%88%87%E5%AE%89%E5%85%A8.html)
 - [Impedance-Matching-and-the-Bode-Fano-Limit](https://wellstsai.com/single-page-conclusion/Impedance-Matching-and-the-Bode-Fano-Limit.html)
+- [Intel-18A-RibbonFET-PowerVia-Process-Analysis](https://wellstsai.com/single-page-conclusion/Intel-18A-RibbonFET-PowerVia-Process-Analysis.html)
 - [Intel-Arc-Pro-B60-專業GPU採購與整合指南](https://wellstsai.com/single-page-conclusion/Intel-Arc-Pro-B60-%E5%B0%88%E6%A5%ADGPU%E6%8E%A1%E8%B3%BC%E8%88%87%E6%95%B4%E5%90%88%E6%8C%87%E5%8D%97.html)
 - [J-Link選擇指南-型號比較與功能差異說明](https://wellstsai.com/single-page-conclusion/J-Link%E9%81%B8%E6%93%87%E6%8C%87%E5%8D%97-%E5%9E%8B%E8%99%9F%E6%AF%94%E8%BC%83%E8%88%87%E5%8A%9F%E8%83%BD%E5%B7%AE%E7%95%B0%E8%AA%AA%E6%98%8E.html)
 - [Let-Them-理論-將嫉妒轉為行動](https://wellstsai.com/single-page-conclusion/Let-Them-%E7%90%86%E8%AB%96-%E5%B0%87%E5%AB%89%E5%A6%92%E8%BD%89%E7%82%BA%E8%A1%8C%E5%8B%95.html)
