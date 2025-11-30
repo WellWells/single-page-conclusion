@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/Tailscale-2025-Fall-Update-Week-%E5%AE%8C%E6%95%B4%E5%9B%9E%E9%A1%A7.png">
+    <meta name="twitter:description" content="總結 Tailscale 2025 秋季更新。重點功能：視覺化策略編輯器 (GA)、多 Tailnet 網路隔離、Tailscale Services 內部負載平衡，以及無需 API 金鑰的 Workload Identity。">
+    <meta name="twitter:title" content="Tailscale-2025-Fall-Update-Week-完整回顧">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/Tailscale-2025-Fall-Update-Week-%E5%AE%8C%E6%95%B4%E5%9B%9E%E9%A1%A7.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/Tailscale-2025-Fall-Update-Week-%E5%AE%8C%E6%95%B4%E5%9B%9E%E9%A1%A7.html">
+    <meta property="og:description" content="總結 Tailscale 2025 秋季更新。重點功能：視覺化策略編輯器 (GA)、多 Tailnet 網路隔離、Tailscale Services 內部負載平衡，以及無需 API 金鑰的 Workload Identity。">
+    <meta property="og:title" content="Tailscale-2025-Fall-Update-Week-完整回顧">
+    <meta name="description" content="總結 Tailscale 2025 秋季更新。重點功能：視覺化策略編輯器 (GA)、多 Tailnet 網路隔離、Tailscale Services 內部負載平衡，以及無需 API 金鑰的 Workload Identity。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailscale 2025 Fall Update Week 完整回顧</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #0c111d;
+            /* 深藍黑底色 */
+            color: #e2e8f0;
+            /* 淺石板色文字 */
+            padding-bottom: 80px;
+            /* 為 fixed footer 預留空間 */
+        }
+
+        /* 漸層文字 (上亮下深) */
+        .gradient-text {
+            background-image: linear-gradient(to bottom, var(--tw-gradient-from), var(--tw-gradient-to));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+
+        /* 關鍵字 Tooltip 觸發樣式 */
+        .keyword {
+            border-bottom: 2px dotted #38bdf8;
+            /* 亮藍色虛線 */
+            cursor: help;
+            position: relative;
+        }
+
+        /* Tooltip 懸浮視窗本體 */
+        #tooltip {
+            position: absolute;
+            display: none;
+            padding: 1rem;
+            background-color: rgba(30, 41, 59, 0.9);
+            /* 半透明深藍灰 */
+            backdrop-filter: blur(8px);
+            border: 1px solid #38bdf8;
+            /* 亮藍色邊框 */
+            border-radius: 0.75rem;
+            /* 圓角 */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            pointer-events: none;
+            /* 避免干擾滑鼠事件 */
+            max-width: 300px;
+            width: max-content;
+            max-width: min(300px, 90vw);
+            /* RWD 適應 */
+            transition: opacity 0.2s ease;
+        }
+
+        #tooltip h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #7dd3fc;
+            /* 淺天藍色 */
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 0.3rem;
+        }
+
+        #tooltip p {
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+        }
+
+        #tooltip span {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            /* 較暗的輔助說明文字 */
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <header class="container mx-auto px-4 py-20 text-center">
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight">
+            Tailscale 2025 🚀 <span class="gradient-text from-sky-300 to-purple-400">Fall Update Week 回顧</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto">
+            更簡單、更智慧、更緊密。我們正在讓安全網路變得（以一種好的方式）無聊——橫跨人員、服務與其間的黏合程式碼。
+        </p>
+    </header>
+
+    <main class="container mx-auto px-4">
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-10">
+                ⚙️ <span class="gradient-text from-emerald-300 to-sky-400">毫不費力的 Tailnet 管理</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div
+                    class="flex flex-col bg-gray-800/50 border border-gray-700/50 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">🖱️ Visual Policy Editor (GA)</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4">
+                            <strong>目標：</strong> 讓 <span class="keyword" data-keyword="acl">ACL</span> 策略管理不再是 <span
+                                class="keyword" data-keyword="json">JSON</span> 專家的特權。
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            <strong>解決了什麼：</strong> 徹底告別手動編輯 <span class="keyword" data-keyword="hujson">HuJSON</span>
+                            檔案時，因<strong>忘記逗號、引號或縮排錯誤</strong>而導致的挫敗感。這個 GUI
+                            介面使得管理權限變得直觀，非常適合<strong>技術背景較淺的團隊成員</strong>（如服務台）或「中等技術」團隊接手管理。它就像一份「即時文件」，無效的選項根本不會出現在下拉選單中。
+                        </p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-b-lg">
+                        <span
+                            class="bg-green-600 text-green-100 text-xs font-medium px-3 py-1 rounded-full ml-6">General
+                            Availability</span>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-col bg-gray-800/50 border border-gray-700/50 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">🗂️ Multiple Tailnets (Alpha)</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4">
+                            <strong>目標：</strong> 提供企業級的<strong>絕對網路隔離</strong>，而無需管理多個組織或 <span class="keyword"
+                                data-keyword="idp">IdP</span>。
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            <strong>解決了什麼：</strong> 就像是「<span class="keyword" data-keyword="tailnet">Tailnet</span>
+                            的資料夾」。它允許您在單一組織下建立多個<strong>完全封閉、互不相通</strong>的 <span class="keyword"
+                                data-keyword="tailnet">Tailnet</span>。這對於需要嚴格區分 <strong>Dev、Test、Prod</strong> 環境的企業，或是
+                            <strong>MSP 服務商</strong>為不同客戶管理網路來說，是個改變遊戲規則的功能。它還支援 <span class="keyword"
+                                data-keyword="api">API</span> 驅動，可建立後銷毀的「暫時性測試網路」。
+                        </p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-b-lg">
+                        <span class="bg-yellow-600 text-yellow-100 text-xs font-medium px-3 py-1 rounded-full ml-6">Open
+                            Alpha (Enterprise)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-10">
+                🛡️ <span class="gradient-text from-yellow-300 to-orange-400">安全的服務連接</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div
+                    class="flex flex-col bg-gray-800/50 border border-gray-700/50 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">📡 Tailscale Services (Beta)</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4">
+                            <strong>目標：</strong> 提供一個內部的、<span class="keyword" data-keyword="acl">ACL</span>
+                            控制的負載平衡器與反向代理。
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            <strong>解決了什麼：</strong> 它將「服務」從「實體主機」中<strong>解耦</strong>。您可以將三個 Proxmox 節點的 WebUI 放入同一個
+                            Service，實現內部服務的<strong>高可用性 (HA)</strong>。它也解決了「我不想記住 8080、9090 等各種埠號」的問題，並為內部資源提供了自訂的 <span
+                                class="keyword" data-keyword="magicdns">MagicDNS</span> 名稱。
+                        </p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-b-lg">
+                        <span class="bg-blue-600 text-blue-100 text-xs font-medium px-3 py-1 rounded-full ml-6">Open
+                            Beta</span>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-col bg-gray-800/50 border border-gray-700/50 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">🤖 Workload Identity Federation (Beta)</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4">
+                            <strong>目標：</strong> 讓自動化服務（而非人類）安全地存取 <span class="keyword"
+                                data-keyword="tailnet">Tailnet</span>。
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            <strong>解決了什麼：</strong> <strong>徹底告別長期的 <span class="keyword" data-keyword="api">API</span>
+                                金鑰</strong>。您的 <span class="keyword" data-keyword="github-actions">GitHub
+                                Actions</span>、<span class="keyword" data-keyword="aws-lambda">AWS Lambda</span> 或 <span
+                                class="keyword" data-keyword="azure">Azure</span> VM 現在可以使用<strong>短暫的、有範圍限制的 <span
+                                    class="keyword" data-keyword="oidc">OIDC</span> Token</strong> 自動向 <span
+                                class="keyword" data-keyword="tailnet">Tailnet</span> 驗證，無需在程式碼庫中儲存任何秘密金鑰，大幅降低管理開銷與安全風險。
+                        </p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-b-lg">
+                        <span
+                            class="bg-blue-600 text-blue-100 text-xs font-medium px-3 py-1 rounded-full ml-6">Beta</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-10">
+                💻 <span class="gradient-text from-cyan-300 to-blue-400">無縫的終端用戶體驗</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div
+                    class="flex flex-col bg-gray-800/50 border border-gray-700/50 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">🌐 Peer Relays (Beta)</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4">
+                            <strong>目標：</strong> 解決 <span class="keyword" data-keyword="derp">DERP</span>
+                            中繼的效能瓶頸並降低雲端出口成本。
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            <strong>解決了什麼：</strong> <span class="keyword" data-keyword="tailscale">Tailscale</span> 超過
+                            90% 的連線是 P2P 直連，但剩下 <10% 會 fallback 到 <span class="keyword" data-keyword="derp">DERP</span>
+                                (TCP-in-TCP，效能有限)。Peer Relays 允許您<strong>自行部署 UDP 中繼站</strong>，在 <strong>"Hard <span
+                                        class="keyword" data-keyword="nat">NAT</span>"</strong> 環境（如 <span
+                                    class="keyword" data-keyword="aws">AWS</span> <span class="keyword"
+                                    data-keyword="nat">NAT</span> Gateway）中，可提供<strong>高達 10
+                                    倍的效能提升</strong>。它還能讓雲端流量保持在同一區域內，<strong>節省高昂的出口 (egress) 費用</strong>。
+                        </p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-b-lg">
+                        <span class="bg-blue-600 text-blue-100 text-xs font-medium px-3 py-1 rounded-full ml-6">Public
+                            Beta</span>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-col bg-gray-800/50 border border-gray-700/50 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">🖥️ Windowed Desktop Client (macOS)</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4">
+                            <strong>目標：</strong> 提供一個功能更豐富的桌面用戶端體驗。
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            <strong>解決了什麼：</strong> <span class="keyword" data-keyword="macos">macOS</span>
+                            用戶端不再只是一個小小的選單列圖示。這個全新的<strong>獨立視窗化應用程式</strong>提供了足夠的「地產」來容納<strong>搜尋、更好的錯誤訊息、連線偵錯</strong>以及
+                            Taildrop 等未來功能。這也預示著其他桌面平台（Linux/Windows）將獲得更強大的 <span class="keyword"
+                                data-keyword="ui">UI</span> 體驗。
+                        </p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-b-lg">
+                        <span
+                            class="bg-indigo-600 text-indigo-100 text-xs font-medium px-3 py-1 rounded-full ml-6">Feature
+                            Preview</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-10">
+                🌐 <span class="gradient-text from-pink-300 to-purple-400">為無縫安全連接而生的平台</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div
+                    class="flex flex-col bg-gray-800/50 border border-gray-700/50 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">🛡️ TSIDP (Tailscale Identity Provider)</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4">
+                            <strong>目標：</strong> 消除 <span class="keyword" data-keyword="tailnet">Tailnet</span>
+                            內部應用程式的登入摩擦。
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            <strong>解決了什麼：</strong> <strong>實現「零點擊登入」</strong>。您已在 <span class="keyword"
+                                data-keyword="tailnet">Tailnet</span> 上驗證了自己的身份，為什麼還要再次登入 Grafana、Proxmox 或
+                            Audiobookshelf？TSIDP 作為一個輕量級 <span class="keyword" data-keyword="oidc">OIDC</span> 供應商，能將您的
+                            <span class="keyword" data-keyword="tailnet">Tailnet</span> 身份無縫傳遞給任何支援 <span
+                                class="keyword" data-keyword="oidc">OIDC</span> 的應用程式，徹底告別登入彈窗。
+                        </p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-b-lg">
+                        <span class="bg-purple-600 text-purple-100 text-xs font-medium px-3 py-1 rounded-full ml-6">Open
+                            Source</span>
+                    </div>
+                </div>
+                <div
+                    class="flex flex-col bg-gray-800/50 border border-gray-700/50 rounded-2xl shadow-lg overflow-hidden h-full">
+                    <div class="p-8 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">🧩 App Capabilities</h3>
+                        <p class="text-slate-400 leading-relaxed mb-4">
+                            <strong>目標：</strong> 將 <span class="keyword" data-keyword="acl">ACL</span>
+                            的精細控制權從「網路層」擴展到「應用層」。
+                        </p>
+                        <p class="text-slate-400 leading-relaxed">
+                            <strong>解決了什麼：</strong> 讓開發人員<strong>無需 <span class="keyword"
+                                    data-keyword="sdk">SDK</span></strong> 即可在應用程式內部實現功能級別的權限控制。您的應用程式只需檢查傳入的
+                            <strong><span class="keyword" data-keyword="http">HTTP</span> 標頭</strong>，就能根據 <span
+                                class="keyword" data-keyword="tailscale">Tailscale</span> <span class="keyword"
+                                data-keyword="acl">ACL</span> 授予的「能力」，決定用戶是「唯讀」還是「可讀寫」，實現真正的最小權限原則。
+                        </p>
+                    </div>
+                    <div class="bg-gray-900/50 p-4 rounded-b-lg">
+                        <span class="bg-gray-600 text-gray-100 text-xs font-medium px-3 py-1 rounded-full ml-6">Rolling
+                            Out (Premium/Enterprise)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                📊 <span class="gradient-text from-sky-300 to-indigo-400">功能上線狀態一覽</span>
+            </h2>
+            <div class="max-w-5xl mx-auto overflow-hidden rounded-xl border border-gray-700 shadow-lg">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[640px] text-left text-sm">
+                        <thead class="bg-gray-800 text-xs text-slate-300 uppercase tracking-wider">
+                            <tr>
+                                <th scope="col" class="px-6 py-4">功能名稱</th>
+                                <th scope="col" class="px-6 py-4">目前狀態</th>
+                                <th scope="col" class="px-6 py-4">適用方案</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700 bg-gray-800/50">
+                            <tr class="hover:bg-gray-800/80 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">Tailscale Services</td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-blue-600 text-blue-100 text-xs font-medium px-2.5 py-0.5 rounded-full">Open
+                                        Beta</span></td>
+                                <td class="px-6 py-4">所有方案 (Beta 期間免費且無上限)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/80 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">Workload Identity Federation</td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-blue-600 text-blue-100 text-xs font-medium px-2.5 py-0.5 rounded-full">Beta</span>
+                                </td>
+                                <td class="px-6 py-4">Premium, Enterprise</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/80 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">Visual Policy Editor</td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-green-600 text-green-100 text-xs font-medium px-2.5 py-0.5 rounded-full">General
+                                        Availability</span></td>
+                                <td class="px-6 py-4">Free, Starter, Premium (完整功能於 Premium)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/80 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">Multiple Tailnets</td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-yellow-600 text-yellow-100 text-xs font-medium px-2.5 py-0.5 rounded-full">Open
+                                        Alpha</span></td>
+                                <td class="px-6 py-4">Enterprise (優先導入)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/80 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">Peer Relays</td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-blue-600 text-blue-100 text-xs font-medium px-2.5 py-0.5 rounded-full">Public
+                                        Beta</span></td>
+                                <td class="px-6 py-4">所有方案 (永久免費 2 個)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/80 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">macOS Windowed Client</td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-indigo-600 text-indigo-100 text-xs font-medium px-2.5 py-0.5 rounded-full">Feature
+                                        Preview</span></td>
+                                <td class="px-6 py-4">所有方案</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/80 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">TSIDP</td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-purple-600 text-purple-100 text-xs font-medium px-2.5 py-0.5 rounded-full">Open
+                                        Source</span></td>
+                                <td class="px-6 py-4">所有人 (via GitHub)</td>
+                            </tr>
+                            <tr class="hover:bg-gray-800/80 transition-colors">
+                                <td class="px-6 py-4 font-medium text-white">App Capabilities</td>
+                                <td class="px-6 py-4"><span
+                                        class="bg-gray-600 text-gray-100 text-xs font-medium px-2.5 py-0.5 rounded-full">Rolling
+                                        Out</span></td>
+                                <td class="px-6 py-4">Premium, Enterprise</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-20 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                🎯 <span class="gradient-text from-fuchsia-400 to-rose-400">總結：邁向更智慧的連接平台</span>
+            </h2>
+            <p class="text-xl text-slate-300 leading-relaxed">
+                Tailscale 此次的「Fall Update Week」不僅是功能的堆疊，更是對<strong>安全、簡易、高效</strong>三大核心價值的深化。從解決 <span class="keyword"
+                    data-keyword="json">JSON</span> 語法錯誤的視覺編輯器，到消除 <span class="keyword" data-keyword="api">API</span>
+                金鑰的 <span class="keyword" data-keyword="oidc">OIDC</span> 聯盟，再到解決 <span class="keyword"
+                    data-keyword="nat">NAT</span> 效能瓶頸的 <span class="keyword" data-keyword="peer-relay">Peer
+                    Relays</span>，這些更新共同將 <span class="keyword" data-keyword="tailnet">Tailnet</span>
+                從一個「裝置網路」轉型為一個更智慧、更快速、更全面的「服務與身份連接平台」。
+            </p>
+        </section>
+
+    </main>
+
+    <footer
+        class="fixed bottom-0 left-0 right-0 bg-gray-950/80 backdrop-blur-sm py-4 text-center text-sm text-slate-500 z-50 border-t border-gray-800">
+        <p>
+            <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="hover:text-sky-400 transition-colors">
+                Generated by wellstsai.com
+            </a>
+            <span class="mx-2">|</span>
+            撰寫日期：2025年11月1日
+        </p>
+    </footer>
+
+    <div id="tooltip"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Tooltip 資料庫
+            const keywordData = {
+                "tailscale": {
+                    title: "Tailscale",
+                    description: "一個基於 WireGuard® 協定的零配置 VPN 服務。",
+                    details: "它能在裝置之間建立安全、點對點的私有網路 (Tailnet)。"
+                },
+                "tailnet": {
+                    title: "Tailnet",
+                    description: "您的私有 Tailscale 網路。",
+                    details: "包含了所有登入到您同一個 Tailscale 帳戶的設備與服務。"
+                },
+                "acl": {
+                    title: "ACL (Access Control List)",
+                    description: "存取控制列表。",
+                    details: "在 Tailscale 中，這是一組 JSON 規則，用來定義 Tailnet 中的哪些設備可以連接到哪些其他設備或服務。"
+                },
+                "oidc": {
+                    title: "OIDC (OpenID Connect)",
+                    description: "一個基於 OAuth 2.0 協定的身份驗證層。",
+                    details: "它允許用戶端（如應用程式）驗證用戶身份，並取得基本的個人資料。"
+                },
+                "derp": {
+                    title: "DERP (Detached Encrypted Relay Protocol)",
+                    description: "Tailscale 的中繼協定。",
+                    details: "當兩個設備因 NAT 或防火牆而無法建立點對點 (P2P) 直連時，流量將通過 DERP 伺服器進行加密中繼。這通常是 TCP-in-TCP，效能有限。"
+                },
+                "nat": {
+                    title: "NAT (Network Address Translation)",
+                    description: "網路位址轉譯。",
+                    details: "一種將私有 IP 位址轉換為公共 IP 位址的技術，常用於家用和企業路由器中。'Hard NAT' 會使 P2P 直連非常困難。"
+                },
+                "json": {
+                    title: "JSON (JavaScript Object Notation)",
+                    description: "一種輕量級的資料交換格式。",
+                    details: "易於人閱讀和編寫，也易於機器解析和生成。"
+                },
+                "api": {
+                    title: "API (Application Programming Interface)",
+                    description: "應用程式介面。",
+                    details: "允許不同軟體系統之間互相溝通和交換資料的規範。"
+                },
+                "aws-lambda": {
+                    title: "AWS Lambda",
+                    description: "Amazon 的無伺服器 (Serverless) 運算服務。",
+                    details: "允許您運行程式碼而無需管理伺服器。"
+                },
+                "github-actions": {
+                    title: "GitHub Actions",
+                    description: "GitHub 內建的 CI/CD (持續整合/持續部署) 平台。",
+                    details: "可用於自動化軟體建置、測試和部署流程。"
+                },
+                "sdk": {
+                    title: "SDK (Software Development Kit)",
+                    description: "軟體開發工具包。",
+                    details: "一組用於開發特定平台或應用的工具、函式庫和文件。"
+                },
+                "ts-services": {
+                    title: "Tailscale Services",
+                    description: "Tailscale 的一項功能，用於公開內部服務。",
+                    details: "為內部應用程式提供一個穩定的 Tail-VIP 和 MagicDNS 名稱，類似私有的負載平衡器。"
+                },
+                "hujson": {
+                    title: "HuJSON",
+                    description: "JSON for Humans (人類的JSON)",
+                    details: "Tailscale 的策略文件格式，允許註解和結尾逗號，更易於手動編輯。"
+                },
+                "idp": {
+                    title: "IdP (Identity Provider)",
+                    description: "身份提供者",
+                    details: "負責驗證用戶身份並提供身份憑證的服務，如 Google, Okta, Microsoft Entra ID。"
+                },
+                "ipv4": {
+                    title: "IPv4",
+                    description: "網際網路通訊協定第4版",
+                    details: "目前廣泛使用的 32 位元 IP 位址格式。"
+                },
+                "ipv6": {
+                    title: "IPv6",
+                    description: "網際網路通訊協定第6版",
+                    details: "新一代的 128 位元 IP 位址格式，用以解決 IPv4 耗盡問題。"
+                },
+                "magicdns": {
+                    title: "MagicDNS",
+                    description: "Tailscale 的 DNS 功能",
+                    details: "自動為您 tailnet 中的設備註冊易於記憶的 .ts.net 網域名稱。"
+                },
+                "cicd": {
+                    title: "CI/CD",
+                    description: "Continuous Integration/Continuous Deployment",
+                    details: "持續整合與持續部署，是自動化軟體開發與發布流程的實踐。"
+                },
+                "aws": {
+                    title: "AWS (Amazon Web Services)",
+                    description: "亞馬遜雲端運算服務",
+                    details: "全球領先的雲端平台，提供IaaS, PaaS, SaaS等服務。"
+                },
+                "azure": {
+                    title: "Microsoft Azure",
+                    description: "微軟雲端運算平台",
+                    details: "微軟提供的公有雲服務。"
+                },
+                "peer-relay": {
+                    title: "Peer Relays",
+                    description: "對等中繼 (Beta)",
+                    details: "由用戶自行部署和管理的 Tailscale 流量中繼節點，基於 UDP，用於改善在 'Hard NAT' 下的連線效能。"
+                },
+                "macos": {
+                    title: "macOS",
+                    description: "蘋果電腦的操作系統",
+                    details: "Apple Mac 電腦的桌面作業系統。"
+                },
+                "ui": {
+                    title: "UI (User Interface)",
+                    description: "使用者介面",
+                    details: "軟體或設備與使用者互動的視覺部分。"
+                },
+                "tsnet": {
+                    title: "tsnet",
+                    description: "Tailscale Go 函式庫",
+                    details: "一個 Go 語言函式庫，允許應用程式直接嵌入 Tailscale 網路功能，使其成為 tailnet 的一部分。"
+                },
+                "funnel": {
+                    title: "Tailscale Funnel",
+                    description: "Tailscale 通道功能",
+                    details: "一項功能，可以將您 tailnet 上的服務安全地公開到公共網際網路上。"
+                },
+                "http": {
+                    title: "HTTP (Hypertext Transfer Protocol)",
+                    description: "超文字傳輸協定",
+                    details: "用於在網路上傳輸網頁等資源的應用層協定。"
+                }
+            };
+
+            // 2. 獲取 Tooltip 元素
+            const tooltip = document.getElementById('tooltip');
+            if (!tooltip) return;
+
+            // 3. 綁定事件
+            const keywords = document.querySelectorAll('.keyword');
+            keywords.forEach(span => {
+                span.addEventListener('mouseenter', showTooltip);
+                span.addEventListener('mousemove', moveTooltip);
+                span.addEventListener('mouseleave', hideTooltip);
+            });
+
+            // 4. 事件處理函式
+            function showTooltip(e) {
+                const key = e.target.dataset.keyword;
+                const data = keywordData[key];
+                if (!data) return;
+
+                // 填充內容
+                tooltip.innerHTML = `
+                    <h3>${data.title}</h3>
+                    <p>${data.description}</p>
+                    ${data.details ? `<span>${data.details}</span>` : ''}
+                `;
+
+                tooltip.style.display = 'block';
+                // 立即調用 moveTooltip 來定位
+                moveTooltip(e);
+            }
+
+            function hideTooltip(e) {
+                tooltip.style.display = 'none';
+            }
+
+            function moveTooltip(e) {
+                if (tooltip.style.display !== 'block') return;
+
+                const tooltipRect = tooltip.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                const scrollY = window.scrollY;
+                const margin = 15; // 邊界
+
+                let x = e.pageX + margin;
+                let y = e.pageY + margin;
+
+                // 檢查右邊界
+                if (e.pageX + tooltipRect.width + margin > viewportWidth + window.scrollX) {
+                    x = e.pageX - tooltipRect.width - margin;
+                }
+
+                // 檢查左邊界
+                if (x - window.scrollX < margin) {
+                    x = window.scrollX + margin;
+                }
+
+                // 檢查下邊界
+                if (e.pageY + tooltipRect.height + margin > viewportHeight + scrollY) {
+                    y = e.pageY - tooltipRect.height - margin;
+                }
+
+                // 檢查上邊界
+                if (y < scrollY + margin) {
+                    y = scrollY + margin;
+                }
+
+                tooltip.style.left = `${x}px`;
+                tooltip.style.top = `${y}px`;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
