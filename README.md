@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-29 13:53:28Z
+更新日期：2025-11-30 15:57:22Z
 
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
@@ -107,6 +107,7 @@
 - [Tailscale-2025-Fall-Update-Week-完整回顧](https://wellstsai.com/single-page-conclusion/Tailscale-2025-Fall-Update-Week-%E5%AE%8C%E6%95%B4%E5%9B%9E%E9%A1%A7.html)
 - [Tailscale-Peer-Relays-設定指南-高效能中繼與應用場景](https://wellstsai.com/single-page-conclusion/Tailscale-Peer-Relays-%E8%A8%AD%E5%AE%9A%E6%8C%87%E5%8D%97-%E9%AB%98%E6%95%88%E8%83%BD%E4%B8%AD%E7%B9%BC%E8%88%87%E6%87%89%E7%94%A8%E5%A0%B4%E6%99%AF.html)
 - [Tailscale-Services-介紹-內網的智慧負載均衡](https://wellstsai.com/single-page-conclusion/Tailscale-Services-%E4%BB%8B%E7%B4%B9-%E5%85%A7%E7%B6%B2%E7%9A%84%E6%99%BA%E6%85%A7%E8%B2%A0%E8%BC%89%E5%9D%87%E8%A1%A1.html)
+- [Taiwan-Economic-Stripping-Analysis-Report](https://wellstsai.com/single-page-conclusion/Taiwan-Economic-Stripping-Analysis-Report.html)
 - [Techno-Frontier-2025-電解電容創新技術戰略分析](https://wellstsai.com/single-page-conclusion/Techno-Frontier-2025-%E9%9B%BB%E8%A7%A3%E9%9B%BB%E5%AE%B9%E5%89%B5%E6%96%B0%E6%8A%80%E8%A1%93%E6%88%B0%E7%95%A5%E5%88%86%E6%9E%90.html)
 - [TypeScript之父Anders-Hejlsberg訪談-10倍Go效能與AI重塑開發](https://wellstsai.com/single-page-conclusion/TypeScript%E4%B9%8B%E7%88%B6Anders-Hejlsberg%E8%A8%AA%E8%AB%87-10%E5%80%8DGo%E6%95%88%E8%83%BD%E8%88%87AI%E9%87%8D%E5%A1%91%E9%96%8B%E7%99%BC.html)
 - [UGREEN-500W-充電器評測-240W EPR與散熱功耗實測](https://wellstsai.com/single-page-conclusion/UGREEN-500W-%E5%85%85%E9%9B%BB%E5%99%A8%E8%A9%95%E6%B8%AC-240W%20EPR%E8%88%87%E6%95%A3%E7%86%B1%E5%8A%9F%E8%80%97%E5%AF%A6%E6%B8%AC.html)
@@ -134,6 +135,7 @@
 - [iPhone Air 值得入手嗎-設計哲學與耐用性解析](https://wellstsai.com/single-page-conclusion/iPhone%20Air%20%E5%80%BC%E5%BE%97%E5%85%A5%E6%89%8B%E5%97%8E-%E8%A8%AD%E8%A8%88%E5%93%B2%E5%AD%B8%E8%88%87%E8%80%90%E7%94%A8%E6%80%A7%E8%A7%A3%E6%9E%90.html)
 - [iPhone-17-全系列評測-規格與選購指南](https://wellstsai.com/single-page-conclusion/iPhone-17-%E5%85%A8%E7%B3%BB%E5%88%97%E8%A9%95%E6%B8%AC-%E8%A6%8F%E6%A0%BC%E8%88%87%E9%81%B8%E8%B3%BC%E6%8C%87%E5%8D%97.html)
 - [index](https://wellstsai.com/single-page-conclusion/index.html)
+- [kiwi-industry-strategic-analysis](https://wellstsai.com/single-page-conclusion/kiwi-industry-strategic-analysis.html)
 - [npm供應鏈安全計畫-受信任發布與2FA](https://wellstsai.com/single-page-conclusion/npm%E4%BE%9B%E6%87%89%E9%8F%88%E5%AE%89%E5%85%A8%E8%A8%88%E7%95%AB-%E5%8F%97%E4%BF%A1%E4%BB%BB%E7%99%BC%E5%B8%83%E8%88%872FA.html)
 - [uri-與-url-深入解析](https://wellstsai.com/single-page-conclusion/uri-%E8%88%87-url-%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90.html)
 - [uv全攻略-Python高速套件與版本管理器](https://wellstsai.com/single-page-conclusion/uv%E5%85%A8%E6%94%BB%E7%95%A5-Python%E9%AB%98%E9%80%9F%E5%A5%97%E4%BB%B6%E8%88%87%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%99%A8.html)
