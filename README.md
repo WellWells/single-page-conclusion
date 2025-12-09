@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-11-30 15:57:22Z
+更新日期：2025-12-09 03:43:40Z
 
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
@@ -81,6 +81,7 @@
 - [NAT穿透-STUN原理與ICE框架P2P直連技術](https://wellstsai.com/single-page-conclusion/NAT%E7%A9%BF%E9%80%8F-STUN%E5%8E%9F%E7%90%86%E8%88%87ICE%E6%A1%86%E6%9E%B6P2P%E7%9B%B4%E9%80%A3%E6%8A%80%E8%A1%93.html)
 - [NPN-vs-PNP-差異-與NPN常見原因](https://wellstsai.com/single-page-conclusion/NPN-vs-PNP-%E5%B7%AE%E7%95%B0-%E8%88%87NPN%E5%B8%B8%E8%A6%8B%E5%8E%9F%E5%9B%A0.html)
 - [Neocloud-AI基礎設施-HPC算力比較](https://wellstsai.com/single-page-conclusion/Neocloud-AI%E5%9F%BA%E7%A4%8E%E8%A8%AD%E6%96%BD-HPC%E7%AE%97%E5%8A%9B%E6%AF%94%E8%BC%83.html)
+- [Netflix併購HBO-台灣訂閱價格與帳號轉移](https://wellstsai.com/single-page-conclusion/Netflix%E4%BD%B5%E8%B3%BCHBO-%E5%8F%B0%E7%81%A3%E8%A8%82%E9%96%B1%E5%83%B9%E6%A0%BC%E8%88%87%E5%B8%B3%E8%99%9F%E8%BD%89%E7%A7%BB.html)
 - [Netflix自由與責任文化指南](https://wellstsai.com/single-page-conclusion/Netflix%E8%87%AA%E7%94%B1%E8%88%87%E8%B2%AC%E4%BB%BB%E6%96%87%E5%8C%96%E6%8C%87%E5%8D%97.html)
 - [Overfitting-Regularization-and-Occams-Razor](https://wellstsai.com/single-page-conclusion/Overfitting-Regularization-and-Occams-Razor.html)
 - [Ozempic-減重熱潮-癌症風險與健保倫理](https://wellstsai.com/single-page-conclusion/Ozempic-%E6%B8%9B%E9%87%8D%E7%86%B1%E6%BD%AE-%E7%99%8C%E7%97%87%E9%A2%A8%E9%9A%AA%E8%88%87%E5%81%A5%E4%BF%9D%E5%80%AB%E7%90%86.html)
