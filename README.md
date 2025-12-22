@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-12-18 18:51:34Z
+更新日期：2025-12-22 02:47:29Z
 
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
@@ -75,6 +75,7 @@
 - [Intel-18A-RibbonFET-PowerVia-Process-Analysis](https://wellstsai.com/single-page-conclusion/Intel-18A-RibbonFET-PowerVia-Process-Analysis.html)
 - [Intel-Arc-Pro-B60-專業GPU採購與整合指南](https://wellstsai.com/single-page-conclusion/Intel-Arc-Pro-B60-%E5%B0%88%E6%A5%ADGPU%E6%8E%A1%E8%B3%BC%E8%88%87%E6%95%B4%E5%90%88%E6%8C%87%E5%8D%97.html)
 - [J-Link選擇指南-型號比較與功能差異說明](https://wellstsai.com/single-page-conclusion/J-Link%E9%81%B8%E6%93%87%E6%8C%87%E5%8D%97-%E5%9E%8B%E8%99%9F%E6%AF%94%E8%BC%83%E8%88%87%E5%8A%9F%E8%83%BD%E5%B7%AE%E7%95%B0%E8%AA%AA%E6%98%8E.html)
+- [Jenkins-CICD-自動化部署實戰攻略](https://wellstsai.com/single-page-conclusion/Jenkins-CICD-%E8%87%AA%E5%8B%95%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AF%A6%E6%88%B0%E6%94%BB%E7%95%A5.html)
 - [Let-Them-理論-將嫉妒轉為行動](https://wellstsai.com/single-page-conclusion/Let-Them-%E7%90%86%E8%AB%96-%E5%B0%87%E5%AB%89%E5%A6%92%E8%BD%89%E7%82%BA%E8%A1%8C%E5%8B%95.html)
 - [MCU Bootloader 完整解析](https://wellstsai.com/single-page-conclusion/MCU%20Bootloader%20%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90.html)
 - [MMS-UWB-IEEE-802.15.4ab-技術-原理-模式與BLE輔助應用](https://wellstsai.com/single-page-conclusion/MMS-UWB-IEEE-802.15.4ab-%E6%8A%80%E8%A1%93-%E5%8E%9F%E7%90%86-%E6%A8%A1%E5%BC%8F%E8%88%87BLE%E8%BC%94%E5%8A%A9%E6%87%89%E7%94%A8.html)
