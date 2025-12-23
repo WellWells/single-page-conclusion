@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-12-22 18:06:59Z
+更新日期：2025-12-23 06:37:22Z
 
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
@@ -263,6 +263,7 @@
 - [瀏覽器任務排程深度解析](https://wellstsai.com/single-page-conclusion/%E7%80%8F%E8%A6%BD%E5%99%A8%E4%BB%BB%E5%8B%99%E6%8E%92%E7%A8%8B%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
 - [為何一切都變賭博-體育博弈-App-金融真相](https://wellstsai.com/single-page-conclusion/%E7%82%BA%E4%BD%95%E4%B8%80%E5%88%87%E9%83%BD%E8%AE%8A%E8%B3%AD%E5%8D%9A-%E9%AB%94%E8%82%B2%E5%8D%9A%E5%BC%88-App-%E9%87%91%E8%9E%8D%E7%9C%9F%E7%9B%B8.html)
 - [為何手機攝影走向多鏡頭時代](https://wellstsai.com/single-page-conclusion/%E7%82%BA%E4%BD%95%E6%89%8B%E6%A9%9F%E6%94%9D%E5%BD%B1%E8%B5%B0%E5%90%91%E5%A4%9A%E9%8F%A1%E9%A0%AD%E6%99%82%E4%BB%A3.html)
+- [熱顯像模組開發-硬體整合與輻射測溫校正實務](https://wellstsai.com/single-page-conclusion/%E7%86%B1%E9%A1%AF%E5%83%8F%E6%A8%A1%E7%B5%84%E9%96%8B%E7%99%BC-%E7%A1%AC%E9%AB%94%E6%95%B4%E5%90%88%E8%88%87%E8%BC%BB%E5%B0%84%E6%B8%AC%E6%BA%AB%E6%A0%A1%E6%AD%A3%E5%AF%A6%E5%8B%99.html)
 - [現代分散式系統架構](https://wellstsai.com/single-page-conclusion/%E7%8F%BE%E4%BB%A3%E5%88%86%E6%95%A3%E5%BC%8F%E7%B3%BB%E7%B5%B1%E6%9E%B6%E6%A7%8B.html)
 - [現代家庭伺服器：MiniPC與DIY SFF比較](https://wellstsai.com/single-page-conclusion/%E7%8F%BE%E4%BB%A3%E5%AE%B6%E5%BA%AD%E4%BC%BA%E6%9C%8D%E5%99%A8%EF%BC%9AMiniPC%E8%88%87DIY%20SFF%E6%AF%94%E8%BC%83.html)
 - [現代顯示卡技術解析](https://wellstsai.com/single-page-conclusion/%E7%8F%BE%E4%BB%A3%E9%A1%AF%E7%A4%BA%E5%8D%A1%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
