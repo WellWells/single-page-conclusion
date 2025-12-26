@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-12-23 18:24:05Z
+更新日期：2025-12-26 12:19:04Z
 
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
 - [140億台灣速食麵市場全解析](https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html)
@@ -17,6 +17,7 @@
 - [8K-360相機評測-GoPro-Max-2-vs-DJI-Osmo-360-vs-Insta360-X5](https://wellstsai.com/single-page-conclusion/8K-360%E7%9B%B8%E6%A9%9F%E8%A9%95%E6%B8%AC-GoPro-Max-2-vs-DJI-Osmo-360-vs-Insta360-X5.html)
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
 - [AI-System-Penetration-Testing-Guide](https://wellstsai.com/single-page-conclusion/AI-System-Penetration-Testing-Guide.html)
+- [AI-代理架構進化-agent.md-與-skill.md-結構化管理](https://wellstsai.com/single-page-conclusion/AI-%E4%BB%A3%E7%90%86%E6%9E%B6%E6%A7%8B%E9%80%B2%E5%8C%96-agent.md-%E8%88%87-skill.md-%E7%B5%90%E6%A7%8B%E5%8C%96%E7%AE%A1%E7%90%86.html)
 - [AI動畫製作-從零到一完整流程教學](https://wellstsai.com/single-page-conclusion/AI%E5%8B%95%E7%95%AB%E8%A3%BD%E4%BD%9C-%E5%BE%9E%E9%9B%B6%E5%88%B0%E4%B8%80%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%E6%95%99%E5%AD%B8.html)
 - [AI審查誤判-Windows 11本機帳號教學影片下架事件](https://wellstsai.com/single-page-conclusion/AI%E5%AF%A9%E6%9F%A5%E8%AA%A4%E5%88%A4-Windows%2011%E6%9C%AC%E6%A9%9F%E5%B8%B3%E8%99%9F%E6%95%99%E5%AD%B8%E5%BD%B1%E7%89%87%E4%B8%8B%E6%9E%B6%E4%BA%8B%E4%BB%B6.html)
 - [AI智慧評估的科學-從聰明漢斯到認知科學的啟示](https://wellstsai.com/single-page-conclusion/AI%E6%99%BA%E6%85%A7%E8%A9%95%E4%BC%B0%E7%9A%84%E7%A7%91%E5%AD%B8-%E5%BE%9E%E8%81%B0%E6%98%8E%E6%BC%A2%E6%96%AF%E5%88%B0%E8%AA%8D%E7%9F%A5%E7%A7%91%E5%AD%B8%E7%9A%84%E5%95%9F%E7%A4%BA.html)
@@ -168,6 +169,7 @@
 - [光電背後的真相剖析](https://wellstsai.com/single-page-conclusion/%E5%85%89%E9%9B%BB%E8%83%8C%E5%BE%8C%E7%9A%84%E7%9C%9F%E7%9B%B8%E5%89%96%E6%9E%90.html)
 - [內褲地精商業計畫-停止空想與開始行動](https://wellstsai.com/single-page-conclusion/%E5%85%A7%E8%A4%B2%E5%9C%B0%E7%B2%BE%E5%95%86%E6%A5%AD%E8%A8%88%E7%95%AB-%E5%81%9C%E6%AD%A2%E7%A9%BA%E6%83%B3%E8%88%87%E9%96%8B%E5%A7%8B%E8%A1%8C%E5%8B%95.html)
 - [全景相機的奧秘](https://wellstsai.com/single-page-conclusion/%E5%85%A8%E6%99%AF%E7%9B%B8%E6%A9%9F%E7%9A%84%E5%A5%A7%E7%A7%98.html)
+- [全球14國炒蛋做法-道地異國早餐烹飪指南](https://wellstsai.com/single-page-conclusion/%E5%85%A8%E7%90%8314%E5%9C%8B%E7%82%92%E8%9B%8B%E5%81%9A%E6%B3%95-%E9%81%93%E5%9C%B0%E7%95%B0%E5%9C%8B%E6%97%A9%E9%A4%90%E7%83%B9%E9%A3%AA%E6%8C%87%E5%8D%97.html)
 - [全球UWB法規戰略分析-2025](https://wellstsai.com/single-page-conclusion/%E5%85%A8%E7%90%83UWB%E6%B3%95%E8%A6%8F%E6%88%B0%E7%95%A5%E5%88%86%E6%9E%90-2025.html)
 - [共有知識vs公共知識-一句廢話的毀滅性邏輯](https://wellstsai.com/single-page-conclusion/%E5%85%B1%E6%9C%89%E7%9F%A5%E8%AD%98vs%E5%85%AC%E5%85%B1%E7%9F%A5%E8%AD%98-%E4%B8%80%E5%8F%A5%E5%BB%A2%E8%A9%B1%E7%9A%84%E6%AF%80%E6%BB%85%E6%80%A7%E9%82%8F%E8%BC%AF.html)
 - [前端即時更新技術指南](https://wellstsai.com/single-page-conclusion/%E5%89%8D%E7%AB%AF%E5%8D%B3%E6%99%82%E6%9B%B4%E6%96%B0%E6%8A%80%E8%A1%93%E6%8C%87%E5%8D%97.html)
@@ -197,6 +199,7 @@
 - [太陽能板原理-光電效應-種類與系統應用](https://wellstsai.com/single-page-conclusion/%E5%A4%AA%E9%99%BD%E8%83%BD%E6%9D%BF%E5%8E%9F%E7%90%86-%E5%85%89%E9%9B%BB%E6%95%88%E6%87%89-%E7%A8%AE%E9%A1%9E%E8%88%87%E7%B3%BB%E7%B5%B1%E6%87%89%E7%94%A8.html)
 - [奇美博物館-埃及之王法老特展-票價時間與必看文物](https://wellstsai.com/single-page-conclusion/%E5%A5%87%E7%BE%8E%E5%8D%9A%E7%89%A9%E9%A4%A8-%E5%9F%83%E5%8F%8A%E4%B9%8B%E7%8E%8B%E6%B3%95%E8%80%81%E7%89%B9%E5%B1%95-%E7%A5%A8%E5%83%B9%E6%99%82%E9%96%93%E8%88%87%E5%BF%85%E7%9C%8B%E6%96%87%E7%89%A9.html)
 - [孟山都帝國興衰史-從橙劑到年年春嘉磷塞爭議](https://wellstsai.com/single-page-conclusion/%E5%AD%9F%E5%B1%B1%E9%83%BD%E5%B8%9D%E5%9C%8B%E8%88%88%E8%A1%B0%E5%8F%B2-%E5%BE%9E%E6%A9%99%E5%8A%91%E5%88%B0%E5%B9%B4%E5%B9%B4%E6%98%A5%E5%98%89%E7%A3%B7%E5%A1%9E%E7%88%AD%E8%AD%B0.html)
+- [學校行政困境-菜鳥行政與校園霸凌真相](https://wellstsai.com/single-page-conclusion/%E5%AD%B8%E6%A0%A1%E8%A1%8C%E6%94%BF%E5%9B%B0%E5%A2%83-%E8%8F%9C%E9%B3%A5%E8%A1%8C%E6%94%BF%E8%88%87%E6%A0%A1%E5%9C%92%E9%9C%B8%E5%87%8C%E7%9C%9F%E7%9B%B8.html)
 - [安靜離職與安靜崩潰-Z世代職場應對與職涯建構指南](https://wellstsai.com/single-page-conclusion/%E5%AE%89%E9%9D%9C%E9%9B%A2%E8%81%B7%E8%88%87%E5%AE%89%E9%9D%9C%E5%B4%A9%E6%BD%B0-Z%E4%B8%96%E4%BB%A3%E8%81%B7%E5%A0%B4%E6%87%89%E5%B0%8D%E8%88%87%E8%81%B7%E6%B6%AF%E5%BB%BA%E6%A7%8B%E6%8C%87%E5%8D%97.html)
 - [完成的錯覺:駕馭軟體迭代與產品竣工的鴻溝](https://wellstsai.com/single-page-conclusion/%E5%AE%8C%E6%88%90%E7%9A%84%E9%8C%AF%E8%A6%BA%3A%E9%A7%95%E9%A6%AD%E8%BB%9F%E9%AB%94%E8%BF%AD%E4%BB%A3%E8%88%87%E7%94%A2%E5%93%81%E7%AB%A3%E5%B7%A5%E7%9A%84%E9%B4%BB%E6%BA%9D.html)
 - [家庭網路管理實戰指南](https://wellstsai.com/single-page-conclusion/%E5%AE%B6%E5%BA%AD%E7%B6%B2%E8%B7%AF%E7%AE%A1%E7%90%86%E5%AF%A6%E6%88%B0%E6%8C%87%E5%8D%97.html)
