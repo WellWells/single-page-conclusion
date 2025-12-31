@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-12-30 11:27:08Z
+更新日期：2025-12-31 18:39:58Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -246,6 +246,7 @@
 - [杏仁酸功效-法規與應用指南](https://wellstsai.com/single-page-conclusion/%E6%9D%8F%E4%BB%81%E9%85%B8%E5%8A%9F%E6%95%88-%E6%B3%95%E8%A6%8F%E8%88%87%E6%87%89%E7%94%A8%E6%8C%87%E5%8D%97.html)
 - [架構師的演進之路-關鍵思維與技能](https://wellstsai.com/single-page-conclusion/%E6%9E%B6%E6%A7%8B%E5%B8%AB%E7%9A%84%E6%BC%94%E9%80%B2%E4%B9%8B%E8%B7%AF-%E9%97%9C%E9%8D%B5%E6%80%9D%E7%B6%AD%E8%88%87%E6%8A%80%E8%83%BD.html)
 - [架構思維-軟體架構師的核心指南](https://wellstsai.com/single-page-conclusion/%E6%9E%B6%E6%A7%8B%E6%80%9D%E7%B6%AD-%E8%BB%9F%E9%AB%94%E6%9E%B6%E6%A7%8B%E5%B8%AB%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8C%87%E5%8D%97.html)
+- [極紫外光微影技術-ASML如何延續摩爾定律](https://wellstsai.com/single-page-conclusion/%E6%A5%B5%E7%B4%AB%E5%A4%96%E5%85%89%E5%BE%AE%E5%BD%B1%E6%8A%80%E8%A1%93-ASML%E5%A6%82%E4%BD%95%E5%BB%B6%E7%BA%8C%E6%91%A9%E7%88%BE%E5%AE%9A%E5%BE%8B.html)
 - [樂事Lays-品牌起源與商業策略](https://wellstsai.com/single-page-conclusion/%E6%A8%82%E4%BA%8BLays-%E5%93%81%E7%89%8C%E8%B5%B7%E6%BA%90%E8%88%87%E5%95%86%E6%A5%AD%E7%AD%96%E7%95%A5.html)
 - [標點符號的演進-從古希臘到數位時代](https://wellstsai.com/single-page-conclusion/%E6%A8%99%E9%BB%9E%E7%AC%A6%E8%99%9F%E7%9A%84%E6%BC%94%E9%80%B2-%E5%BE%9E%E5%8F%A4%E5%B8%8C%E8%87%98%E5%88%B0%E6%95%B8%E4%BD%8D%E6%99%82%E4%BB%A3.html)
 - [模型上下文協定-MCP-AI助理的標準化介面](https://wellstsai.com/single-page-conclusion/%E6%A8%A1%E5%9E%8B%E4%B8%8A%E4%B8%8B%E6%96%87%E5%8D%94%E5%AE%9A-MCP-AI%E5%8A%A9%E7%90%86%E7%9A%84%E6%A8%99%E6%BA%96%E5%8C%96%E4%BB%8B%E9%9D%A2.html)
