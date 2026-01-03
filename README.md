@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2025-12-31 18:42:35Z
+更新日期：2026-01-03 10:16:36Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -108,6 +108,7 @@
 - [PyArmor教學-加密保護.授權啟用與部署疑難排解](https://wellstsai.com/single-page-conclusion/PyArmor%E6%95%99%E5%AD%B8-%E5%8A%A0%E5%AF%86%E4%BF%9D%E8%AD%B7.%E6%8E%88%E6%AC%8A%E5%95%9F%E7%94%A8%E8%88%87%E9%83%A8%E7%BD%B2%E7%96%91%E9%9B%A3%E6%8E%92%E8%A7%A3.html)
 - [QR碼技術解析](https://wellstsai.com/single-page-conclusion/QR%E7%A2%BC%E6%8A%80%E8%A1%93%E8%A7%A3%E6%9E%90.html)
 - [RAM vs VRAM 深度解析](https://wellstsai.com/single-page-conclusion/RAM%20vs%20VRAM%20%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
+- [Rsync-演算法-滾動校驗-同步原理](https://wellstsai.com/single-page-conclusion/Rsync-%E6%BC%94%E7%AE%97%E6%B3%95-%E6%BB%BE%E5%8B%95%E6%A0%A1%E9%A9%97-%E5%90%8C%E6%AD%A5%E5%8E%9F%E7%90%86.html)
 - [S25-Edge-vs-iPhone-Air-比較-推薦-規格評測](https://wellstsai.com/single-page-conclusion/S25-Edge-vs-iPhone-Air-%E6%AF%94%E8%BC%83-%E6%8E%A8%E8%96%A6-%E8%A6%8F%E6%A0%BC%E8%A9%95%E6%B8%AC.html)
 - [SPI協定-運作模式-CPOL-CPHA-與I2C比較](https://wellstsai.com/single-page-conclusion/SPI%E5%8D%94%E5%AE%9A-%E9%81%8B%E4%BD%9C%E6%A8%A1%E5%BC%8F-CPOL-CPHA-%E8%88%87I2C%E6%AF%94%E8%BC%83.html)
 - [Shellcode-核心技術-攻防實戰指南](https://wellstsai.com/single-page-conclusion/Shellcode-%E6%A0%B8%E5%BF%83%E6%8A%80%E8%A1%93-%E6%94%BB%E9%98%B2%E5%AF%A6%E6%88%B0%E6%8C%87%E5%8D%97.html)
