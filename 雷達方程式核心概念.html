@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E9%9B%B7%E9%81%94%E6%96%B9%E7%A8%8B%E5%BC%8F%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5.png">
+    <meta name="twitter:description" content="本頁聚焦雷達方程式的原理，包括點目標與擴展目標的功率衰減特性、單基與雙基雷達的系統差異，以及雷達橫截面（RCS）對目標偵測效能的影響，適用於車用、工業與航空雷達感測技術之基礎知識。">
+    <meta name="twitter:title" content="雷達方程式核心概念">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E9%9B%B7%E9%81%94%E6%96%B9%E7%A8%8B%E5%BC%8F%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E9%9B%B7%E9%81%94%E6%96%B9%E7%A8%8B%E5%BC%8F%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5.html">
+    <meta property="og:description" content="本頁聚焦雷達方程式的原理，包括點目標與擴展目標的功率衰減特性、單基與雙基雷達的系統差異，以及雷達橫截面（RCS）對目標偵測效能的影響，適用於車用、工業與航空雷達感測技術之基礎知識。">
+    <meta property="og:title" content="雷達方程式核心概念">
+    <meta name="description" content="本頁聚焦雷達方程式的原理，包括點目標與擴展目標的功率衰減特性、單基與雙基雷達的系統差異，以及雷達橫截面（RCS）對目標偵測效能的影響，適用於車用、工業與航空雷達感測技術之基礎知識。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雷達方程式核心概念</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- === KaTeX 數學公式支援 CSS === -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+        xintegrity="sha384-KiWOmfVjnN8d/RwA2eNf/eF2wJb/O/ka/S/J1X/3e/3X/OHEu/K+jN/P0/f/aWc/" crossorigin="anonymous">
+
+    <style>
+        /* 應用 Google Font 與基本樣式 */
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+            /* 修正 Tailwind/Chrome 對中文字體套用 wght 300 時過細的問題 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 自訂漸層背景 */
+        .main-gradient-bg {
+            background-image: linear-gradient(to bottom, #0f172a, #000000);
+        }
+
+        /* 卡片統一樣式 */
+        .content-card {
+            @apply bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-lg transition-all duration-300 hover:shadow-cyan-500/10 hover:border-cyan-500/50;
+        }
+
+        /* 表格標頭 */
+        .table-header {
+            @apply px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase tracking-wider;
+        }
+
+        /* 表格儲存格 */
+        .table-cell {
+            @apply px-6 py-4 whitespace-nowrap text-sm;
+        }
+    </style>
+
+    <!-- === KaTeX 數學公式支援 JS === -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+        xintegrity="sha384-hIoBPJfiS/1gNVIeMBNn87/sVvBseT9R/E/Q-M+h/f/K/a/cK/y2/qxsH+IfD+OT"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+        xintegrity="sha384-43gA/I/L/Qf3/R/j+cTnxrYV/0/13vkvEcTrE/q/V/G+qI/4t/GNERpbGb/V/cgy"
+        crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 頁面載入時自動渲染所有 KaTeX 公式
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false },
+                    { left: '\\(', right: '\\)', display: false },
+                    { left: '\\[', right: '\\]', display: true }
+                ],
+                throwOnError: false
+            });
+        });
+
+        /**
+         * 供動態內容 (例如 Tooltip) 呼叫的 KaTeX 渲染函式
+         * @param {HTMLElement} element - 需要渲染 KaTeX 公式的 DOM 元素
+         */
+        function renderKatexInDynamicContent(element) {
+            if (window.renderMathInElement && element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false },
+                        { left: '\\(', right: '\\)', display: false },
+                        { left: '\\[', right: '\\]', display: true }
+                    ],
+                    throwOnError: false
+                });
+            }
+        }
+    </script>
+</head>
+
+<body class="main-gradient-bg text-slate-300 min-h-screen flex flex-col">
+
+    <!-- =========== Header =========== -->
+    <header class="py-12 md:py-16 text-center">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-bold text-white">
+                ⚡️ 雷達方程式核心概念
+            </h1>
+            <p class="text-lg md:text-xl text-slate-400 mt-4 max-w-3xl mx-auto">
+                探索點目標、擴展目標及雷達橫截面 (RCS) 的關鍵原理
+            </p>
+        </div>
+    </header>
+
+    <!-- =========== Main Content =========== -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-8">
+
+        <!-- --- 核心摘要卡片 --- -->
+        <section class="mb-16">
+            <div
+                class="bg-slate-800/70 backdrop-blur-sm border border-cyan-500/30 rounded-2xl shadow-2xl shadow-cyan-500/10 p-8 md:p-10 max-w-4xl mx-auto text-center">
+                <h2 class="text-2xl md:text-3xl font-semibold text-white mb-4">
+                    📝 核心摘要
+                </h2>
+                <p class="text-lg md:text-xl leading-relaxed text-slate-300">
+                    雷達方程式是評估雷達感測器效能的基礎，它建立了發射功率、目標特性、距離與接收功率之間的數學關係。為了應對不同的測量任務，此方程式必須被適當地應用與解讀，主要區分為「點目標」與「無限擴展區域目標」兩種基礎模型。
+                </p>
+            </div>
+        </section>
+
+        <!-- --- 方程式與模型網格 --- -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+
+            <!-- 卡片 1: 點目標 -->
+            <div class="content-card p-6 md:p-8">
+                <h3 class="text-2xl font-semibold text-cyan-400 mb-4">
+                    🎯 點目標雷達方程式
+                </h3>
+                <p class="mb-4 text-base leading-relaxed">
+                    此模型假設目標與天線均滿足遠場 (Far Field) 條件。其最關鍵的特徵是，接收功率 $P_{rx}$ 會隨著距離 $R$ 的四次方 ($1/R^4$)
+                    而急劇衰減。這導致雷達通道在處理不同距離的目標時，必須應對極高的動態範圍。
+                </p>
+                <div
+                    class="my-4 p-4 bg-black/40 rounded-md font-mono text-sm text-amber-300 overflow-x-auto shadow-inner">
+                    $$ P_{rx} = P_{tx} \cdot \frac{G_{tx}G_{rx}\lambda^{2}}{(4\pi)^{3}R^{4}} \cdot \sigma_{rcs} $$
+                </div>
+                <p class="text-sm text-slate-400">
+                    其中遠場距離 $R_{FF} = 2A^2 / \lambda$。例如，一個 77 GHz、孔徑 5cm 的車用雷達，其遠場距離約為 1.3 公尺。
+                </p>
+            </div>
+
+            <!-- 卡片 2: 擴展區域目標 -->
+            <div class="content-card p-6 md:p-8">
+                <h3 class="text-2xl font-semibold text-teal-400 mb-4">
+                    🌍 擴展區域目標方程式
+                </h3>
+                <p class="mb-4 text-base leading-relaxed">
+                    此模型適用於目標非常巨大，以至於完全覆蓋天線視場 (FoV) 的情況，例如對地觀測或大型儲罐的液位測量。此時使用「鏡像法」進行分析，接收功率 $P_{rx}$ 隨距離 $R$ 的平方
+                    ($1/R^2$) 衰減。
+                </p>
+                <div
+                    class="my-4 p-4 bg-black/40 rounded-md font-mono text-sm text-lime-300 overflow-x-auto shadow-inner">
+                    $$ P_{rx} = P_{tx} \cdot \frac{G_{tx}G_{rx}\lambda^{2}}{(4\pi)^{2}(2R)^{2}} $$
+                </div>
+                <p class="text-sm text-slate-400">
+                    在實務中，例如車用雷達，近距離目標可能符合區域目標 ($1/R^2$)，而遠距離目標則符合點目標 ($1/R^4$)。
+                </p>
+            </div>
+
+            <!-- 卡片 3: 單基 vs 雙基 -->
+            <div class="content-card p-6 md:p-8">
+                <h3 class="text-2xl font-semibold text-indigo-400 mb-4">
+                    📡 單基 (Monostatic) vs. 雙基 (Bistatic)
+                </h3>
+                <p class="mb-4 text-base">
+                    雷達系統依天線配置可分為兩種：
+                </p>
+                <ul class="space-y-3 list-disc list-inside">
+                    <li>
+                        <strong>單基雷達:</strong>
+                        <br><span class="pl-5 text-slate-400">使用<strong>同一天線</strong>進行發射(Tx)與接收(Rx)。優點是結構
+                            компактный、體積小；缺點是需要訊號分離器 (Splitter)，這會在高頻毫米波段引入額外損耗。</span>
+                    </li>
+                    <li>
+                        <strong>雙基雷達:</strong>
+                        <br><span
+                            class="pl-5 text-slate-400">發射(Tx)與接收(Rx)天線<strong>分離</strong>。優點是天線可針對各自任務（如照明、測角）進行優化，且無需分離器；缺點是天線分離可能導致視差
+                            (Parallax) 問題。</span>
+                    </li>
+                </ul>
+
+                <!-- === 圖片說明區域 === -->
+                <div
+                    class="mt-6 bg-slate-700/50 border border-dashed border-slate-500 rounded-lg p-6 text-center text-slate-400">
+                    <div class="w-full aspect-video  rounded-md flex items-center justify-center  text-slate-500">
+                        <span> <img
+                                src="data:image/png;base64,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"
+                                alt="角反射器示意圖" </span>
+                    </div>
+                    <p class="font-semibold text-white">Fig. 1.4：單基 (a) 與 雙基 (b) 天線配置</p>
+                    <p class="text-sm">展示了共用或分離的發射 (Tx) 與接收 (Rx) 天線。</p>
+                </div>
+                <!-- === 結束圖片說明區域 === -->
+
+            </div>
+
+            <!-- 卡片 4: RCS -->
+            <div class="content-card p-6 md:p-8">
+                <h3 class="text-2xl font-semibold text-purple-400 mb-4">
+                    📏 雷達橫截面 (RCS)
+                </h3>
+                <p class="mb-4 text-base">
+                    RCS ($\sigma_{rcs}$) 是一個等效面積，用以量化目標將電磁波反射回雷達接收器的能力。它並非目標的實際物理面積，而是受多種因素強烈影響：
+                </p>
+                <ul class="space-y-2 list-disc list-inside text-slate-300">
+                    <li><strong>材料:</strong> 金屬（高反射） vs. 低介電常數材料（低反射）。</li>
+                    <li><strong>形狀:</strong> 具 90° 直角的「角反射器」RCS 極高。</li>
+                    <li><strong>視角:</strong> 除球體外，RCS 通常對視角 very 敏感。</li>
+                    <li><strong>尺寸:</strong> RCS 通常隨目標尺寸相對於波長的比例而增加。</li>
+                </ul>
+
+                <!-- === 圖片說明區域 === -->
+                <div
+                    class="mt-6 bg-slate-700/50 border border-dashed border-slate-500 rounded-lg p-6 text-center text-slate-400">
+                    <div class="w-full aspect-video  rounded-md flex items-center justify-center mb-3 text-slate-500">
+                        <span> <img
+                                src="data:image/png;base64,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"
+                                alt="角反射器示意圖" </span>
+                    </div>
+                    <p class="font-semibold text-white">Fig. 1.5：角反射器</p>
+                    <p class="text-sm">由三面互相垂直的金屬板組成，邊長為 $a$。</p>
+                </div>
+                <!-- === 結束圖片說明區域 === -->
+
+            </div>
+        </section>
+
+        <!-- --- 關鍵方程式推導 --- -->
+        <section class="mb-16">
+            <div class="content-card p-6 md:p-8">
+                <h2 class="text-3xl font-semibold text-white text-center mb-8">
+                    ⚙️ 關鍵方程式推導
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 max-w-5xl mx-auto text-sm">
+
+                    <!-- 點目標推導 -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-cyan-400 mb-3">🎯 點目標 (Point Target) 推導</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center justify-between flex-wrap"><span>等向功率密度:</span> <span
+                                    class="font-mono text-slate-300 ml-4">$S_{tx,i} = \frac{P_{tx}}{4\pi r^2}$</span>
+                            </li>
+                            <li class="flex items-center justify-between flex-wrap"><span>天線增益功率密度:</span> <span
+                                    class="font-mono text-slate-300 ml-4">$S_{tx} = \frac{P_{tx}G_{tx}}{4\pi
+                                    R^2}$</span></li>
+                            <li class="flex items-center justify-between flex-wrap"><span>散射功率:</span> <span
+                                    class="font-mono text-slate-300 ml-4">$P_{s} = S_{tx}\sigma_{rcs}$</span></li>
+                            <li class="flex items-center justify-between flex-wrap"><span>接收功率 (天線面積):</span> <span
+                                    class="font-mono text-slate-300 ml-4">$P_{rx} = A_{eff,rx}S_{s}$</span></li>
+                            <li class="flex items-center justify-between flex-wrap"><span>接收天線增益:</span> <span
+                                    class="font-mono text-slate-300 ml-4">$G_{rx} = \frac{4\pi
+                                    A_{eff,rx}}{\lambda^2}$</span></li>
+                            <li class="flex items-center justify-between flex-wrap"><span class="whitespace-nowrap">最大距離
+                                    (點目標):</span> <span class="font-mono text-slate-300 ml-4 text-right">$R_{max} =
+                                    \sqrt[4]{\frac{P_{tx}G_{tx}G_{rx}\lambda^2\sigma_{rcs}}{(4\pi)^3
+                                    P_{rx,min}}}$</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- 擴展目標 & RCS -->
+                    <div>
+                        <h3 class="text-xl font-semibold text-teal-400 mb-3">🌍 擴展目標 (Extended Target)</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center justify-between flex-wrap"><span>接收功率密度:</span> <span
+                                    class="font-mono text-slate-300 ml-4">$S_{rx} =
+                                    \frac{P_{tx}G_{tx}}{4\pi(2R)^2}$</span></li>
+                            <li class="flex items-center justify-between flex-wrap"><span class="whitespace-nowrap">最大距離
+                                    (擴展目標):</span> <span class="font-mono text-slate-300 ml-4 text-right">$R_{max} =
+                                    \sqrt{\frac{P_{tx}G_{tx}G_{rx}\lambda^2}{4(4\pi)^2 P_{rx,min}}}$</span></li>
+                        </ul>
+
+                        <h3 class="text-xl font-semibold text-purple-400 mb-3 mt-6">📏 雷達橫截面 (RCS)</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center justify-between flex-wrap"><span>RCS (場強):</span> <span
+                                    class="font-mono text-slate-300 ml-4">$\sigma_{rcs} = 4\pi R^2
+                                    \frac{|E_s|^2}{|E_i|^2}$</span></li>
+                            <li class="flex items-center justify-between flex-wrap"><span>RCS (功率):</span> <span
+                                    class="font-mono text-slate-300 ml-4">$\sigma_{rcs} = 4\pi R^2
+                                    \frac{P_s}{P_i}$</span></li>
+                            <li class="flex items-center justify-between flex-wrap"><span>角反射器 RCS:</span> <span
+                                    class="font-mono text-slate-300 ml-4">$\sigma_{rcs,CR} = \frac{4\pi
+                                    a^4}{3\lambda^2}$</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- --- 比較表格 --- -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-semibold text-white text-center mb-8">
+                📊 關鍵特性比較
+            </h2>
+            <div class="content-card overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-[700px] divide-y divide-slate-700">
+                        <thead class="bg-black/30">
+                            <tr>
+                                <th class="table-header">特性</th>
+                                <th class="table-header">模型</th>
+                                <th class="table-header">功率衰減</th>
+                                <th class="table-header">關鍵假設</th>
+                                <th class="table-header">優/缺點</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800">
+                            <tr class="hover:bg-slate-700/50 transition-colors">
+                                <td class="table-cell font-medium text-cyan-300">點目標</td>
+                                <td class="table-cell">Point Target</td>
+                                <td class="table-cell font-mono text-red-400">$1 / R^4$</td>
+                                <td class="table-cell">目標在遠場，尺寸小於波束</td>
+                                <td class="table-cell">高動態範圍，適用遠距小目標</td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50 transition-colors">
+                                <td class="table-cell font-medium text-teal-300">區域目標</td>
+                                <td class="table-cell">Extended Area Target</td>
+                                <td class="table-cell font-mono text-yellow-400">$1 / R^2$</td>
+                                <td class="table-cell">目標覆蓋整個天線視場 (FoV)</td>
+                                <td class="table-cell">適用於近距大面積目標 (如地面)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50 transition-colors">
+                                <td class="table-cell font-medium text-indigo-300">單基雷達</td>
+                                <td class="table-cell">Monostatic</td>
+                                <td class="table-cell text-slate-400">N/A</td>
+                                <td class="table-cell">Tx / Rx 共用天線</td>
+                                <td class="table-cell">優: 體積小 / 缺: 訊號分離器損耗</td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50 transition-colors">
+                                <td class="table-cell font-medium text-purple-300">雙基雷達</td>
+                                <td class="table-cell">Bistatic</td>
+                                <td class="table-cell text-slate-400">N/A</td>
+                                <td class="table-cell">Tx / Rx 天線分離</td>
+                                <td class="table-cell">優: 天線可優化 / 缺: 視差問題</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- --- RCS 參考值表格 --- -->
+        <section class="mb-16 max-w-lg mx-auto">
+            <h2 class="text-3xl font-semibold text-white text-center mb-8">
+                🛰️ 典型 RCS 參考值 (77 GHz)
+            </h2>
+            <div class="content-card overflow-hidden">
+                <table class="w-full divide-y divide-slate-700">
+                    <thead class="bg-black/30">
+                        <tr>
+                            <th class="table-header">目標物件</th>
+                            <th class="table-header">RCS (dBsm)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800 text-center">
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="table-cell">昆蟲</td>
+                            <td class="table-cell font-mono text-slate-400">-60 to -45</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="table-cell">手</td>
+                            <td class="table-cell font-mono text-slate-400">-40 to -30</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="table-cell">行人</td>
+                            <td class="table-cell font-mono text-yellow-500">-10 to 0</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="table-cell">機動車輛</td>
+                            <td class="table-cell font-mono text-orange-500">10 to 20</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="table-cell">卡車</td>
+                            <td class="table-cell font-mono text-red-500">20 to 40</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="table-cell">角反射器</td>
+                            <td class="table-cell font-mono text-cyan-300">極高 (參見推導公式)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- --- 結論 --- -->
+        <section class="text-center max-w-3xl mx-auto">
+            <h2 class="text-2xl font-semibold text-white mb-4">
+                💡 總結
+            </h2>
+            <p class="text-lg text-slate-400 leading-relaxed">
+                掌握點目標 ($1/R^4$) 與區域目標 ($1/R^2$) 兩種雷達方程式模型，並理解 RCS 的關鍵影響因素，是設計與評估特定應用場景下（無論是車用、工業或航空）雷達感測器效能的第一步。
+            </p>
+        </section>
+
+    </main>
+
+    <!-- =========== Footer =========== -->
+    <footer class="w-full py-6 mt-16 bg-black/50 backdrop-blur-sm border-t border-slate-800">
+        <div class="container mx-auto text-center text-sm text-slate-500 px-4">
+            <p>
+                <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-cyan-400 transition-colors">
+                    Generated by wellstsai.com
+                </a>
+            </p>
+            <p class="mt-1">
+                撰寫日期：2025年11月05日
+            </p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

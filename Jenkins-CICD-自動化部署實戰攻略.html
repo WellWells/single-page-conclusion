@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/Jenkins-CICD-%E8%87%AA%E5%8B%95%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AF%A6%E6%88%B0%E6%94%BB%E7%95%A5.png">
+    <meta name="twitter:description" content="Jenkins CI/CD (Continuous Integration/Continuous Deployment) 完整實戰指南。涵蓋 Docker 環境建置、Pipeline (流水線) 腳本撰寫、憑證安全管理及 GitHub 自動化部署流程，助力開發團隊構建高效 DevOps 工作流。">
+    <meta name="twitter:title" content="Jenkins-CICD-自動化部署實戰攻略">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/Jenkins-CICD-%E8%87%AA%E5%8B%95%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AF%A6%E6%88%B0%E6%94%BB%E7%95%A5.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/Jenkins-CICD-%E8%87%AA%E5%8B%95%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AF%A6%E6%88%B0%E6%94%BB%E7%95%A5.html">
+    <meta property="og:description" content="Jenkins CI/CD (Continuous Integration/Continuous Deployment) 完整實戰指南。涵蓋 Docker 環境建置、Pipeline (流水線) 腳本撰寫、憑證安全管理及 GitHub 自動化部署流程，助力開發團隊構建高效 DevOps 工作流。">
+    <meta property="og:title" content="Jenkins-CICD-自動化部署實戰攻略">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenkins CI/CD 自動化部署實戰攻略</title>
+    <meta name="description" content="Jenkins CI/CD (Continuous Integration/Continuous Deployment) 完整實戰指南。涵蓋 Docker 環境建置、Pipeline (流水線) 腳本撰寫、憑證安全管理及 GitHub 自動化部署流程，助力開發團隊構建高效 DevOps 工作流。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151f32', // Custom deeper slate
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        .glass-card {
+            background-color: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        /* Prism.js Overrides for rounded corners */
+        pre[class*="language-"] {
+            border-radius: 0.75rem;
+            /* rounded-xl */
+            margin: 1rem 0;
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+        }
+
+        /* Ensure code blocks preserve formatting */
+        pre code {
+            white-space: pre !important;
+            display: block;
+            overflow-x: auto;
+        }
+
+        code[class*="language-"],
+        pre[class*="language-"] {
+            white-space: pre !important;
+        }
+    </style>
+    <!-- Prism.js CSS (Okaidia Theme for Dark Mode) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css"
+        rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css"
+        rel="stylesheet" />
+</head>
+
+<body
+    class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-950 to-black text-slate-300 font-sans antialiased selection:bg-indigo-500 selection:text-white pb-12">
+
+    <!-- Header Section -->
+    <header class="pt-16 pb-12 px-4 text-center max-w-5xl mx-auto">
+        <h1
+            class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 leading-tight tracking-tight">
+            <span class="text-white">🚀</span> Jenkins 自動化部署實戰攻略
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto font-light leading-relaxed">
+            掌握 DevOps（Development and Operations）核心技能，從零建置 CI/CD（Continuous Integration / Continuous
+            Delivery）持續整合與交付流程，整合 Docker 與 Pipeline（流水線）的全方位技術解析。
+        </p>
+    </header>
+
+    <!-- Summary Card -->
+    <div class="px-4 mb-16">
+        <div
+            class="glass-card max-w-4xl mx-auto rounded-2xl shadow-2xl p-8 md:p-10 relative overflow-hidden group hover:border-indigo-500/30 transition-colors duration-300">
+            <div
+                class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none">
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                <span class="mr-3 text-3xl">💡</span>
+                核心摘要
+            </h2>
+            <p class="text-slate-300 leading-8 text-justify">
+                本指南深入探討 Jenkins 在現代軟體開發週期中的關鍵角色。從基礎的 <strong>CI/CD</strong> 概念出發，詳細解說如何利用 Docker 快速建置 Jenkins
+                環境，並透過 <strong>Pipeline</strong> 技術將程式碼的建置、測試與部署流程自動化。內容涵蓋 <strong>Jenkinsfile</strong>
+                的版本控制策略、<strong>Git/GitHub</strong> 整合、<strong>Maven</strong> 專案建置，以及利用 SSH（Secure Shell）
+                實現遠端伺服器自動部署。此外，亦探討了分散式建置架構（Master/Agent），協助工程師打造高效率、可擴展的 DevOps 工作流。
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content Stack -->
+    <main class="max-w-6xl mx-auto px-4 space-y-12">
+
+        <!-- Section 0: Beginner Guide -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-4">
+                <div class="sticky top-8">
+                    <h3 class="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-emerald-500 pl-4">
+                        <span class="mr-3">🔰</span> 新手閱讀指南
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-6">
+                        在開始這趟自動化旅程前，建議先檢視必備知識與正確心態，避開常見的學習盲點。
+                    </p>
+                </div>
+            </div>
+            <div class="lg:col-span-8 space-y-6">
+                <!-- Prerequisites -->
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-emerald-300 mb-4">📋 閱讀前準備 (Prerequisites)</h4>
+                    <p class="text-slate-300 text-sm mb-4">本指南包含大量實戰操作。即使是經驗豐富的工程師，也可能在以下領域遭遇挑戰：</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                            <strong class="text-white block mb-2 flex items-center"><span class="mr-2">🐧</span> Linux
+                                指令恐懼症</strong>
+                            <p class="text-xs text-slate-400 leading-5">
+                                指南中充滿了 <code>docker run</code>、<code>chmod</code>、<code>ssh-keygen</code> 等指令。若您對
+                                Command Line（命令列）感到陌生，建議先熟悉基礎 Linux 操作再開始。
+                            </p>
+                        </div>
+                        <div class="bg-slate-800/50 p-4 rounded-lg border border-slate-700">
+                            <strong class="text-white block mb-2 flex items-center"><span class="mr-2">☕</span> Java
+                                版本檢核</strong>
+                            <p class="text-xs text-slate-400 leading-5">
+                                這是最常見的啟動失敗原因。請務必確認您的電腦或伺服器環境符合 <strong>Java 17 或 21</strong> 的要求。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenges & Mindset -->
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-yellow-300 mb-4">💡 給新手的避開陷阱指南</h4>
+                    <ul class="space-y-4 text-slate-300 text-sm">
+                        <li class="flex gap-3">
+                            <span class="text-xl flex-shrink-0">🛡️</span>
+                            <div>
+                                <strong class="text-white block">小心 Docker 權限深水區</strong>
+                                <p class="text-slate-400 mt-1 text-xs">
+                                    遇到 <code>permission denied</code> 時不要慌張。雖然 <code>chmod 666 docker.sock</code>
+                                    可以快速解決問題，但請記住這是不安全的權宜之計，生產環境請務必使用標準 Group 設定。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-xl flex-shrink-0">🔑</span>
+                            <div>
+                                <strong class="text-white block">SSH 金鑰的隱形門檻</strong>
+                                <p class="text-slate-400 mt-1 text-xs">
+                                    觀念上是「鑰匙與鎖頭」，但實作上是「檔案權限」。請將此口訣記在心裡：私鑰檔案必須是 <code>600</code> 權限，<code>.ssh</code>
+                                    目錄必須是 <code>700</code> 權限，否則連線會直接被拒絕。
+                                </p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="text-xl flex-shrink-0">🐛</span>
+                            <div>
+                                <strong class="text-white block">擁抱試錯 (Trial and Error)</strong>
+                                <p class="text-slate-400 mt-1 text-xs">
+                                    第一次撰寫 Jenkinsfile 幾乎 100% 會遇到語法錯誤或路徑問題。這是學習過程的常態，不是你做錯了什麼，請善用 Log 進行除錯。
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 1: Core Concepts -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-4">
+                <div class="sticky top-8">
+                    <h3 class="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-blue-500 pl-4">
+                        <span class="mr-3">⚙️</span> CI/CD 與 DevOps 概論
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-6">
+                        理解自動化流程的價值，為何現代開發團隊必須導入持續整合與交付。
+                    </p>
+                </div>
+            </div>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-card rounded-xl p-6 hover:bg-slate-800/60 transition duration-300">
+                    <h4 class="text-lg font-semibold text-indigo-300 mb-3">CI（Continuous Integration）持續整合</h4>
+                    <p class="leading-7">
+                        開發者頻繁地將程式碼合併至主分支。系統自動觸發<strong>編譯、建置與單元測試</strong>，儘早發現整合錯誤，避免「整合地獄」。核心價值在於<strong>快速回饋</strong>與<strong>降低風險</strong>。
+                    </p>
+                </div>
+                <div class="glass-card rounded-xl p-6 hover:bg-slate-800/60 transition duration-300">
+                    <h4 class="text-lg font-semibold text-purple-300 mb-3">CD（Continuous Delivery/Deployment）持續交付/部署
+                    </h4>
+                    <p class="leading-7">
+                        在 CI
+                        的基礎上，自動將通過測試的程式碼部署至測試環境或生產環境。<strong>持續交付</strong>確保軟體隨時處於可發布狀態；<strong>持續部署</strong>則進一步自動化上線流程，減少人為介入。
+                    </p>
+                </div>
+                <!-- 新手友善補充：比喻 -->
+                <div class="glass-card rounded-xl p-4 border border-indigo-400/30 bg-indigo-500/5">
+                    <h4 class="text-base font-bold text-indigo-300 mb-2 flex items-center">
+                        <span class="mr-2">🐣</span> 給初學者的白話文：餐廳比喻
+                    </h4>
+                    <p class="text-slate-300 text-sm leading-6">
+                        想像你在經營一家高品質餐廳：<br>
+                        <strong>CI (持續整合)</strong>
+                        就像是<strong>「試菜員」</strong>。每當廚師（開發者）發明新菜色，試菜員會立刻檢查味道是否合格（測試），確保不會讓難吃的菜流出去。<br>
+                        <strong>CD (持續交付/部署)</strong>
+                        就像是<strong>「自動上菜系統」</strong>。一旦試菜通過，這套系統會自動把菜送到客人的桌上（生產環境），中間不需要服務生手忙腳亂地傳遞。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Installation -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-8 border-t border-slate-800">
+            <div class="lg:col-span-4">
+                <div class="sticky top-8">
+                    <h3 class="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-green-500 pl-4">
+                        <span class="mr-3">📦</span> 環境建置與安裝
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-6">
+                        推薦使用 Docker 進行輕量化部署，解決繁瑣的 Java 環境相依性問題。
+                    </p>
+                </div>
+            </div>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-green-300 mb-4">系統需求與準備</h4>
+                    <ul class="space-y-3 text-slate-300 list-disc list-inside">
+                        <li><strong>Java 環境：</strong>
+                            <ul class="list-disc list-inside ml-4 mt-1 text-slate-400 text-xs">
+                                <li>Jenkins 2.357 - 2.462：支援 Java 11, 17, 21</li>
+                                <li>Jenkins 2.463+ (2024/06後)：<strong>需要 Java 17 或 21</strong> (不支援 Java 11)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Docker (推薦)：</strong> 使用官方映像檔可快速啟動，並易於管理資料持久化。</li>
+                    </ul>
+                </div>
+                <div class="glass-card rounded-xl p-6 overflow-hidden">
+                    <h4 class="text-lg font-semibold text-green-300 mb-4">Docker 啟動指令</h4>
+                    <pre class="line-numbers"><code class="language-bash">docker run -d \
+  -u root \
+  --name jenkins \
+  -p 8080:8080 \
+  -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkins/jenkins:lts</code></pre>
+                    <p class="mt-4 text-sm text-slate-400">
+                        <strong>參數解析：</strong><br>
+                        <code>-p 8080:8080</code>：Web 介面通訊埠。<br>
+                        <code>-p 50000:50000</code>：Agent 節點通訊埠。<br>
+                        <code>-v jenkins_home:...</code>：掛載資料卷，確保重啟容器後設定與資料不遺失。<br>
+                        <code>-v ...docker.sock</code>：（選用）若需在 Jenkins 內部操作實體主機 Docker 時使用。
+                    </p>
+
+                    <!-- 新手友善補充：Docker Volume -->
+                    <div class="mt-4 p-3 border-l-4 border-blue-400 bg-blue-500/10">
+                        <strong class="text-blue-300 text-sm block mb-1">💡 為什麼要設定
+                            <code>-v jenkins_home</code>？</strong>
+                        <p class="text-slate-400 text-sm">
+                            Docker 容器就像是一個「用完即丟」的盒子。如果你刪除或者是升級這個容器，裡面所有的資料（使用者帳號、建置歷史、Pipeline 設定）都會瞬間消失！<br>
+                            透過 <code>-v</code> 掛載資料卷，就像是把資料存放在盒子外面的保險箱。即使盒子換了，保險箱裡的資料還在，這是<strong>資料持久化</strong>的關鍵。
+                        </p>
+                    </div>
+                    <div class="mt-4 p-4 border border-red-500/50 bg-red-500/10 rounded-lg">
+                        <strong class="text-red-400 block mb-2 text-base">🚨 重要安全警告：Docker Socket 權限風險</strong>
+                        <p class="text-sm text-slate-300 mb-3">當掛載 <code>/var/run/docker.sock</code> 時，Jenkins
+                            容器內的使用者可能無權存取實體主機的 Docker 常駐程式，導致建置失敗。</p>
+
+                        <div class="bg-yellow-500/10 border-l-4 border-yellow-500 p-3 mb-3">
+                            <strong class="text-yellow-400 text-sm block mb-1">⚡ 快速解決方案（僅限本地測試/學習環境）：</strong>
+                            <p class="text-sm text-slate-400 mb-2">在實體主機執行以下指令修改權限：</p>
+                            <pre><code class="language-bash">sudo chmod 666 /var/run/docker.sock</code></pre>
+                            <p class="text-xs text-red-300 mt-2 font-semibold">⛔ 此方法讓任何容器都能完全控制實體主機 Docker，等同給予 root
+                                權限！生產環境絕對禁用！</p>
+                        </div>
+
+                        <strong class="text-green-400 text-sm block mb-2">✅ 生產環境安全做法：</strong>
+                        <div class="space-y-2 text-sm text-slate-300">
+                            <p><strong>方法一：建立 Docker 群組</strong></p>
+                            <pre><code class="language-bash">sudo groupadd docker
+sudo usermod -aG docker jenkins
+sudo systemctl restart docker</code></pre>
+                            <p><strong>方法二：使用 Docker-in-Docker (DinD)</strong></p>
+                            <pre><code class="language-bash">docker run -d --privileged \
+  --name jenkins-dind \
+  docker:dind</code></pre>
+                            <p class="text-xs text-slate-400 mt-2">詳細說明請參考：<a
+                                    href="https://www.docker.com/blog/docker-can-now-run-within-docker/"
+                                    class="text-blue-400 hover:underline">Docker-in-Docker 官方文件</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-green-300 mb-3">初始化設定</h4>
+                    <p class="leading-7 mb-4">
+                        首次啟動需輸入<strong>解鎖密碼</strong>。若使用 Docker，可透過以下指令獲取：
+                    </p>
+                    <pre><code class="language-bash">docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword</code></pre>
+                    <p class="leading-7 mt-4">
+                        接著安裝「建議的套件 (Suggested Plugins)」並建立管理員帳戶即可完成初始設定。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Pipeline & Jenkinsfile -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-8 border-t border-slate-800">
+            <div class="lg:col-span-4">
+                <div class="sticky top-8">
+                    <h3 class="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-orange-500 pl-4">
+                        <span class="mr-3">📝</span> Pipeline 與 Jenkinsfile
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-6">
+                        Pipeline as Code 是現代 CI/CD 的標準。使用 Declarative Syntax（宣告式語法）定義清晰的建置流程。
+                    </p>
+                </div>
+            </div>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-orange-300 mb-3">Freestyle vs. Pipeline</h4>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-700 text-slate-400 text-sm uppercase">
+                                <th class="py-3 px-2">特性</th>
+                                <th class="py-3 px-2">Freestyle Project</th>
+                                <th class="py-3 px-2">Pipeline</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-300 text-sm">
+                            <tr class="border-b border-slate-700/50 hover:bg-slate-700/20">
+                                <td class="py-3 px-2 font-medium">設定方式</td>
+                                <td class="py-3 px-2">GUI（圖形使用者介面）點擊設定</td>
+                                <td class="py-3 px-2">撰寫腳本程式碼 (Groovy)</td>
+                            </tr>
+                            <tr class="border-b border-slate-700/50 hover:bg-slate-700/20">
+                                <td class="py-3 px-2 font-medium">版本控制</td>
+                                <td class="py-3 px-2">困難 (存於 XML)</td>
+                                <td class="py-3 px-2">容易 (Jenkinsfile 隨專案版控)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/20">
+                                <td class="py-3 px-2 font-medium">流程複雜度</td>
+                                <td class="py-3 px-2">適合簡單單一任務</td>
+                                <td class="py-3 px-2">支援複雜邏輯、平行處理、暫停重啟</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-orange-300 mb-4">Declarative Pipeline 範例</h4>
+                    <p class="mb-4 text-slate-400 text-sm">推薦使用聲明式語法 (Declarative)，結構清晰且易於維護。<br>
+                        Tools」中已設定好名為 Maven 3 與 JDK 17 的工具設定。</span>
+                    </p>
+
+                    <!-- 新手友善補充：Pipeline 結構 -->
+                    <div class="mb-4 p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+                        <h5 class="text-yellow-300 font-bold text-sm mb-2">📜 Pipeline 語法結構拆解</h5>
+                        <ul class="text-sm text-slate-300 space-y-2">
+                            <li><code class="text-orange-400">pipeline { ... }</code>：整個自動化流程的<strong>最外層容器</strong>。
+                            </li>
+                            <li><code class="text-orange-400">agent any</code>：<strong>誰來做？</strong>
+                                指派任何有空的工人（Node/Agent）來執行任務。</li>
+                            <li><code class="text-orange-400">stages { ... }</code>：<strong>流程總管</strong>，包含多個階段。</li>
+                            <li><code
+                                    class="text-orange-400">stage('Build')</code>：<strong>具體階段</strong>，例如「備料」、「烹飪」或「打包」。
+                            </li>
+                            <li><code class="text-orange-400">steps { ... }</code>：<strong>實際動作</strong>，這裡寫具體的指令，如
+                                <code>sh</code> (執行 Shell 指令) 或 <code>echo</code> (印出訊息)。
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="code-wrapper relative">
+                        <pre class="line-numbers"><code class="language-groovy">pipeline {
+    agent any
+    // 關鍵：宣告使用的工具，名稱需對應 Jenkins 系統設定
+    tools {
+        maven 'Maven 3'
+        jdk 'JDK 17'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                // 顯示拉取程式碼過程
+                checkout scm
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                // -B (Batch mode) 讓 Log 更簡潔，-DskipTests 跳過測試加速驗證
+                sh 'mvn clean package -B -DskipTests'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                sh 'mvn test'
+            }
+        }
+    }
+    // 建置後的動作：清理、通知與錯誤處理
+    post {
+        always {
+            cleanWs() // 清理工作區，節省空間
+        }
+        success {
+            echo '✅ 建置成功！'
+            // 可選：發送成功通知到 Slack
+            // slackSend(channel: '#devops', color: 'good', message: "✅ 建置成功: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
+        }
+        failure {
+            echo '❌ 建置失敗，請檢查 Log'
+            // Email 通知範例（需安裝 Email Extension Plugin）
+            emailext(
+                subject: "❌ Jenkins 建置失敗: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: """建置失敗，請檢查日誌：
+                         Job: ${env.JOB_NAME}
+                         Build: ${env.BUILD_NUMBER}
+                         URL: ${env.BUILD_URL}""",
+                to: 'dev-team@example.com'
+            )
+        }
+        unstable {
+            echo '⚠️ 建置不穩定，存在警告'
+        }
+        aborted {
+            echo '🛑 建置已中止'
+        }
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3.5: Credentials Security Best Practices -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-8 border-t border-slate-800">
+            <div class="lg:col-span-4">
+                <div class="sticky top-8">
+                    <h3 class="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-pink-500 pl-4">
+                        <span class="mr-3">🔐</span> 憑證安全管理
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-6">
+                        正確管理敏感資訊是 DevOps 安全的基石，避免密碼、Token 洩露於程式碼或日誌中。
+                    </p>
+                </div>
+            </div>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-pink-300 mb-3">❌ 絕對不要這樣做</h4>
+                    <pre class="line-numbers"><code class="language-groovy">// 🚫 寫死密碼或 Token（任何人都能看到！）
+stage('Deploy') {
+    steps {
+        sh "curl -u admin:MyPassword123 https://api.example.com/deploy"
+    }
+}
+
+// 🚫 把密碼放在環境變數中直接使用
+stage('Build') {
+    environment {
+        DB_PASSWORD = 'SuperSecret123'  // 會出現在 Log 中！
+    }
+    steps {
+        sh "echo ${DB_PASSWORD}"  // 密碼會被記錄
+    }
+}</code></pre>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-green-300 mb-3">✅ 正確做法：使用 withCredentials</h4>
+                    <pre class="line-numbers"><code class="language-groovy">stage('Deploy with Token') {
+    steps {
+        // 使用 Jenkins Credentials Store 中的憑證
+        withCredentials([string(credentialsId: 'api-token', variable: 'API_TOKEN')]) {
+            // Jenkins 會自動在 Log 中隱藏 TOKEN 內容
+            sh '''
+                curl -H "Authorization: Bearer ${API_TOKEN}" \
+                     https://api.example.com/deploy
+            '''
+        }
+    }
+}
+
+// 使用多種憑證類型
+stage('Database Migration') {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'db-credentials',
+                usernameVariable: 'DB_USER',
+                passwordVariable: 'DB_PASS'
+            )
+        ]) {
+            sh '''
+                mysql -u ${DB_USER} -p${DB_PASS} < migration.sql
+            '''
+        }
+    }
+}</code></pre>
+                    <p class="mt-4 p-3 border-l-4 border-green-500 bg-green-500/10 text-slate-300 text-sm">
+                        <strong>💡 關鍵優勢：</strong><br>
+                        • 憑證集中管理於 Jenkins Credentials Store<br>
+                        • 自動遮蔽 Log 中的敏感資訊<br>
+                        • 支援憑證輪替而不需修改 Pipeline 程式碼<br>
+                        • 可整合外部 Secret 管理工具（如 HashiCorp Vault）
+                    </p>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-blue-300 mb-3">🔧 設定 Jenkins Credentials</h4>
+                    <ol class="list-decimal list-inside space-y-2 text-slate-300 text-sm">
+                        <li>進入 <code>Manage Jenkins → Credentials</code></li>
+                        <li>選擇對應的 Domain（通常是 Global）</li>
+                        <li>點擊「Add Credentials」</li>
+                        <li>選擇憑證類型：
+                            <ul class="list-disc list-inside ml-6 mt-2 space-y-1 text-slate-400">
+                                <li><strong>Secret text：</strong> API Token、密碼</li>
+                                <li><strong>Username with password：</strong> 資料庫帳密</li>
+                                <li><strong>SSH Username with private key：</strong> SSH 私鑰</li>
+                                <li><strong>Certificate：</strong> SSL/TLS 憑證</li>
+                            </ul>
+                        </li>
+                        <li>設定易識別的 ID（例如 <code>github-api-token</code>）</li>
+                        <li>在 Pipeline 中透過 <code>credentialsId</code> 引用</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Real-world Deployment -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-8 border-t border-slate-800">
+            <div class="lg:col-span-4">
+                <div class="sticky top-8">
+                    <h3 class="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-red-500 pl-4">
+                        <span class="mr-3">🚀</span> 自動化部署實戰流程
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-6">
+                        整合 GitHub、Maven 與 SSH，實現從程式碼提交到伺服器上線的全自動化流程。
+                    </p>
+                </div>
+            </div>
+            <div class="lg:col-span-8 space-y-6">
+                <!-- Step 1 -->
+                <div class="glass-card rounded-xl p-6 hover:translate-x-1 transition-transform duration-300">
+                    <div class="flex items-start">
+                        <div class="bg-red-500/20 text-red-400 rounded-lg p-2 mr-4 font-mono font-bold">01</div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-white mb-2">設定 GitHub 權限與 Webhook</h4>
+                            <p class="text-slate-300 text-sm leading-6">
+                                為了解決 Jenkins 拉取私有儲存庫程式碼的權限問題，需設定 <strong>SSH Keys</strong> 或 <strong>Personal Access
+                                    Token
+                                    (PAT)</strong>。
+                                <br>
+                                <span class="text-slate-500 block mt-2">設定路徑：Manage Jenkins → Credentials → Add
+                                    Credentials。</span>
+                                若需實現「Push 即建置」，需完成以下設定：
+                                <br>
+                                <strong class="text-white text-sm mt-3 block">1. Jenkins Job 設定：</strong>
+                            <ul class="list-disc list-inside ml-2 text-slate-400 space-y-1">
+                                <li>進入 Job Configuration → Build Triggers</li>
+                                <li>勾選 <strong>「GitHub hook trigger for GITScm polling」</strong></li>
+                            </ul>
+
+                            <strong class="text-white text-sm mt-3 block">2. GitHub Webhook 設定：</strong>
+                            <ul class="list-disc list-inside ml-2 text-slate-400 space-y-1">
+                                <li><strong>Payload URL:</strong>
+                                    <code>http://&lt;你的Jenkins IP&gt;:8080/github-webhook/</code>
+                                    <span class="block text-xs text-yellow-500 mt-1 pl-4">⚠️ 本地/內網環境需建立外部通道。傳統可用
+                                        ngrok/frp 等反向代理，或推薦使用更安全簡單的 <strong>Zero Trust</strong> 方案：<a
+                                            href="https://wellstsai.com/post/tailscale/" target="_blank"
+                                            class="underline text-indigo-300 hover:text-white">使用 Tailscale
+                                            建立安全通道</a></span>
+                                </li>
+                                <li><strong>Content type:</strong> <code>application/json</code></li>
+                                <li><strong>觸發事件:</strong> Just the push event</li>
+                            </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="glass-card rounded-xl p-6 hover:translate-x-1 transition-transform duration-300">
+                    <div class="flex items-start">
+                        <div class="bg-red-500/20 text-red-400 rounded-lg p-2 mr-4 font-mono font-bold">02</div>
+                        <div>
+                            <h4 class="text-lg font-semibold text-white mb-2">專案建置與測試</h4>
+                            <p class="text-slate-300 text-sm leading-6">
+                                在 Pipeline 中定義 Maven 或 Gradle 指令。需要在 Jenkins 的「Global Tool Configuration」中預先設定好 JDK 與
+                                Maven 的路徑，確保執行環境變數正確。
+                                <br>
+                                <span class="text-slate-500 block mt-2">建議：將 Maven 相依套件快取 (m2 repo)
+                                    掛載至容器外部，加快建置速度。</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="glass-card rounded-xl p-6 hover:translate-x-1 transition-transform duration-300">
+                    <div class="flex items-start">
+                        <div class="bg-red-500/20 text-red-400 rounded-lg p-2 mr-4 font-mono font-bold">03</div>
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-lg font-semibold text-white mb-2">部署至遠端伺服器 (使用 Jenkins Credentials/sshagent)
+                            </h4>
+                            <p class="text-slate-300 text-sm leading-6">
+                                建置成功後，利用 SSH 將 Artifact 傳輸至目標伺服器。建議使用標準做法，將私鑰託管於 Jenkins。
+                                <br>
+                                <strong>關鍵步驟 (修正版)：</strong>
+                            <ul class="list-disc list-inside mt-2 text-slate-400 space-y-2">
+                                <li><strong>在本機/實體主機產生金鑰：</strong> 使用 <code>ssh-keygen -t rsa -f jenkins_key</code>
+                                    生成一對金鑰。
+                                    <p class="text-xs text-slate-400 mt-1 pl-2 border-l-2 border-slate-600">
+                                        🔑 <strong>新手觀念：</strong> SSH Key 包含兩部分。<br>
+                                        1. <strong>私鑰 (Private Key)</strong>：像是家裡的鑰匙，必須<strong>自己保管好</strong> (交給
+                                        Jenkins 保管)。<br>
+                                        2. <strong>公鑰 (Public Key)</strong>：像是鎖頭，可以複製很多個裝在不同伺服器上 (放在目標機器的
+                                        <code>authorized_keys</code>)。<br>
+                                        這樣拿著鑰匙 (Jenkins) 就能打開裝有鎖頭 (目標伺服器) 的門。
+                                    </p>
+                                </li>
+                                <li><strong>設定目標伺服器：</strong> 將公鑰 (<code>jenkins_key.pub</code>) 內容複製到目標伺服器的
+                                    <code>~/.ssh/authorized_keys</code> 檔案中。
+                                </li>
+                                <li><strong>Jenkins 憑證託管：</strong> 進入 Manage Jenkins → Credentials，新增類型為 "SSH Username
+                                    with private key"，將私鑰 (<code>jenkins_key</code>) 內容貼入，並記下 ID (例如
+                                    <code>remote-server-ssh</code>)。
+                                </li>
+                                <li><strong>Pipeline 部署腳本：</strong> 使用 <code>sshagent</code> 套件進行連線：
+                                    <div class="code-wrapper relative">
+                                        <pre class="line-numbers"><code class="language-groovy">stage('Deploy') {
+    steps {
+        sshagent(['remote-server-ssh']) {
+            sh '''
+                # 建立 .ssh 目錄並自動掃描主機指紋 (使用 -H 雜湊主機名)
+                mkdir -p ~/.ssh
+                ssh-keyscan -H &lt;目標IP&gt; >> ~/.ssh/known_hosts 2>/dev/null
+                
+                # 遠端部署
+                ssh user@&lt;目標IP&gt; '
+                    cd /var/www/app && 
+                    echo "Deploying..." &&
+                    ./deploy.sh
+                '
+            '''
+        }
+    }
+}</code></pre>
+                                    </div>
+                                    <p class="text-xs text-yellow-300 mt-2">⚠️ 避免使用
+                                        <code>-o StrictHostKeyChecking=no</code>，這會讓你暴露於中間人攻擊（MITM）風險中！
+                                    </p>
+                                </li>
+                            </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Security & Plugin Management Best Practices -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-8 border-t border-slate-800">
+            <div class="lg:col-span-4">
+                <div class="sticky top-8">
+                    <h3 class="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-yellow-500 pl-4">
+                        <span class="mr-3">🛡️</span> 安全性與套件管理
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-6">
+                        維護 Jenkins 安全性與穩定性的關鍵策略。
+                    </p>
+                </div>
+            </div>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-yellow-300 mb-3">📦 套件版本管理策略</h4>
+                    <div class="space-y-3 text-slate-300 text-sm">
+                        <p><strong class="text-white">1. 使用 LTS 版本</strong></p>
+                        <p class="text-slate-400 ml-4">• Jenkins 提供長期支援版本（LTS），每 12 週發布一次<br>
+                            • 建議生產環境使用 LTS 版本而非每週更新版<br>
+                            • 下載位置：<code>jenkins/jenkins:lts</code> Docker image</p>
+
+                        <p><strong class="text-white">2. 鎖定套件版本</strong></p>
+                        <p class="text-slate-400 ml-4">• 避免設定「自動更新套件」<br>
+                            • 在測試環境先驗證新版本套件再部署到生產環境<br>
+                            • 使用 <code>plugins.txt</code> 或 Configuration as Code (JCasC) 管理套件版本</p>
+
+                        <p><strong class="text-white">3. 定期檢查安全公告</strong></p>
+                        <p class="text-slate-400 ml-4">• 訂閱 <a href="https://www.jenkins.io/security/advisories/"
+                                class="text-blue-400 hover:underline">Jenkins Security Advisories</a><br>
+                            • 在「Manage Jenkins → System Information」查看套件版本<br>
+                            • 使用「Plugin Manager」查看可用更新與安全修補</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-red-300 mb-3">🚨 最小化攻擊面</h4>
+                    <ul class="space-y-2 text-slate-300 text-sm list-disc list-inside">
+                        <li><strong>移除不必要的套件：</strong> 定期檢視已安裝套件，移除未使用的套件</li>
+                        <li><strong>限制 Master 節點建置：</strong> 設定「# of executors」為 0，所有建置都在 Agent 執行</li>
+                        <li><strong>啟用 CSRF（Cross-Site Request Forgery）保護：</strong> Manage Jenkins → Configure Global
+                            Security → Prevent Cross Site
+                            Request Forgery exploits</li>
+                        <li><strong>使用授權矩陣：</strong> 精細控制不同使用者/團隊的權限（Matrix-based security）</li>
+                        <li><strong>定期備份：</strong> 備份 <code>jenkins_home</code>，包含所有設定與 Job 歷史</li>
+                    </ul>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h4 class="text-lg font-semibold text-cyan-300 mb-3">🔍 推薦必裝安全套件</h4>
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-700 text-slate-400">
+                                <th class="py-2 px-2">套件名稱</th>
+                                <th class="py-2 px-2">功能</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-300">
+                            <tr class="border-b border-slate-700/50">
+                                <td class="py-2 px-2 font-mono text-xs">OWASP Dependency-Check</td>
+                                <td class="py-2 px-2">檢查專案相依套件的已知漏洞</td>
+                            </tr>
+                            <tr class="border-b border-slate-700/50">
+                                <td class="py-2 px-2 font-mono text-xs">Audit Trail</td>
+                                <td class="py-2 px-2">記錄所有 Jenkins 操作日誌</td>
+                            </tr>
+                            <tr class="border-b border-slate-700/50">
+                                <td class="py-2 px-2 font-mono text-xs">Job Restrictions</td>
+                                <td class="py-2 px-2">限制 Job 可使用的節點與資源</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-2 font-mono text-xs">Configuration as Code</td>
+                                <td class="py-2 px-2">以 YAML 管理 Jenkins 設定，便於版本控制</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: Advanced Features -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-8 border-t border-slate-800">
+            <div class="lg:col-span-4">
+                <div class="sticky top-8">
+                    <h3 class="text-2xl font-bold text-white mb-4 flex items-center border-l-4 border-cyan-500 pl-4">
+                        <span class="mr-3">🔌</span> 進階功能與最佳化
+                    </h3>
+                    <p class="text-slate-400 text-sm leading-6">
+                        提升 Jenkins 使用體驗與效能的關鍵設定。
+                    </p>
+                </div>
+            </div>
+            <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card rounded-xl p-6 flex flex-col h-full">
+                    <h4 class="text-lg font-semibold text-cyan-300 mb-3">Blue Ocean 介面</h4>
+                    <p class="text-slate-300 text-sm leading-6 flex-grow">
+                        Jenkins 的全新 UI 套件。提供視覺化的 Pipeline 流程圖，讓每個階段 (Stage) 的狀態、日誌與錯誤訊息一目瞭然，大幅提升了使用者體驗與除錯效率。
+                    </p>
+                </div>
+                <div class="glass-card rounded-xl p-6 flex flex-col h-full">
+                    <h4 class="text-lg font-semibold text-cyan-300 mb-3">分散式建置 (Nodes)</h4>
+                    <div class="text-slate-300 text-sm leading-6 flex-grow">
+                        <p class="mb-3">為避免 Master 節點負載過重，可設定多個 <strong>Agent 節點</strong>。連接方式選擇建議：</p>
+                        <table class="w-full text-left border-collapse text-xs mb-3">
+                            <thead>
+                                <tr class="border-b border-slate-700 text-cyan-300">
+                                    <th class="py-2 px-2">連接方式</th>
+                                    <th class="py-2 px-2">適用場景</th>
+                                    <th class="py-2 px-2 md:table-cell hidden">優缺點</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-slate-700/50">
+                                    <td class="py-2 px-2 font-bold">SSH</td>
+                                    <td class="py-2 px-2">標準企業內網</td>
+                                    <td class="py-2 px-2 md:table-cell hidden">Master 主動連線，簡單直接</td>
+                                </tr>
+                                <tr class="border-b border-slate-700/50">
+                                    <td class="py-2 px-2 font-bold">JNLP</td>
+                                    <td class="py-2 px-2">防火牆後的 Agent</td>
+                                    <td class="py-2 px-2 md:table-cell hidden">Agent 主動回連，安全性較高</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-2 px-2 font-bold">Docker Cloud</td>
+                                    <td class="py-2 px-2">動態擴展需求</td>
+                                    <td class="py-2 px-2 md:table-cell hidden">隨用隨丟，資源不浪費</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-3 p-3 border-l-4 border-yellow-500 bg-yellow-500/10 text-slate-400 text-sm">
+                        <strong>💡 小撇步：</strong> 確保 Master 與 Agent 的 Java 版本一致，且 Agent 節點上也需安裝 Git 與 Docker 才能執行對應的
+                        Pipeline 指令。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <section class="mt-12 text-center max-w-3xl mx-auto px-4">
+            <h3 class="text-2xl font-bold text-white mb-4">結語</h3>
+            <p class="text-slate-400 leading-relaxed">
+                透過 Jenkins 實現 CI/CD 自動化，不僅是工具的導入，更是開發文化的轉變。從手動重複的建置工作中解放，讓團隊能專注於創造更有價值的程式碼與功能。掌握 Jenkinsfile 與 Docker
+                Agent，是邁向資深 DevOps 工程師的必經之路。
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-20 py-8 border-t border-slate-800 bg-slate-900/50 backdrop-blur-sm">
+        <div class="max-w-6xl mx-auto text-center space-y-2">
+            <p class="text-slate-500 text-sm">
+                Generated by <a href="https://wellstsai.com" target="_blank"
+                    class="text-indigo-400 hover:text-indigo-300 hover:underline transition-colors">wellstsai.com</a>
+            </p>
+            <p class="text-slate-600 text-xs font-mono">
+                撰寫日期：
+                <script>document.write(new Date().toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' }));</script>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Navigation FAB -->
+    <div class="fixed bottom-8 right-8 flex flex-col items-center gap-3 z-50">
+        <!-- TOC Content (Hidden by default) -->
+        <div id="toc-panel" class="absolute bottom-full mb-4 right-0 hidden">
+            <div class="glass-card rounded-xl p-4 w-64 max-h-80 overflow-y-auto shadow-2xl">
+                <h5 class="text-white font-bold mb-3 border-b border-slate-700 pb-2">📖 目錄</h5>
+                <nav id="toc-list" class="space-y-2 text-sm text-slate-300">
+                    <!-- Dynamic TOC Content -->
+                </nav>
+            </div>
+        </div>
+
+        <!-- TOC Toggle Button -->
+        <button id="toc-btn"
+            class="w-12 h-12 rounded-full bg-slate-700 text-white shadow-lg hover:bg-slate-600 transition-all flex items-center justify-center border border-slate-600 group"
+            title="目錄 (Contents)">
+            <span class="text-xl">📑</span>
+        </button>
+
+        <!-- Back to Top Button -->
+        <button id="back-to-top"
+            class="w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-500 hover:scale-105 transition-all flex items-center justify-center border border-indigo-400/50"
+            title="回到頂部 (Top)">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Prism.js & Navigation Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+
+    <script>
+        // Copy to clipboard customization (Partial translation of Prism label)
+        (function () {
+            if (typeof Prism === 'undefined') return;
+            // Config autoloader path if needed, usually CDN works fine automatically
+        })();
+
+        // TOC & Navigation Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const tocList = document.getElementById('toc-list');
+            const headers = document.querySelectorAll('main h3, main h4');
+
+            headers.forEach((header, index) => {
+                // Ensure ID
+                if (!header.id) {
+                    header.id = `section-${index}`;
+                }
+
+                const link = document.createElement('a');
+                link.href = `#${header.id}`;
+                link.textContent = header.textContent.trim().replace(/^[\W_]+/, ''); // Remove leading emojis
+                link.className = 'block hover:text-indigo-400 transition-colors py-1 truncate';
+
+                // Indent h4
+                if (header.tagName === 'H4') {
+                    link.className += ' pl-4 border-l border-slate-700 text-xs text-slate-400';
+                }
+
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById('toc-panel').classList.add('hidden'); // Close TOC on click
+                    header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+
+                tocList.appendChild(link);
+            });
+
+            const tocBtn = document.getElementById('toc-btn');
+            const tocPanel = document.getElementById('toc-panel');
+            const backToTopBtn = document.getElementById('back-to-top');
+
+            // Toggle TOC
+            tocBtn.addEventListener('click', () => {
+                tocPanel.classList.toggle('hidden');
+            });
+
+            // Back to Top
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+
+            // Hide TOC when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!tocBtn.contains(e.target) && !tocPanel.contains(e.target)) {
+                    tocPanel.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
