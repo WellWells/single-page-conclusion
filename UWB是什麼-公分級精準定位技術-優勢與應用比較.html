@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/UWB%E6%98%AF%E4%BB%80%E9%BA%BC-%E5%85%AC%E5%88%86%E7%B4%9A%E7%B2%BE%E6%BA%96%E5%AE%9A%E4%BD%8D%E6%8A%80%E8%A1%93-%E5%84%AA%E5%8B%A2%E8%88%87%E6%87%89%E7%94%A8%E6%AF%94%E8%BC%83.png">
+    <meta name="twitter:description" content="說明 UWB (超寬頻) 技術的核心。UWB 如何透過 ToF 實現公分級精準定位，並在安全性、低延遲上優於 BLE 與 Wi-Fi。涵蓋其在工業、汽車與智慧家庭的應用。">
+    <meta name="twitter:title" content="UWB是什麼：公分級精準定位技術-優勢與應用比較">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/UWB%E6%98%AF%E4%BB%80%E9%BA%BC-%E5%85%AC%E5%88%86%E7%B4%9A%E7%B2%BE%E6%BA%96%E5%AE%9A%E4%BD%8D%E6%8A%80%E8%A1%93-%E5%84%AA%E5%8B%A2%E8%88%87%E6%87%89%E7%94%A8%E6%AF%94%E8%BC%83.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/UWB%E6%98%AF%E4%BB%80%E9%BA%BC-%E5%85%AC%E5%88%86%E7%B4%9A%E7%B2%BE%E6%BA%96%E5%AE%9A%E4%BD%8D%E6%8A%80%E8%A1%93-%E5%84%AA%E5%8B%A2%E8%88%87%E6%87%89%E7%94%A8%E6%AF%94%E8%BC%83.html">
+    <meta property="og:description" content="說明 UWB (超寬頻) 技術的核心。UWB 如何透過 ToF 實現公分級精準定位，並在安全性、低延遲上優於 BLE 與 Wi-Fi。涵蓋其在工業、汽車與智慧家庭的應用。">
+    <meta property="og:title" content="UWB是什麼：公分級精準定位技術-優勢與應用比較">
+    <meta name="description" content="說明 UWB (超寬頻) 技術的核心。UWB 如何透過 ToF 實現公分級精準定位，並在安全性、低延遲上優於 BLE 與 Wi-Fi。涵蓋其在工業、汽車與智慧家庭的應用。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一次搞懂 UWB：新世代的微米級定位技術</title>
+    <!-- Google Fonts: Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* 自訂字體 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        /* 漸層文字效果 */
+        .gradient-text {
+            background-image: linear-gradient(to bottom, #38bdf8, #c084fc);
+            /* from-sky-400 to-purple-400 */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* 專有名詞關鍵字樣式 */
+        .keyword {
+            border-bottom: 2px dotted #67e8f9;
+            /* cyan-300 */
+            cursor: help;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .keyword:hover {
+            background-color: rgba(14, 165, 233, 0.1);
+            /* sky-600 with 10% opacity */
+        }
+
+        /* Tooltip 容器樣式 */
+        #tooltip {
+            position: fixed;
+            /* 改為 fixed 以處理滾動 */
+            display: none;
+            padding: 0.75rem 1rem;
+            /* 12px 16px */
+            background-color: rgba(30, 41, 59, 0.95);
+            /* slate-800 with 95% opacity */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #e2e8f0;
+            /* slate-200 */
+            border: 1px solid #64748b;
+            /* slate-500 */
+            border-radius: 0.5rem;
+            /* 8px */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            pointer-events: none;
+            /* 避免 tooltip 干擾滑鼠事件 */
+            max-width: 90vw;
+            /* 窄螢幕優化 */
+            transition: opacity 0.2s ease;
+        }
+
+        #tooltip h4 {
+            font-weight: 700;
+            color: #7dd3fc;
+            /* sky-300 */
+            margin-bottom: 0.25rem;
+            /* 4px */
+        }
+
+        #tooltip p {
+            font-size: 0.875rem;
+            /* 14px */
+            line-height: 1.25rem;
+            /* 20px */
+            color: #cbd5e1;
+            /* slate-300 */
+        }
+
+        #tooltip code {
+            background-color: #1e293b;
+            /* slate-800 */
+            color: #f8fafc;
+            /* slate-50 */
+            padding: 0.125rem 0.375rem;
+            /* 2px 6px */
+            border-radius: 0.25rem;
+            /* 4px */
+            font-size: 0.8rem;
+        }
+
+        /* 自訂卡片樣式 */
+        .content-card {
+            background-color: rgba(30, 41, 59, 0.6);
+            /* slate-800 with 60% opacity */
+            border: 1px solid #475569;
+            /* slate-600 */
+            border-radius: 0.75rem;
+            /* 12px */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            border-color: #64748b;
+            /* slate-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-300 selection:bg-purple-500 selection:text-white">
+
+    <!-- 頁首 Hero 區塊 -->
+    <header class="container mx-auto max-w-5xl px-4 pt-16 pb-12 text-center">
+        <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
+            🛰️ <span class="gradient-text">探索超寬頻 (UWB) 技術</span>
+        </h1>
+        <p class="mt-6 text-lg leading-8 text-slate-400 max-w-3xl mx-auto">
+            深入解析 UWB 如何以公分級的精準度、即時性與高安全性，徹底改變我們感知「位置」的方式。
+        </p>
+    </header>
+
+    <main class="container mx-auto max-w-5xl px-4 pb-16">
+
+        <!-- 文章摘要卡片 -->
+        <section class="mb-12">
+            <div class="content-card p-6 md:p-8 max-w-3xl mx-auto">
+                <h2 class="text-2xl font-bold text-center mb-4 text-sky-300">
+                    📖 <span class="gradient-text">章節核心摘要</span>
+                </h2>
+                <p class="text-base text-slate-300 leading-relaxed">
+                    本章節將帶您回顧定位技術的演進，從 <span class="keyword" data-keyword="GPS">GPS</span>
+                    的普及到室內導航的興起。我們將探討「位置」資訊的巨大價值，並說明為何現有的 <span class="keyword" data-keyword="BLE">BLE</span> 或 <span
+                        class="keyword" data-keyword="Wi-Fi">Wi-Fi</span> 已不足以滿足新世代的需求。最終，我們將聚焦於 <span class="keyword"
+                        data-keyword="UWB">UWB</span> (超寬頻) 技術，解析其核心優勢、關鍵特性，並透過與其他技術的詳細比較，展示 <span class="keyword"
+                        data-keyword="UWB">UWB</span> 如何在眾多行業中實現前所未有的應用。
+                </p>
+            </div>
+        </section>
+
+        <!-- 主體內容分段 -->
+        <div class="space-y-12">
+
+            <!-- Section 1: 演進與價值 -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <h2 class="text-3xl font-bold">
+                        📍 <span class="gradient-text">「位置」的演進與價值</span>
+                    </h2>
+                    <p>
+                        定位技術在 2000 年 <span class="keyword" data-keyword="GPS">GPS</span>
+                        向大眾開放後才真正普及，近十年來，室內導航也逐漸成熟。目前，我們正迎來「微米級定位」的新時代。
+                    </p>
+                    <p>
+                        為設備增添「<strong>Where
+                            (何處)</strong>」的維度，如同賦予其第六感。這不僅能提升效率（如倉儲資產定位）、強化安全（如人員與機器協同作業），更能實現前所未有的情境感知決策（如智慧家庭自動化）與安全憑證（如防止身分偽造）。
+                    </p>
+                </div>
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-bold text-center text-sky-300 mb-4">關鍵應用領域</h3>
+                    <ul class="space-y-3 text-slate-200">
+                        <li class="flex items-center"><span class="text-2xl mr-3">🏥</span> <strong>智慧醫療：</strong>
+                            病患與醫療設備即時追蹤。</li>
+                        <li class="flex items-center"><span class="text-2xl mr-3">🏭</span> <strong>工業 4.0：</strong>
+                            提升營運效率、工廠安全。</li>
+                        <li class="flex items-center"><span class="text-2xl mr-3">🚗</span> <strong>汽車產業：</strong>
+                            安全被動進入、車內感知。</li>
+                        <li class="flex items-center"><span class="text-2xl mr-3">🏠</span> <strong>智慧家庭：</strong>
+                            自動化控制、智慧遙控。</li>
+                        <li class="flex items-center"><span class="text-2xl mr-3">🔐</span> <strong>安全控管：</strong>
+                            存取控制、社交距離維持。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 2: 為何需要新技術 -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4 md:order-2">
+                    <h2 class="text-3xl font-bold">
+                        🎯 <span class="gradient-text">為何需要新世代定位技術？</span>
+                    </h2>
+                    <p>
+                        要實現真正的微米級定位，新技術必須滿足：<strong>公分級精度</strong>、<strong>高可靠性</strong>（抗干擾）、<strong>高擴展性</strong>（支援大量設備）、<strong>低功耗</strong>、<strong>低成本</strong>且<strong>即時</strong>。
+                    </p>
+                    <p>
+                        現有的 <span class="keyword" data-keyword="BLE">BLE</span> 與 <span class="keyword"
+                            data-keyword="Wi-Fi">Wi-Fi</span>
+                        並非為此設計。它們的精度僅達公尺級，且極易受環境干擾。更重要的是，它們需要大量處理才能獲得一個<strong>可靠的</strong>定位點，這在密集或動態環境中會<strong>增加延遲與功耗</strong>，難以滿足<strong>持續性、即時</strong>的公分級精度需求。
+                    </p>
+                </div>
+                <div class="content-card p-6 md:order-1">
+                    <h3 class="text-xl font-bold text-center text-sky-300 mb-4">BLE/Wi-Fi 定位限制</h3>
+                    <ul class="space-y-3 text-slate-200">
+                        <li><span class="mr-3">📉</span> <strong>精度不足：</strong> 典型精度為公尺級，非公分級。</li>
+                        <li><span class="mr-3">🌊</span> <strong>訊號不穩：</strong> 依賴 <span class="keyword"
+                                data-keyword="RSSI">RSSI</span>，易受多路徑、遮蔽物嚴重干擾。</li>
+                        <li><span class="mr-3">⏳</span> <strong>延遲問題：</strong> 雖可達毫秒級更新，但為求穩定需平滑/過濾，導致應用延遲。</li>
+                        <li><span class="mr-3">🔒</span> <strong>安全性：</strong> 易受偽造、重放 (Replay) 與中繼 (Relay) 攻擊。</li>
+                        <li class="pt-2 border-t border-slate-700"><span class="mr-3">💡</span> <strong>未來展望 (BT
+                                6.0)：</strong> 藍牙 6.0 引入通道探測 (Channel Sounding)，理論可達公寸級精度，但目前依賴產品支援且尚未普及。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 3: 認識 UWB -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <h2 class="text-3xl font-bold">
+                        ⚡ <span class="gradient-text">認識超寬頻 (UWB)</span>
+                    </h2>
+                    <p>
+                        <span class="keyword" data-keyword="UWB">UWB</span> (Ultra-Wideband) 是一種基於 IEEE 802.15.4a/z
+                        標準的技術，專為安全、精確的微米級定位應用而優化，它能完美滿足前述的所有嚴苛要求。
+                    </p>
+                    <p>
+                        <span class="keyword" data-keyword="UWB">UWB</span>
+                        的真正優勢在於<strong>結合了「公分級精度」、「高可靠性」與「高安全性」</strong>，這是 <span class="keyword"
+                            data-keyword="BLE">BLE</span> 或 <span class="keyword" data-keyword="Wi-Fi">Wi-Fi</span>
+                        難以同時實現的。
+                    </p>
+                </div>
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-bold text-center text-sky-300 mb-4">UWB 六大核心優勢</h3>
+                    <ul class="space-y-3 text-slate-200">
+                        <li><span class="mr-3">📏</span> <strong>極致精準：</strong> 數公分誤差 (比 BLE/Wi-Fi 精確 10-100 倍)。</li>
+                        <li><span class="mr-3">🛡️</span> <strong>高度可靠：</strong> 對多路徑反射和干擾具高免疫力 (源於超寬頻寬)。</li>
+                        <li><span class="mr-3">⏱️</span> <strong>超低延遲：</strong> 穩定提供毫秒級 (ms) 即時更新。</li>
+                        <li><span class="mr-3">🔋</span> <strong>低功耗：</strong> 脈衝訊號設計，適合鈕扣電池驅動。</li>
+                        <li><span class="mr-3">☝️</span> <strong>單點測量：</strong> 依賴 <span class="keyword"
+                                data-keyword="ToF">ToF</span>，單次測量即可獲得準確位置。</li>
+                        <li><span class="mr-3">🔒</span> <strong>安全穩固：</strong> 基於時基 (Time-based) 測距，能有效抵抗中繼攻擊。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 4: 技術比較表格 -->
+            <section class="space-y-6">
+                <h2 class="text-3xl font-bold text-center">
+                    📊 <span class="gradient-text">UWB 與其他室內定位技術比較</span>
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full min-w-max text-left border-collapse content-card">
+                        <thead class="border-b border-slate-600">
+                            <tr>
+                                <th class="p-4 text-sky-300">技術</th>
+                                <th class="p-4 text-sky-300">準確度 (典型)</th>
+                                <th class="p-4 text-sky-300">可靠性</th>
+                                <th class="p-4 text-sky-300">安全測距</th>
+                                <th class="p-4 text-sky-300">延遲</th>
+                                <th class="p-4 text-sky-300">擴展性</th>
+                                <th class="p-4 text-sky-300">基礎設施成本</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700">
+                            <tr class="hover:bg-slate-700/50">
+                                <td class="p-4 font-bold text-white"><span class="keyword" data-keyword="UWB">UWB</span>
+                                </td>
+                                <td class="p-4 text-green-400"><strong>~ 10 公分</strong></td>
+                                <td class="p-4 text-green-400"><strong>強抗多徑/干擾</strong></td>
+                                <td class="p-4 text-green-400"><strong>非常安全 (ToF)</strong></td>
+                                <td class="p-4 text-green-400"><strong>毫秒級 (< 1ms)</strong>
+                                </td>
+                                <td class="p-4 text-green-400">高 (數萬個)</td>
+                                <td class="p-4 text-red-400"><strong>$$$ (較高)</strong></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50">
+                                <td class="p-4 font-bold text-white"><span class="keyword"
+                                        data-keyword="BLE">Bluetooth</span></td>
+                                <td class="p-4 text-red-400">1 - 5 公尺 (BT 6.0 具備公寸級潛力，但尚未普及)</td>
+                                <td class="p-4 text-red-400">對環境敏感</td>
+                                <td class="p-4 text-red-400">可被欺騙 (RSSI)</td>
+                                <td class="p-4 text-yellow-400">毫秒至秒級</td>
+                                <td class="p-4 text-yellow-400">中 (數百至千個)</td>
+                                <td class="p-4 text-green-400"><strong>$ (較低)</strong></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50">
+                                <td class="p-4 font-bold text-white"><span class="keyword"
+                                        data-keyword="Wi-Fi">Wi-Fi</span></td>
+                                <td class="p-4 text-red-400">1 - 15 公尺 (視方法)</td>
+                                <td class="p-4 text-red-400">對環境敏感</td>
+                                <td class="p-4 text-red-400">可被欺騙 (RSSI/RTT)</td>
+                                <td class="p-4 text-yellow-400">毫秒至秒級</td>
+                                <td class="p-4 text-yellow-400">高 (可利用現有 AP)</td>
+                                <td class="p-4 text-green-400"><strong>$ - $$ (低至中)</strong></td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/50">
+                                <td class="p-4 font-bold text-white"><span class="keyword"
+                                        data-keyword="RFID">RFID</span></td>
+                                <td class="p-4 text-yellow-400">公分至公尺級</td>
+                                <td class="p-4 text-yellow-400">強 (近場) / 敏感 (UHF)</td>
+                                <td class="p-4 text-red-400">可被欺騙/複製</td>
+                                <td class="p-4 text-yellow-400">毫秒至秒級</td>
+                                <td class="p-4 text-green-400">極高 (被動標籤)</td>
+                                <td class="p-4 text-green-400"><strong>$ (標籤低 / 讀取器中)</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Section 5: 基礎設施成本 -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <h2 class="text-3xl font-bold">
+                        🏗️ <span class="gradient-text">範圍 vs. 錨點密度</span>
+                    </h2>
+                    <p>
+                        範圍和成本是相關的。 <span class="keyword" data-keyword="UWB">UWB</span> 的 RF 範圍可達 50-70 公尺，遠高於 <span
+                            class="keyword" data-keyword="BLE">BLE</span> 用於定位的 10-20 公尺。
+                    </p>
+                    <p>
+                        雖然 <span class="keyword" data-keyword="UWB">UWB</span> 的 <strong>單一硬體成本 (錨點、標籤) 目前高於 <span
+                                class="keyword"
+                                data-keyword="BLE">BLE</span></strong>，但其優勢在於<strong>「更少的錨點覆蓋更大範圍」</strong>。<span
+                            class="keyword" data-keyword="UWB">UWB</span> 的精度在整個範圍內保持恆定，而 <span class="keyword"
+                            data-keyword="BLE">BLE</span>/ <span class="keyword" data-keyword="Wi-Fi">Wi-Fi</span>
+                        則會隨距離迅速下降。
+                    </p>
+                    <p>
+                        這意味著在大型場域中 (如工廠、倉庫)，<strong>總部署成本可能更具競爭力</strong>，且維護更簡單。
+                    </p>
+                </div>
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-bold text-center text-sky-300 mb-4">基礎設施對比</h3>
+                    <ul class="space-y-3 text-slate-200">
+                        <li><span class="mr-3">🛰️</span> <strong>UWB (超寬頻):</strong>
+                            <ul class="mt-2 ml-8 list-disc list-outside space-y-1 text-sm">
+                                <li>範圍: <strong>50 - 70 公尺</strong></li>
+                                <li>精度: 範圍內恆定 (公分級)</li>
+                                <li>部署: <strong>錨點稀疏</strong></li>
+                                <li>成本: 硬體單價高</li>
+                            </ul>
+                        </li>
+                        <li><span class="mr-3">📱</span> <strong>BLE (藍牙低功耗):</strong>
+                            <ul class="mt-2 ml-8 list-disc list-outside space-y-1 text-sm">
+                                <li>範圍: <strong>10 - 20 公尺</strong></li>
+                                <li>精度: 隨距離下降 (公尺級)</li>
+                                <li>部署: <strong>錨點密集</strong></li>
+                                <li>成本: 硬體單價低</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Section 6: 實際應用 -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4 md:order-2">
+                    <h2 class="text-3xl font-bold">
+                        🚀 <span class="gradient-text">UWB 實際應用</span>
+                    </h2>
+                    <p>
+                        <span class="keyword" data-keyword="UWB">UWB</span> 已在 40 多個行業中部署，從消費電子、汽車到工業
+                        4.0。它能實現完整的物件和人員定位可視性，從而提高營運效率、安全性和資產追蹤能力。
+                    </p>
+                </div>
+                <div class="content-card p-6 md:order-1">
+                    <h3 class="text-xl font-bold text-center text-sky-300 mb-4">多元應用場景</h3>
+                    <ul class="space-y-3 text-slate-200">
+                        <li><span class="mr-3">🔑</span> <strong>汽車：</strong> 安全被動進入 (防中繼攻擊)，基於精確的 <span class="keyword"
+                                data-keyword="ToF">ToF</span>。</li>
+                        <li><span class="mr-3">🤖</span> <strong>機器人：</strong> 精準自主導航 (AGV、自動割草機)。</li>
+                        <li><span class="mr-3">🏟️</span> <strong>體育：</strong> 運動員即時資料分析 (利用低延遲)。</li>
+                        <li><span class="mr-3">🏢</span> <strong>企業：</strong> 可靠的社交距離解決方案、無感門禁。</li>
+                        <li><span class="mr-3">🏠</span> <strong>家庭：</strong> "指向即控制" 的智慧遙控器、無縫解鎖。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 結論 -->
+            <section class="text-center max-w-3xl mx-auto pt-8">
+                <h2 class="text-3xl font-bold mb-4">
+                    🔬 <span class="gradient-text">結論：這就是物理學！</span>
+                </h2>
+                <p class="text-lg text-slate-300 leading-relaxed">
+                    <span class="keyword" data-keyword="UWB">UWB</span> 之所以能超越傳統技術，歸功於其物理特性：它使用超過 <strong>500
+                        MHz</strong> 的<strong>極寬頻寬</strong>進行傳輸，並依賴精確的 <span class="keyword" data-keyword="ToF">ToF
+                        (飛時測距)</span> 來計算距離，而非像 <span class="keyword" data-keyword="BLE">BLE</span> 或 <span
+                        class="keyword" data-keyword="Wi-Fi">Wi-Fi</span> 那樣使用窄頻通訊與不穩定的 <span class="keyword"
+                        data-keyword="RSSI">RSSI (訊號強度)</span>。這使其從根本上更精確、更可靠、更安全。
+                </p>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="mt-16 py-8 bg-slate-900/80 border-t border-slate-700">
+        <div class="container mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>
+                <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-sky-400 transition-colors">
+                    Generated by wellstsai.com
+                </a>
+            </p>
+            <p class="mt-1">撰寫日期：2025年10月29日</p>
+        </div>
+    </footer>
+
+    <!-- Tooltip 元素 (隱藏) -->
+    <div id="tooltip"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Tooltip 資料庫
+            const keywordDefinitions = {
+                "GPS": {
+                    title: "🛰️ GPS (全球定位系統)",
+                    desc: "Global Positioning System。一種利用衛星訊號進行戶外定位的技術，精度通常在公尺級。"
+                },
+                "BLE": {
+                    title: "📱 BLE (藍牙低功耗)",
+                    desc: "Bluetooth Low Energy。一種低功耗無線通訊技術，常用於信標 (Beacon) 定位，但精度低 (公尺級) 且易受干擾。",
+                    detail: "<strong>BT 6.0 更新：</strong> 引入通道探測 (PBR/RTT)，理論可達公寸級精度，但尚待產品普及。"
+                },
+                "Wi-Fi": {
+                    title: "📶 Wi-Fi (無線區域網路)",
+                    desc: "一種無線網路技術，也可用於定位 (RSSI 指紋或 RTT/FTM)，但精度與可靠性受限。"
+                },
+                "UWB": {
+                    title: "⚡ UWB (超寬頻)",
+                    desc: "Ultra-Wideband。一種使用極寬頻寬 ( > 500MHz) 傳輸的無線電技術，專為高精度 (公分級)、高可靠性、低延遲的定位而設計。"
+                },
+                "RSSI": {
+                    title: "📊 RSSI (接收訊號強度指示)",
+                    desc: "Received Signal Strength Indicator。BLE 和 Wi-Fi 依賴此數值估算距離，但 RSSI 非常不穩定，易受遮擋、反射影響，導致定位不準確。",
+                    detail: "<code>RSSI</code> 值越強不代表越近，可能只是反射訊號的疊加。"
+                },
+                "ToF": {
+                    title: "⏱️ ToF (飛時測距)",
+                    desc: "Time of Flight。UWB 使用的核心技術，透過測量無線電訊號從發射端到接收端的「飛行時間」，再乘以光速，來精確計算距離。",
+                    detail: "由於光速恆定，ToF 不易受訊號強度變化的干擾，因此極為精確可靠。"
+                },
+                "RFID": {
+                    title: "🏷️ RFID (無線射頻辨識)",
+                    desc: "Radio-Frequency Identification。一種短距離通訊技術，主要用於辨識和追蹤標籤，分為被動式 (無電源) 和主動式。定位能力有限。"
+                }
+            };
+
+            // 2. 獲取 Tooltip 元素和所有關鍵字
+            const tooltip = document.getElementById('tooltip');
+            const keywords = document.querySelectorAll('.keyword');
+
+            let tooltipVisible = false;
+
+            // 3. 綁定事件
+            keywords.forEach(keyword => {
+                const key = keyword.dataset.keyword;
+                if (!key) return;
+
+                // 滑鼠移入：顯示並填入內容
+                keyword.addEventListener('mouseenter', (e) => {
+                    const definition = keywordDefinitions[key];
+                    if (definition) {
+                        let content = `<h4>${definition.title}</h4><p>${definition.desc}</p>`;
+                        if (definition.detail) {
+                            content += `<p class="mt-2 text-xs text-slate-400">${definition.detail}</p>`;
+                        }
+                        tooltip.innerHTML = content;
+                        tooltip.style.display = 'block';
+                        tooltipVisible = true;
+                        // 初始定位
+                        updateTooltipPosition(e);
+                    }
+                });
+
+                // 滑鼠移出：隱藏
+                keyword.addEventListener('mouseleave', () => {
+                    tooltip.style.display = 'none';
+                    tooltipVisible = false;
+                });
+
+                // 滑鼠移動：更新位置
+                keyword.addEventListener('mousemove', updateTooltipPosition);
+
+                // 手機觸控支援
+                keyword.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const data = keywordData[key];
+                    if (data) {
+                        tooltip.innerHTML = `
+                            <h4>${data.title}</h4>
+                            <p>${data.desc}</p>
+                            ${data.detail ? `<code>${data.detail}</code>` : ''}
+                        `;
+                        tooltip.style.display = 'block';
+                        tooltipVisible = true;
+                        updateTooltipPosition(e);
+                    }
+                });
+            });
+
+            // 監聽滾動事件，滾動時隱藏 tooltip
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                if (tooltipVisible) {
+                    tooltip.style.display = 'none';
+                    tooltipVisible = false;
+                }
+
+                // 清除之前的 timeout
+                clearTimeout(scrollTimeout);
+
+                // 設定新的 timeout，防止滾動過程中 tooltip 閃爍
+                scrollTimeout = setTimeout(() => {
+                    // 滾動停止後的處理（如果需要）
+                }, 150);
+            }, { passive: true });
+
+            // 4. 更新 Tooltip 位置的函式
+            function updateTooltipPosition(e) {
+                if (!tooltipVisible) return;
+
+                // *** FIX: 使用 clientX/clientY 替代 pageX/pageY ***
+                // clientX/Y 是相對於 viewport 的座標，配合 position: fixed
+                const { clientX, clientY } = e;
+                const { innerWidth, innerHeight } = window;
+
+                const tooltipRect = tooltip.getBoundingClientRect();
+                const tooltipWidth = tooltipRect.width;
+                const tooltipHeight = tooltipRect.height;
+
+                const margin = 15; // 與邊界的距離
+
+                let x = clientX + margin;
+                let y = clientY + margin;
+
+                // 檢查右側邊界
+                if (x + tooltipWidth + margin > innerWidth) {
+                    x = clientX - tooltipWidth - margin; // 改為 clientX
+                }
+
+                // 檢查底部邊界
+                if (y + tooltipHeight + margin > innerHeight) {
+                    y = clientY - tooltipHeight - margin; // 改為 clientY
+                }
+
+                // 檢查左側邊界 (防止切換後又超出)
+                if (x < margin) {
+                    x = margin;
+                }
+
+                // 檢查頂部邊界 (防止切換後又超出)
+                if (y < margin) {
+                    y = margin;
+                }
+
+                tooltip.style.left = `${x}px`;
+                tooltip.style.top = `${y}px`;
+            }
+        });
+    </script>
+
+</body>
+
+</html>

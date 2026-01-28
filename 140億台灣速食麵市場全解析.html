@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.png">
+    <meta name="twitter:description" content="完整解析台灣速食麵年產值約140億元與9億包規模，剖析「懷舊價值」與「創新溢價」雙軌、關鍵客群與通路、品牌市佔、價格帶分層、暢銷與專家排行，以及四大未來趨勢。">
+    <meta name="twitter:title" content="140億台灣速食麵市場全解析：品牌策略、消費趨勢與未來戰局">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/140%E5%84%84%E5%8F%B0%E7%81%A3%E9%80%9F%E9%A3%9F%E9%BA%B5%E5%B8%82%E5%A0%B4%E5%85%A8%E8%A7%A3%E6%9E%90.html">
+    <meta property="og:description" content="完整解析台灣速食麵年產值約140億元與9億包規模，剖析「懷舊價值」與「創新溢價」雙軌、關鍵客群與通路、品牌市佔、價格帶分層、暢銷與專家排行，以及四大未來趨勢。">
+    <meta property="og:title" content="140億台灣速食麵市場全解析：品牌策略、消費趨勢與未來戰局">
+    <meta name="description" content="完整解析台灣速食麵年產值約140億元與9億包規模，剖析「懷舊價值」與「創新溢價」雙軌、關鍵客群與通路、品牌市佔、價格帶分層、暢銷與專家排行，以及四大未來趨勢。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>140億臺灣速食麵市場全解析：品牌策略、消費趨勢與未來戰局</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F0F4F8;
+            /* 柔和背景色 */
+            color: #2D3748;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .text-shadow {
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 動畫基礎樣式：使用 transform 與 opacity 以獲得最佳效能 */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* 元素進入可視範圍時觸發的樣式 */
+        .scroll-reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 考慮使用者對減少動畫的偏好 */
+        @media (prefers-reduced-motion: reduce) {
+
+            .scroll-reveal,
+            .modal-transition {
+                transition: none;
+            }
+        }
+
+        /* 提供清晰的鍵盤 focus 樣式 */
+        :focus-visible {
+            outline: 3px solid #FFD166;
+            outline-offset: 3px;
+            border-radius: 0.375rem;
+        }
+
+        /* 隱藏 modal 的 focus-visible，由 JS 控制 */
+        .modal:focus-visible {
+            outline: none;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100">
+
+    <header class="bg-[#073B4C] text-white text-center py-16 px-4 overflow-hidden">
+        <div class="scroll-reveal">
+            <h1 class="text-4xl md:text-6xl font-black text-shadow text-[#FFD166]">140億臺灣速食麵市場</h1>
+            <p class="text-lg md:text-2xl mt-4 max-w-3xl mx-auto text-gray-200">解構臺灣年產值140億元的速食麵市場：一場「懷舊」與「創新」的雙軌對決</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section class="my-12 grid grid-cols-1 md:grid-cols-3 gap-8 scroll-reveal">
+            <div
+                class="bg-[#073B4C] text-white p-8 rounded-xl text-center shadow-2xl transition-transform duration-300 hover:scale-105">
+                <span class="text-5xl font-black text-[#FFD166]">140<span class="text-2xl ml-2">億</span></span>
+                <p class="mt-2 text-lg text-gray-300">年市場產值 (新臺幣)</p>
+            </div>
+            <div
+                class="bg-[#073B4C] text-white p-8 rounded-xl text-center shadow-2xl transition-transform duration-300 hover:scale-105">
+                <span class="text-5xl font-black text-[#FFD166]">9<span class="text-2xl ml-2">億</span></span>
+                <p class="mt-2 text-lg text-gray-300">年消費包數</p>
+            </div>
+            <div
+                class="bg-[#073B4C] text-white p-8 rounded-xl text-center shadow-2xl transition-transform duration-300 hover:scale-105">
+                <span class="text-5xl font-black text-[#FFD166]">~40<span class="text-2xl ml-2">包</span></span>
+                <p class="mt-2 text-lg text-gray-300">平均每人年消費量</p>
+            </div>
+        </section>
+
+        <section class="my-20 scroll-reveal">
+            <h2 class="text-4xl font-black text-[#073B4C] mb-8 text-center">市場的雙重面貌</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+                <button data-modal-target="modal-nostalgia"
+                    class="group relative bg-white rounded-xl p-8 shadow-lg border border-slate-200 border-t-8 border-t-[#FF6B6B] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 focus-visible:shadow-2xl focus-visible:-translate-y-2 text-left">
+                    <div class="text-6xl mb-4 transition-transform duration-300 group-hover:scale-110">🕰️</div>
+                    <h3 class="text-2xl font-bold text-[#FF6B6B] mb-2">懷舊價值經濟</h3>
+                    <p class="text-gray-600">由統一肉燥麵等經典款構成市場基石，憑藉深厚的情感連結與高性價比，穩佔銷售量龍頭。這是颱風天、月底與童年記憶的味道。</p>
+                    <div
+                        class="mt-4 flex items-center justify-end text-sm font-bold text-[#FF6B6B] transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
+                        了解更多
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </div>
+                </button>
+                <button data-modal-target="modal-premium"
+                    class="group relative bg-white rounded-xl p-8 shadow-lg border border-slate-200 border-t-8 border-t-[#06D6A0] transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 focus-visible:shadow-2xl focus-visible:-translate-y-2 text-left">
+                    <div class="text-6xl mb-4 transition-transform duration-300 group-hover:scale-110">💡</div>
+                    <h3 class="text-2xl font-bold text-[#06D6A0] mb-2">創新溢價體驗</h3>
+                    <p class="text-gray-600">市場的增長引擎，由精緻乾拌麵、餐飲聯名、高價進口麵驅動。專注於獨特風味、高品質原料與品牌故事，開創全新價值。</p>
+                    <div
+                        class="mt-4 flex items-center justify-end text-sm font-bold text-[#06D6A0] transition-opacity duration-300 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100">
+                        了解更多
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <section class="my-20 scroll-reveal">
+            <h2 class="text-4xl font-black text-[#073B4C] mb-8 text-center">誰在買？何時買？</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 h-full">
+                    <h3 class="text-xl font-bold text-[#118AB2] mb-1">核心消費族群</h3>
+                    <p class="text-gray-600 mb-4">資料顯示，35至44歲的女性是市場主力，佔據近六成消費人群，通常是為家庭採購的決策者。</p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="consumerDemographicsChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 h-full">
+                    <h3 class="text-xl font-bold text-[#118AB2] mb-4">消費時機與通路</h3>
+                    <div class="space-y-6 text-gray-700">
+                        <div class="flex items-center gap-4"><span class="text-3xl">🌙</span>
+                            <div><strong>深夜食堂 (20-22點):</strong> 宵夜與追劇良伴，成為每日銷售高峰。</div>
+                        </div>
+                        <div class="flex items-center gap-4"><span class="text-3xl">🗓️</span>
+                            <div><strong>月底效應:</strong> 接近月底時銷量顯著增長，成為家庭預算調節的選擇。</div>
+                        </div>
+                        <div class="flex items-center gap-4"><span class="text-3xl">🛒</span>
+                            <div><strong>通路分流:</strong> <span class="font-bold text-[#118AB2]">便利商店</span>滿足即時需求，<span
+                                    class="font-bold text-[#06D6A0]">超市量販</span>負責家庭囤貨，<span
+                                    class="font-bold text-[#FF6B6B]">電商</span>則以高達五成的增長率，成為新興品牌崛起的溫床。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-20 scroll-reveal">
+            <h2 class="text-4xl font-black text-[#073B4C] mb-8 text-center">市場巨頭：誰主沉浮？</h2>
+            <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+                <h3 class="text-xl font-bold text-[#118AB2] text-center">2024年臺灣速食麵市佔率</h3>
+                <p class="text-gray-600 text-center mb-4">市場呈現高度集中的寡占結構，統一企業以近半市佔率遙遙領先，構成市場的穩定核心。</p>
+                <div class="chart-container">
+                    <canvas id="marketShareChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-20 scroll-reveal">
+            <h2 class="text-4xl font-black text-[#073B4C] mb-2 text-center">一分錢一分貨</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-8">從國民袋麵到餐廳聯名款，不同價格對應著不同的價值主張與消費場景。</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div
+                    class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <div
+                        class="text-2xl font-bold bg-[#118AB2] text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        1</div>
+                    <h4 class="font-bold text-lg mb-2 text-[#118AB2]">經濟型 < NT$20</h4>
+                            <p class="text-sm text-gray-500">家庭儲備、高CP值首選。<br><strong>特色:</strong> 經典袋裝</p>
+                </div>
+                <div
+                    class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <div
+                        class="text-2xl font-bold bg-[#06D6A0] text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        2</div>
+                    <h4 class="font-bold text-lg mb-2 text-[#06D6A0]">主流型 NT$20-40</h4>
+                    <p class="text-sm text-gray-500">日常便利的午餐或點心。<br><strong>特色:</strong> 杯麵、標準碗麵</p>
+                </div>
+                <div
+                    class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <div
+                        class="text-2xl font-bold bg-[#FFD166] text-gray-800 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        3</div>
+                    <h4 class="font-bold text-lg mb-2 text-[#FFD166]">高價型 NT$45-65</h4>
+                    <p class="text-sm text-gray-500">豐盛的一餐，正餐替代品。<br><strong>特色:</strong> 真實肉塊調理包</p>
+                </div>
+                <div
+                    class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                    <div
+                        class="text-2xl font-bold bg-[#FF6B6B] text-white rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                        4</div>
+                    <h4 class="font-bold text-lg mb-2 text-[#FF6B6B]">超高價 > NT$80</h4>
+                    <p class="text-sm text-gray-500">極致味覺饗宴，平價奢侈品。<br><strong>特色:</strong> 餐廳聯名、精緻工藝</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-20 scroll-reveal">
+            <h2 class="text-4xl font-black text-[#073B4C] mb-8 text-center">兩種冠軍：銷量之王 vs. 專家首選</h2>
+            <p class="max-w-3xl mx-auto text-center text-gray-600 mb-8">
+                市場存在巨大的「品味斷層」，最暢銷的產品與最受專家好評的產品幾乎沒有交集，這反映了市場的高度分化。</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+                    <h3 class="text-xl font-bold text-[#118AB2]">商業銷售排行榜 (大眾市場)</h3>
+                    <p class="text-gray-600 mb-4">由歷史悠久、價格親民的經典產品主導，勝在情感連結與高性價比。</p>
+                    <div class="chart-container h-96"><canvas id="salesRankingChart"></canvas></div>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+                    <h3 class="text-xl font-bold text-[#06D6A0]">專業品鑑排行榜 (全球專家)</h3>
+                    <p class="text-gray-600 mb-4">由新興精緻乾拌麵品牌霸榜，勝在麵體創新、醬料層次與食材品質。</p>
+                    <div class="chart-container h-96"><canvas id="expertRankingChart"></canvas></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="my-20 scroll-reveal">
+            <h2 class="text-4xl font-black text-[#073B4C] mb-8 text-center">未來浪潮：四大趨勢定乾坤</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 h-full">
+                    <h3 class="text-xl font-bold text-[#FF6B6B] mb-2">📈 高價化</h3>
+                    <p class="text-gray-600">從量的擴張轉為質的提升，經典品牌升級與餐飲聯名成為常態，是市場增長的核心驅動力。</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 h-full">
+                    <h3 class="text-xl font-bold text-[#06D6A0] mb-2">🍜 乾拌麵崛起</h3>
+                    <p class="text-gray-600">最具活力的創新領域，成為展現產品工藝的舞臺，更是臺灣速食麵走向國際的先鋒。</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 h-full">
+                    <h3 class="text-xl font-bold text-[#118AB2] mb-2">🌍 國際化雙向道</h3>
+                    <p class="text-gray-600">韓國農心等品牌強勢滲透臺灣市場，同時臺灣精緻品牌也成功出海，贏得全球聲譽。</p>
+                </div>
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200 h-full">
+                    <h3 class="text-xl font-bold text-[#FFD166] mb-2">🌿 健康與養生</h3>
+                    <p class="text-gray-600">非油炸麵體成為高價產品的新標配，迎合消費者對健康飲食的關注，開創新的利基市場。</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#073B4C] text-white text-center py-10 px-4 mt-12 scroll-reveal">
+        <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+            class="inline-block text-sm text-gray-400 hover:text-[#FFD166] transition-colors duration-300 py-2 px-4 rounded-md focus-visible:text-[#FFD166]">
+            Generated by wellstsai.com
+        </a>
+    </footer>
+
+    <!-- Modal 結構 -->
+    <div id="modal-container" role="dialog" aria-modal="true" aria-hidden="true"
+        class="modal fixed inset-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ease-in-out opacity-0 pointer-events-none">
+        <!-- 模糊背景 -->
+        <div id="modal-backdrop" class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+        <!-- Modal 內容 -->
+        <div id="modal-content"
+            class="relative z-10 w-full max-w-2xl bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-8 transition-all duration-300 ease-in-out transform scale-95">
+            <button id="modal-close-btn"
+                class="absolute top-4 right-4 text-gray-500 hover:text-gray-900 transition-colors" aria-label="關閉視窗">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div id="modal-body">
+                <!-- 內容由 JS 動態填入 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 模板 -->
+    <template id="modal-nostalgia">
+        <h3 class="text-2xl font-bold text-[#FF6B6B] mb-4">🕰️ 懷舊價值經濟</h3>
+        <p class="text-gray-700 mb-4">
+            這是市場的「壓艙石」，其核心競爭力並非口味本身，而是數十年累積的**文化資本**與**集體記憶**。一個新品牌或許能做出更好吃的肉燥麵，但它無法複製臺灣人對於「颱風天吃統一麵」的情感連結。</p>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+            <li><strong>主要產品：</strong> 統一肉燥麵、維力炸醬麵、味味A排骨雞麵</li>
+            <li><strong>關鍵驅動力：</strong> 情感連結、口味熟悉度、高性價比</li>
+            <li><strong>消費場景：</strong> 家庭常備品、月底救星、颱風天必備</li>
+        </ul>
+    </template>
+
+    <template id="modal-premium">
+        <h3 class="text-2xl font-bold text-[#06D6A0] mb-4">💡 創新溢價體驗</h3>
+        <p class="text-gray-700 mb-4">這是市場的「增長引擎」，透過**價值拆解**與**價值錨定**策略，成功將消費者注意力從總價轉移到核心價值上，使高價位更容易被市場所接受。</p>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+            <li><strong>主要產品：</strong> 台酒花雕雞麵、阿舍食堂、滿漢大餐Gold系列、餐廳聯名款</li>
+            <li><strong>關鍵驅動力：</strong> 獨特原料(如陳年花雕酒)、非油炸麵體、品牌故事、名店光環</li>
+            <li><strong>消費場景：</strong> 自我犒賞的晚餐、在家享受的餐廳級體驗、平價的奢侈品</li>
+        </ul>
+    </template>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- 滾動動畫 Intersection Observer ---
+            // 此功能用於監測元素是否進入可視區域，並觸發入場動畫
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // 動畫只觸發一次
+                    }
+                });
+            }, {
+                threshold: 0.1 // 元素可見 10% 時觸發
+            });
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+
+            // --- Chart.js 圖表繪製 ---
+            const palette = { red: '#FF6B6B', yellow: '#FFD166', green: '#06D6A0', blue: '#118AB2', darkBlue: '#073B4C', gray: '#A0AEC0' };
+            const globalTooltipOptions = { plugins: { tooltip: { callbacks: { title: function (tooltipItems) { const item = tooltipItems[0]; let label = item.chart.data.labels[item.dataIndex]; return Array.isArray(label) ? label.join(' ') : label; } } } } };
+            function wrapLabel(label) {
+                const maxLength = 16;
+                if (typeof label !== 'string' || label.length <= maxLength) return label;
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                for (const word of words) {
+                    if ((currentLine + ' ' + word).trim().length > maxLength && currentLine.length > 0) {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = currentLine ? `${currentLine} ${word}` : word;
+                    }
+                }
+                lines.push(currentLine);
+                return lines;
+            }
+
+            const consumerDemographicsCtx = document.getElementById('consumerDemographicsChart');
+            if (consumerDemographicsCtx) { new Chart(consumerDemographicsCtx, { type: 'doughnut', data: { labels: ['女性消費者 (35-44歲為主)', '其他消費族群'], datasets: [{ data: [60, 40], backgroundColor: [palette.red, palette.gray], borderColor: '#FFFFFF', borderWidth: 4, }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { ...globalTooltipOptions.plugins, legend: { position: 'bottom', labels: { font: { size: 14 } } } }, cutout: '60%' } }); }
+            const marketShareCtx = document.getElementById('marketShareChart');
+            if (marketShareCtx) { const rawLabels = ['統一企業', '維力食品', '味丹企業', '農心 (韓國)', '臺灣菸酒公司', '其他']; new Chart(marketShareCtx, { type: 'pie', data: { labels: rawLabels.map(wrapLabel), datasets: [{ label: '市佔率 (%)', data: [48.94, 16.81, 14.49, 10.45, 3.29, 6.02], backgroundColor: [palette.blue, palette.green, palette.yellow, palette.red, palette.darkBlue, palette.gray], borderColor: '#FFFFFF', borderWidth: 2, }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { ...globalTooltipOptions.plugins, legend: { position: 'right', labels: { font: { size: 14 }, boxWidth: 20, } } } } }); }
+            const salesRankingCtx = document.getElementById('salesRankingChart');
+            if (salesRankingCtx) { const rawLabels = ['統一肉燥麵', '來一客鮮蝦魚板', '維力炸醬麵', '台酒花雕雞麵', '味味A排骨雞麵']; new Chart(salesRankingCtx, { type: 'bar', data: { labels: rawLabels.map(wrapLabel), datasets: [{ label: '相對銷售指數', data: [100, 88, 82, 70, 65], backgroundColor: palette.blue, borderRadius: 4, barThickness: 25, }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { ...globalTooltipOptions.plugins, legend: { display: false, } }, scales: { x: { beginAtZero: true, grid: { display: false } }, y: { ticks: { font: { size: 14 } } } } } }); }
+            const expertRankingCtx = document.getElementById('expertRankingChart');
+            if (expertRankingCtx) { const rawLabels = ['阿舍食堂 流星拌麵 (全球第三)', '老媽拌麵 黃金鵝油炸醬麵 (全球第六)', '維力炸醬麵 (榮譽獎)']; new Chart(expertRankingCtx, { type: 'bar', data: { labels: rawLabels.map(wrapLabel), datasets: [{ label: '專家評分指數', data: [100, 95, 80], backgroundColor: palette.green, borderRadius: 4, barThickness: 25, }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { ...globalTooltipOptions.plugins, legend: { display: false } }, scales: { x: { beginAtZero: true, grid: { display: false } }, y: { ticks: { font: { size: 14 } } } } } }); }
+
+            // --- Modal 互動邏輯 ---
+            const modalContainer = document.getElementById('modal-container');
+            const modalContent = document.getElementById('modal-content');
+            const modalBody = document.getElementById('modal-body');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalTriggers = document.querySelectorAll('[data-modal-target]');
+            let lastFocusedElement;
+
+            const openModal = (modalId) => {
+                lastFocusedElement = document.activeElement; // 儲存目前 focus 的元素
+                const template = document.getElementById(modalId);
+                if (!template) return;
+
+                modalBody.innerHTML = template.innerHTML;
+                modalContainer.setAttribute('aria-hidden', 'false');
+                modalContainer.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-95');
+                document.body.style.overflow = 'hidden'; // 禁止背景滾動
+                modalCloseBtn.focus(); // 將 focus 移至關閉按鈕
+            };
+
+            const closeModal = () => {
+                modalContainer.classList.add('opacity-0');
+                modalContent.classList.add('scale-95');
+                setTimeout(() => {
+                    modalContainer.classList.add('pointer-events-none');
+                    modalContainer.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                    if (lastFocusedElement) lastFocusedElement.focus(); // 返回 focus
+                }, 300); // 等待動畫結束
+            };
+
+            modalTriggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const modalId = trigger.getAttribute('data-modal-target');
+                    openModal(modalId);
+                });
+            });
+
+            modalCloseBtn.addEventListener('click', closeModal);
+            document.getElementById('modal-backdrop').addEventListener('click', closeModal);
+
+            // 鍵盤操作 (ESC 關閉, Focus Trap)
+            modalContainer.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeModal();
+
+                if (e.key === 'Tab') {
+                    const focusableElements = modalContent.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                    const firstElement = focusableElements[0];
+                    const lastElement = focusableElements[focusableElements.length - 1];
+
+                    if (e.shiftKey) { // Shift + Tab
+                        if (document.activeElement === firstElement) {
+                            lastElement.focus();
+                            e.preventDefault();
+                        }
+                    } else { // Tab
+                        if (document.activeElement === lastElement) {
+                            firstElement.focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
