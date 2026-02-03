@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E7%86%B1%E9%A1%AF%E5%83%8F%E6%A8%A1%E7%B5%84%E9%96%8B%E7%99%BC-%E7%A1%AC%E9%AB%94%E6%95%B4%E5%90%88%E8%88%87%E8%BC%BB%E5%B0%84%E6%B8%AC%E6%BA%AB%E6%A0%A1%E6%AD%A3%E5%AF%A6%E5%8B%99.png">
+    <meta name="twitter:description" content="深入探討長波紅外線（LWIR）熱顯像模組開發，涵蓋微測輻射計物理特性、SPI/I2C 通訊介面實作、PCB 熱管理機構設計、黑體測量理論及保護窗衰減補償演算法。專為嵌入式工程師提供商用級高精度輻射測溫的整合指南。">
+    <meta name="twitter:title" content="熱顯像模組開發-硬體整合與輻射測溫校正實務">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E7%86%B1%E9%A1%AF%E5%83%8F%E6%A8%A1%E7%B5%84%E9%96%8B%E7%99%BC-%E7%A1%AC%E9%AB%94%E6%95%B4%E5%90%88%E8%88%87%E8%BC%BB%E5%B0%84%E6%B8%AC%E6%BA%AB%E6%A0%A1%E6%AD%A3%E5%AF%A6%E5%8B%99.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E7%86%B1%E9%A1%AF%E5%83%8F%E6%A8%A1%E7%B5%84%E9%96%8B%E7%99%BC-%E7%A1%AC%E9%AB%94%E6%95%B4%E5%90%88%E8%88%87%E8%BC%BB%E5%B0%84%E6%B8%AC%E6%BA%AB%E6%A0%A1%E6%AD%A3%E5%AF%A6%E5%8B%99.html">
+    <meta property="og:description" content="深入探討長波紅外線（LWIR）熱顯像模組開發，涵蓋微測輻射計物理特性、SPI/I2C 通訊介面實作、PCB 熱管理機構設計、黑體測量理論及保護窗衰減補償演算法。專為嵌入式工程師提供商用級高精度輻射測溫的整合指南。">
+    <meta property="og:title" content="熱顯像模組開發-硬體整合與輻射測溫校正實務">
+    <meta name="description" content="深入探討長波紅外線（LWIR）熱顯像模組開發，涵蓋微測輻射計物理特性、SPI/I2C 通訊介面實作、PCB 熱管理機構設計、黑體測量理論及保護窗衰減補償演算法。專為嵌入式工程師提供商用級高精度輻射測溫的整合指南。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>熱顯像模組開發-硬體整合與輻射測溫校正實務</title>
+
+    <!-- Google Fonts: Noto Sans TC for technical professionalism -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Config for Fonts and Colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#1e293b', // Custom dark slate
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar for Webkit */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+
+        body {
+            /* Gradient: Lighter top (Slate 800) to Darker bottom (Black/Slate 950) */
+            background: linear-gradient(180deg, #334155 0%, #0f172a 100%);
+            min-height: 100vh;
+            color: #cbd5e1;
+            /* slate-300 */
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+    </style>
+    <!-- MathJax for LaTeX Support -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+<body class="flex flex-col antialiased selection:bg-cyan-500 selection:text-white">
+
+    <!-- Header Section -->
+    <header class="w-full py-16 text-center relative overflow-hidden border-b border-slate-700/50">
+        <div class="relative z-10 px-4">
+            <div
+                class="inline-block px-3 py-1 mb-4 text-xs font-medium tracking-wider text-cyan-400 uppercase bg-cyan-900/30 rounded-full border border-cyan-500/30">
+                Technical Reference Manual
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 tracking-wide drop-shadow-2xl">
+                紅外線熱顯像傳感器<br>深度技術整合指南
+            </h1>
+            <p class="text-lg md:text-xl text-slate-300 font-light max-w-4xl mx-auto leading-relaxed">
+                涵蓋熱顯像模組之硬體熱管理物理特性、協同處理晶片訊號處理流水線、<br class="hidden md:block">介面通訊協定與高精度輻射測溫校正實務。
+            </p>
+        </div>
+        <!-- Decorative background glow -->
+        <div
+            class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-full bg-cyan-500/5 blur-3xl rounded-full pointer-events-none">
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-12 space-y-16">
+
+        <!-- Section Roadmap: 文章導讀 (Added) -->
+        <section>
+            <div
+                class="bg-gradient-to-br from-slate-800/80 to-slate-900/80 border border-slate-700/50 rounded-2xl p-8 backdrop-blur-sm relative overflow-hidden">
+                <!-- Background decoration -->
+                <div
+                    class="absolute -top-24 -right-24 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none">
+                </div>
+
+                <div class="relative z-10">
+                    <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+                        <span class="mr-3 text-3xl">🗺️</span>
+                        <span>文章導讀與架構規劃</span>
+                    </h2>
+                    <p class="text-slate-400 mb-8 leading-relaxed max-w-4xl">
+                        本文專為嵌入式工程師與機構設計師編寫，內容依循<strong>「物理原理 → 系統實作 → 精度優化 → 驗收評估」</strong>的工程邏輯。建議讀者參考以下規劃順序閱讀，以掌握開發全貌。
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Step 1 -->
+                        <div
+                            class="bg-slate-800/50 rounded-lg p-5 border border-slate-700/50 hover:border-cyan-500/30 transition-colors">
+                            <div class="text-cyan-400 font-bold text-xs mb-2 uppercase tracking-wider">Step 1: 物理基礎
+                            </div>
+                            <h3 class="text-white font-bold text-sm mb-2">紅外線測溫原理</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                理解微測輻射計與熱電效應。<br>
+                                <span class="text-cyan-500/80 mt-2 block font-medium">目的：建立核心物理直覺</span>
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div
+                            class="bg-slate-800/50 rounded-lg p-5 border border-slate-700/50 hover:border-blue-500/30 transition-colors">
+                            <div class="text-blue-400 font-bold text-xs mb-2 uppercase tracking-wider">Step 2: 介面實作
+                            </div>
+                            <h3 class="text-white font-bold text-sm mb-2">協同處理與控制</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                掌握 SPI/I2C 介面與初始化流程。<br>
+                                <span class="text-blue-500/80 mt-2 block font-medium">目的：點亮模組並讀取資料</span>
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div
+                            class="bg-slate-800/50 rounded-lg p-5 border border-slate-700/50 hover:border-orange-500/30 transition-colors">
+                            <div class="text-orange-400 font-bold text-xs mb-2 uppercase tracking-wider">Step 3: 硬體整合
+                            </div>
+                            <h3 class="text-white font-bold text-sm mb-2">熱管理與機構</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                解決 PCB 熱應力與外殼散熱設計。<br>
+                                <span class="text-orange-500/80 mt-2 block font-medium">目的：消除環境熱干擾</span>
+                            </p>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div
+                            class="bg-slate-800/50 rounded-lg p-5 border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
+                            <div class="text-emerald-400 font-bold text-xs mb-2 uppercase tracking-wider">Step 4: 演算法優化
+                            </div>
+                            <h3 class="text-white font-bold text-sm mb-2">校正與訊號處理</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                實作保護窗衰減補償與濾波算法。<br>
+                                <span class="text-emerald-500/80 mt-2 block font-medium">目的：實現商用級精度</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 0: 紅外線測溫原理 (New Fundamental Section) -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-cyan-500/20 text-cyan-400 text-2xl mr-4 border border-cyan-500/30">
+                    🌡️</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">紅外線測溫原理與技術基礎</h2>
+                    <p class="text-slate-400 text-sm mt-1">Infrared Sensing Principle & Technical Foundation</p>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-xl p-8 border-l-4 border-cyan-500 mb-8">
+                <p class="text-slate-300 leading-relaxed">
+                    非冷卻型長波紅外線（LWIR, Long-Wave Infrared）熱成像感測器屬於先進的微測輻射計系統。其測溫原理結合了物理學的熱輻射定律與微機電 (MEMS) / CMOS 半導體製程技術。
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Step 1 -->
+                <article
+                    class="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:bg-slate-800/60 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <span
+                            class="w-8 h-8 flex items-center justify-center rounded-full bg-cyan-900/50 text-cyan-400 font-bold text-sm mr-3">1</span>
+                        <h3 class="text-lg font-bold text-white">物理基礎：熱輻射吸收</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><strong class="text-slate-200">紅外線波段：</strong> 偵測 8 到 14 微米 (μm) 的長波紅外線
+                            (LWIR)，這是人體與室溫物體發射熱輻射的主要波段。</li>
+                        <li><strong class="text-slate-200">能量轉換：</strong> 輻射透過鏡頭聚焦到像素陣列 (FPA) 上，像素吸收能量產生溫升。</li>
+                        <li><strong class="text-slate-200">真空封裝 (WLVP)：</strong> 晶圓級真空封裝技術阻斷熱傳導與對流，確保像素能敏銳保留微小熱能。</li>
+                    </ul>
+                </article>
+
+                <!-- Step 2 -->
+                <article
+                    class="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:bg-slate-800/60 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <span
+                            class="w-8 h-8 flex items-center justify-center rounded-full bg-cyan-900/50 text-cyan-400 font-bold text-sm mr-3">2</span>
+                        <h3 class="text-lg font-bold text-white">光電轉換：溫差發電效應</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><strong class="text-slate-200">混合架構：</strong> 採用微熱輻射熱計 (Microbolometer) 與熱電堆 (Thermopile)
+                            混合技術。</li>
+                        <li><strong class="text-slate-200">電壓產生：</strong> 像素吸收輻射後產生的微幅溫升會透過熱電效應轉化為微小電壓。</li>
+                        <li><strong class="text-slate-200">相對測量：</strong> 產生的電壓取決於「視野物體」與「晶片本身 (Die Temp)」的溫差。</li>
+                    </ul>
+                </article>
+
+                <!-- Step 3 -->
+                <article
+                    class="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:bg-slate-800/60 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <span
+                            class="w-8 h-8 flex items-center justify-center rounded-full bg-cyan-900/50 text-cyan-400 font-bold text-sm mr-3">3</span>
+                        <h3 class="text-lg font-bold text-white">訊號處理與數位化</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><strong class="text-slate-200">類比前端 (AFE)：</strong> 處理晶片將像素產生的微弱電壓訊號進行高精度放大與濾波。</li>
+                        <li><strong class="text-slate-200">數位轉換 (ADC)：</strong> 放大後的訊號被轉換為數位數值 (Raw ADC counts)。</li>
+                        <li><strong class="text-slate-200">溫度參考：</strong> 必須同時讀取感測器內部的封裝溫度 ($T_{die}$) 作為計算基準。</li>
+                    </ul>
+                </article>
+
+                <!-- Step 4 -->
+                <article
+                    class="bg-slate-800/40 p-6 rounded-xl border border-slate-700/50 hover:bg-slate-800/60 transition-colors">
+                    <div class="flex items-center mb-4">
+                        <span
+                            class="w-8 h-8 flex items-center justify-center rounded-full bg-cyan-900/50 text-cyan-400 font-bold text-sm mr-3">4</span>
+                        <h3 class="text-lg font-bold text-white">溫度計算與校正</h3>
+                    </div>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><strong class="text-slate-200">逐像素校正：</strong> 利用 Flash 內的 Look-up Tables 消除像素間的不均勻性。</li>
+                        <li><strong class="text-slate-200">輻射測溫公式 (Radiometry)：</strong> 結合基座溫度、物體發射率
+                            (Emissivity)、靈敏度因子與偏移量進行補償。</li>
+                        <li><strong class="text-slate-200">最終輸出：</strong> 以 deci-Kelvin (dK) 格式透過 SPI 輸出，供主機端直接轉換。</li>
+                    </ul>
+                </article>
+            </div>
+
+            <div class="mt-8 bg-cyan-900/20 border border-cyan-500/20 p-4 rounded-lg">
+                <p class="text-xs text-cyan-300 text-center">
+                    <strong>總結：</strong> 物體發出紅外線 → 像素吸收升溫 → 產生相對電壓差 → 數位化 → 加上晶片溫度並經過參數補償 → 輸出目標溫度。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: 協同處理器與通訊介面 -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-blue-500/20 text-blue-400 text-2xl mr-4 border border-blue-500/30">
+                    ⚙️</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">協同處理器與通訊介面</h2>
+                    <p class="text-slate-400 text-sm mt-1">Companion IC Role & Interface Selection</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Processor Role -->
+                <article class="glass-panel rounded-xl p-8 hover:border-blue-500/40 transition-all duration-300">
+                    <h3 class="text-xl font-bold text-blue-300 mb-4">處理晶片核心職責</h3>
+                    <p class="text-slate-300 mb-4 leading-relaxed">
+                        協同處理晶片（Companion IC）負責處理底層控制與原始資料運算，為 Host 主機提供標準化介面。其完整資料流水線（Pipeline）包含：
+                    </p>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-start"><span
+                                class="text-blue-500 mr-2">▸</span><span><strong>原始資料擷取：</strong>從感測器讀取類比訊號並進行 ADC
+                                轉換。</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 mr-2">▸</span><span><strong>像素級校正
+                                    (Per-pixel Calibration)：</strong>修正個別像素的增益與偏移誤差。</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 mr-2">▸</span><span><strong>壞點修正
+                                    (BPC)：</strong>偵測失效像素並利用鄰近像素進行數值補償。</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 mr-2">▸</span><span><strong>溫度轉換 (Temp
+                                    Conversion)：</strong>將原始資料轉換為絕對溫度（Kelvin）。</span></li>
+                        <li class="flex items-start"><span class="text-blue-500 mr-2">▸</span><span><strong>雜訊抑制
+                                    (Denoising)：</strong>執行時間與空間濾波演算法。</span></li>
+                    </ul>
+                </article>
+
+                <!-- Interface Selection -->
+                <article class="glass-panel rounded-xl p-8 hover:border-blue-500/40 transition-all duration-300">
+                    <h3 class="text-xl font-bold text-blue-300 mb-4">通訊介面配置策略</h3>
+                    <p class="text-slate-300 mb-4 leading-relaxed">
+                        處理晶片支援多種主機通訊模式，通常於硬體重置時透過特定腳位的電位狀態來決定：
+                    </p>
+
+                    <div class="space-y-4">
+                        <div class="bg-slate-800/50 p-4 rounded-lg border-l-4 border-blue-500">
+                            <h4 class="font-bold text-white text-sm">USB 介面模式</h4>
+                            <p class="text-xs text-slate-400 mt-1">
+                                當 MODE Pin 拉高（Pull-up）時啟用。適用於 PC 或高階嵌入式系統，直接模擬為 USB 裝置進行資料傳輸。
+                            </p>
+                        </div>
+                        <div class="bg-slate-800/50 p-4 rounded-lg border-l-4 border-emerald-500">
+                            <h4 class="font-bold text-white text-sm">SPI + I2C 組合模式</h4>
+                            <p class="text-xs text-slate-400 mt-1">
+                                當 MODE Pin 拉低（Pull-down）時啟用。此為 MCU 開發最常用模式：<br>
+                                • <strong>I2C (Control)：</strong> 用於發送指令、讀取狀態暫存器（Master-Slave 架構）。<br>
+                                • <strong>SPI (Data)：</strong> 專用於高速熱影像資料（Thermal Data Frame）傳輸。
+                            </p>
+                        </div>
+                    </div>
+        </section>
+
+        <!-- Section 3: 控制流程與軟體實作 -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-indigo-500/20 text-indigo-400 text-2xl mr-4 border border-indigo-500/30">
+                    🎮</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">控制流程與軟體實作</h2>
+                    <p class="text-slate-400 text-sm mt-1">Software Logic & Control Flow</p>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <!-- 1. Interface Config -->
+                <div class="glass-panel rounded-xl p-8 border-l-4 border-indigo-500">
+                    <h3 class="text-xl font-bold text-indigo-300 mb-4">1. 硬體介面與接腳規劃</h3>
+                    <p class="text-slate-300 mb-4 text-sm leading-relaxed">
+                        系統透過偵測<strong>模式切換腳位 (MODE)</strong> 的電位來決定通訊方式：
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/50">
+                            <span class="text-indigo-400 font-bold block mb-1">SPI + I2C 模式 (MCU 開發)</span>
+                            <p class="text-[11px] text-slate-400">MODE 接腳下拉 (Pull-down)。這是嵌入式系統開發的標準模式，分別處理控制指令與高頻資料。
+                            </p>
+                        </div>
+                        <div class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/50">
+                            <span class="text-indigo-400 font-bold block mb-1">USB 模式 (PC/Android)</span>
+                            <p class="text-[11px] text-slate-400">MODE 接腳上拉 (Pull-up)。處理晶片模擬為 USB CDC 裝置（虛擬 COM Port），使用
+                                ASCII 字串通訊。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Embedded Control Flow -->
+                <article class="glass-panel rounded-xl p-8">
+                    <h3 class="text-xl font-bold text-indigo-300 mb-6">2. 嵌入式系統控制邏輯 (SPI + I2C)</h3>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Step A -->
+                        <div class="space-y-4">
+                            <h4 class="text-white font-bold text-sm underline decoration-indigo-500 underline-offset-4">
+                                A. 初始化與啟動</h4>
+                            <ul class="text-xs text-slate-400 space-y-3">
+                                <li><strong class="text-slate-300">重置程序：</strong> 將 <code>nRESET</code> 接腳拉低至少 32µs
+                                    以進行硬體重置。</li>
+                                <li><strong class="text-slate-300">等待就緒：</strong> 正常啟動約需 1.5 秒。若接新感測器模組，首次啟動可能需 3~5 秒。
+                                </li>
+                                <li><strong class="text-slate-300">狀態輪詢：</strong> 讀取暫存器 <code>0xB6</code>，監控
+                                    <code>BOOTING_UP</code> 標誌位。
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Step B -->
+                        <div class="space-y-4">
+                            <h4 class="text-white font-bold text-sm underline decoration-indigo-500 underline-offset-4">
+                                B. 參數配置 (I2C)</h4>
+                            <ul class="text-xs text-slate-400 space-y-3">
+                                <li><strong class="text-slate-300">啟動串流：</strong> 寫入 <code>0xB1</code> 選擇連續模式 (0x02)
+                                    或單張模式 (0x01)。</li>
+                                <li><strong class="text-slate-300">設定幀率 (FPS)：</strong> 透過 <code>0xB4</code> 暫存器設定除數。
+                                </li>
+                                <li><strong class="text-slate-300">增益範圍控制：</strong> 寫入
+                                    <code>0xB9</code>，可選自動增益或指定高中低檔（測溫上限隨之調整）。
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Step C -->
+                        <div class="space-y-4">
+                            <h4 class="text-white font-bold text-sm underline decoration-indigo-500 underline-offset-4">
+                                C. 資料讀取 (SPI)</h4>
+                            <ul class="text-xs text-slate-400 space-y-3">
+                                <li><strong class="text-slate-300">DR 中斷：</strong> 當資料就緒，<code>DATA_READY</code>
+                                    接腳會由低變高。</li>
+                                <li><strong class="text-slate-300">SPI 模式：</strong> Master 設為 Mode 0 (CPOL=0, CPHA=0)。
+                                </li>
+                                <li><strong class="text-slate-300">資料幀構造：</strong> 讀取完整 Data Frame（包含 Header 與 Pixel
+                                    Data）。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-indigo-900/10 p-5 rounded-xl border border-indigo-500/20">
+                        <h4 class="text-white font-bold text-sm mb-2">3. 資料解析與轉換</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                            <div class="text-xs text-slate-400 leading-relaxed">
+                                <p class="mb-2"><strong>溫度轉換：</strong> 讀取的 16-bit 原始資料通常為 <code
+                                        class="text-indigo-400">deci-Kelvin (dK)</code> 格式。</p>
+                                <p class="bg-black/30 p-2 rounded text-indigo-300 italic font-mono mb-2">Example: 3005
+                                    dK = 300.5 K = 27.35 °C</p>
+                                <p>可透過 <code>0x31</code> 暫存器將輸出單位切換為攝氏或華氏。</p>
+                            </div>
+                            <div class="border-l border-slate-700 pl-6 hidden md:block">
+                                <span
+                                    class="text-[10px] text-slate-500 uppercase tracking-widest block mb-2">核心迴圈虛擬碼</span>
+                                <pre class="text-[10px] font-mono text-indigo-300 leading-tight">
+Init(I2C, SPI);
+Write_Reg(0xB1, 0x02); // Enable Continuous Mode
+while(true) {
+  if (Pin_DataReady == HIGH) {
+    Read_SPI_Buffer(data_array);
+    Process_Temperature(data_array);
+  }
+}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 4. Detailed Register Map (New) -->
+                <div class="glass-panel p-8 rounded-xl border-l-4 border-indigo-400">
+                    <h3 class="text-xl font-bold text-indigo-300 mb-6 flex items-center">
+                        <span class="bg-indigo-500/20 p-2 rounded-lg mr-3">🎛️</span>
+                        暫存器控制詳解 (Register Control Map)
+                    </h3>
+                    <p class="text-sm text-slate-400 mb-6">
+                        本傳感器系列提供豐富的 I2C 暫存器，可精細調整系統行為。以下為四大關鍵控制類別：
+                    </p>
+
+                    <div class="space-y-8">
+
+                        <!-- Cat 1: Acquisition -->
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            <div class="lg:col-span-1">
+                                <h4 class="text-white font-bold text-sm border-b border-indigo-500/30 pb-2 mb-2">1.
+                                    影像擷取控制</h4>
+                                <span class="text-[10px] text-slate-500 uppercase">Acquisition Control</span>
+                            </div>
+                            <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">FRAME_MODE (0xB1)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">R/W</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        核心開關。Bit 1 啟動連續串流；Bit 7 在「溫度資料」與「補償Raw」間切換。
+                                    </p>
+                                </div>
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">FRAME_RATE (0xB4)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">R/W</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        設定除數 (Divider) 以降低 FPS。適合慢速 MCU 或增強訊號積分時間。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cat 2: Radiometry -->
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            <div class="lg:col-span-1">
+                                <h4 class="text-white font-bold text-sm border-b border-indigo-500/30 pb-2 mb-2">2.
+                                    溫度測量校正</h4>
+                                <span class="text-[10px] text-slate-500 uppercase">Radiometry & Calibration</span>
+                            </div>
+                            <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">EMISSIVITY (0xCA)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">0~100</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        發射率補償。預設 0x5F (95%)。測量金屬或特殊材質時務必調整。
+                                    </p>
+                                </div>
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">SENS_FACTOR (0xC2)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">Float</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        保護窗穿透率補償 (如 1.23x)。還原被阻擋的熱輻射能量。
+                                    </p>
+                                </div>
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">OFFSET_CORR (0xCB)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">+/-</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        全域溫度偏移。消除環境熱或外殼自發熱造成的截距誤差。
+                                    </p>
+                                </div>
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">GAIN_CTRL (0xB9)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">Mode</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        高增益 (<120°C)、低增益 (>400°C) 或 Auto 切換。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cat 3: Filtering -->
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            <div class="lg:col-span-1">
+                                <h4 class="text-white font-bold text-sm border-b border-indigo-500/30 pb-2 mb-2">3.
+                                    濾波與演算法</h4>
+                                <span class="text-[10px] text-slate-500 uppercase">Quality Optimization</span>
+                            </div>
+                            <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">FILTER_CTRL (0xD0)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">R/W</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        濾波總開關。啟用時間濾波 (Temporal)、移動平均 (Rolling Avg) 等。
+                                    </p>
+                                </div>
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">STARK_CTRL (0x20)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">Adv</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        進階時空濾波 (Spatio-Temporal)。平衡去噪與動態殘影，適合即時監控。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cat 4: System -->
+                        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                            <div class="lg:col-span-1">
+                                <h4 class="text-white font-bold text-sm border-b border-indigo-500/30 pb-2 mb-2">4. 系統管理
+                                </h4>
+                                <span class="text-[10px] text-slate-500 uppercase">Power & Status</span>
+                            </div>
+                            <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">SLEEP_MODE (0xB5)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">Time</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        設定讀取後的休眠時長。節能關鍵。
+                                    </p>
+                                </div>
+                                <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <code class="text-indigo-400 text-xs font-bold">USER_FLASH (0xD8)</code>
+                                        <span
+                                            class="text-[10px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400">NVM</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        存取內建 Flash，可用於儲存使用者自定義的校正參數或序號。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-6 bg-indigo-900/20 p-4 rounded-lg flex items-start">
+                        <span class="text-indigo-400 text-lg mr-3">�</span>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            <strong class="text-indigo-300">開發建議：</strong> 初期只需專注於 <code
+                                class="text-indigo-400">0xB1</code> (開畫面) 與 <code
+                                class="text-indigo-400">0xCA/0xC2</code> (調準度)。濾波器 (<code
+                                class="text-indigo-400">0xD0</code>) 建議在確定原始資料正確後再開啟。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: 進階熱管理與機構設計 -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-orange-500/20 text-orange-400 text-2xl mr-4 border border-orange-500/30">
+                    🔥</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">進階熱管理與機構設計</h2>
+                    <p class="text-slate-400 text-sm mt-1">Thermal Physics & Mechanical Integration</p>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-xl p-8 border-t-4 border-orange-500">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Column 1 -->
+                    <div class="col-span-1">
+                        <h3 class="text-lg font-bold text-orange-300 mb-3">熱傳導挑戰</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                            熱感測器的準確度極易受 PCB 熱應力影響。主要設計目標是阻斷熱源傳導至感測器，確保感測器處於<strong>均溫狀態（Isothermal State）</strong>。
+                        </p>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-2">PCB 布局規範</h4>
+                        <ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
+                            <li><strong>銅箔切口 (Cut-outs)：</strong> 移除感測器周圍的接地層與電源層，增加熱阻。</li>
+                            <li><strong>元件布局：</strong> 遠離高功率元件（如 MCU、LDO）。</li>
+                            <li><strong>物理隔離：</strong> 在模組與 PCB 間使用絕緣墊片。</li>
+                        </ul>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="col-span-1 border-l border-slate-700 pl-0 md:pl-8">
+                        <h3 class="text-lg font-bold text-orange-300 mb-3">外殼材質物理特性</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                            外殼材質的<strong>熱導率 (Thermal Conductivity, k)</strong> 決定了溫度梯度的分布，直接影響測量誤差。
+                        </p>
+                        <div class="space-y-3">
+                            <div class="bg-slate-900/50 p-3 rounded border border-orange-500/20">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-bold text-white">鋁合金 (Aluminum)</span>
+                                    <span class="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">推薦</span>
+                                </div>
+                                <p class="text-xs text-slate-400">高熱導率促使外殼溫度分布均勻，消除局部熱點，使感測器能快速達到熱平衡，穩態誤差極小。</p>
+                            </div>
+                            <div class="bg-slate-900/50 p-3 rounded border border-slate-700">
+                                <div class="flex justify-between items-center mb-1">
+                                    <span class="text-sm font-bold text-slate-300">FR4 / 塑膠</span>
+                                    <span class="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded">需謹慎</span>
+                                </div>
+                                <p class="text-xs text-slate-400">低熱導率易導致溫度梯度，產生難以補償的動態誤差。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 3 -->
+                    <div class="col-span-1 border-l border-slate-700 pl-0 md:pl-8">
+                        <h3 class="text-lg font-bold text-orange-300 mb-3">保護視窗 (Protective Window)</h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-2">
+                            引入視窗會帶來兩大挑戰，需透過軟體與機構共同解決：
+                        </p>
+                        <ol class="list-decimal list-inside text-xs text-slate-400 space-y-2 mb-4">
+                            <li><strong>訊號衰減 (Attenuation)：</strong> 視窗吸收紅外線，導致讀數偏低。</li>
+                            <li><strong>自發輻射 (Self-emission)：</strong> 視窗自身溫度會成為干擾熱源。</li>
+                        </ol>
+                        <div class="bg-orange-900/20 p-3 rounded text-xs border border-orange-500/30">
+                            <strong>材料建議：</strong> 必須使用對 LWIR 波段透明的材料，如 <strong>矽 (Si)</strong> 或 <strong>鍺
+                                (Ge)</strong>，並施加 AR 鍍膜。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: 訊號處理與濾波演算法 -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-purple-500/20 text-purple-400 text-2xl mr-4 border border-purple-500/30">
+                    📊</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">訊號處理與濾波演算法</h2>
+                    <p class="text-slate-400 text-sm mt-1">Signal Processing & STARK Filter</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Filter Types -->
+                <div class="lg:col-span-2 glass-panel rounded-xl p-6">
+                    <h3 class="text-lg font-bold text-purple-300 mb-4">時域 vs 空域濾波器</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-xs text-slate-400 border-b border-slate-700">
+                                    <th class="py-2 px-3">濾波器類型</th>
+                                    <th class="py-2 px-3">工作原理</th>
+                                    <th class="py-2 px-3">優缺點分析</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm text-slate-300 divide-y divide-slate-800">
+                                <tr>
+                                    <td class="py-3 px-3 font-medium text-purple-200">時間濾波 (Temporal)</td>
+                                    <td class="py-3 px-3">計算單一像素在連續多幀的平均值。</td>
+                                    <td class="py-3 px-3">
+                                        <span class="text-green-400">優：</span> 靜態場景極佳<br>
+                                        <span class="text-red-400">缺：</span> 動態場景產生鬼影 (Ghosting)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 px-3 font-medium text-purple-200">空間濾波 (Spatial)</td>
+                                    <td class="py-3 px-3">計算單幀內鄰近像素的數值（如中值濾波）。</td>
+                                    <td class="py-3 px-3">
+                                        <span class="text-green-400">優：</span> 去除椒鹽雜訊<br>
+                                        <span class="text-red-400">缺：</span> 可能模糊細微特徵
+                                    </td>
+                                </tr>
+                                <tr class="bg-purple-900/10">
+                                    <td class="py-3 px-3 font-bold text-white">STARK 濾波器</td>
+                                    <td class="py-3 px-3">Spatio-Temporal Advanced Rolling Kernel<br>結合時域與空域資訊。</td>
+                                    <td class="py-3 px-3 text-xs">
+                                        最佳平衡方案。但在快速動態場景中，雜訊可能被誤判為運動模糊。
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Color Mapping -->
+                <div class="glass-panel rounded-xl p-6 flex flex-col justify-center">
+                    <h3 class="text-lg font-bold text-purple-300 mb-3">色彩映射核心：Min-Max Scaling</h3>
+                    <p class="text-sm text-slate-400 mb-4">
+                        將溫度資料視覺化時，必須使用最小-最大特徵縮放，將感測器溫度範圍映射至 0-255 的顏色索引。
+                    </p>
+                    <div
+                        class="bg-black/40 p-4 rounded-lg font-mono text-xs text-green-400 mb-4 border border-slate-700">
+                        Index = (T_pixel - T_min) * 255 <br>
+                        --------------------------- <br>
+                        (T_max - T_min)
+                    </div>
+                    <p class="text-xs text-slate-500">
+                        * T_min 與 T_max 可透過「自動增益」動態調整，或「手動鎖定」以維持背景一致性。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: 黑體測量理論與邏輯 -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-pink-500/20 text-pink-400 text-2xl mr-4 border border-pink-500/30">
+                    🎯</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">黑體測量理論與邏輯</h2>
+                    <p class="text-slate-400 text-sm mt-1">Blackbody Measurement Theory & Principles</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- 1. What is Blackbody -->
+                <article class="glass-panel rounded-xl p-8 border-l-4 border-pink-500">
+                    <h3 class="text-xl font-bold text-pink-300 mb-4">1. 什麼是黑體測量？</h3>
+                    <p class="text-slate-300 mb-4 leading-relaxed">
+                        在熱成像技術中，<strong>黑體 (Blackbody)</strong> 是一個絕對標準的參考熱輻射源。它能設定在特定溫度並發出已知且穩定的紅外輻射。
+                    </p>
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-900/50 p-4 rounded-lg border border-pink-500/20">
+                        <div>
+                            <span class="text-pink-400 font-bold block text-sm mb-1">核心定義</span>
+                            <p class="text-xs text-slate-400">
+                                理想黑體具有 <strong>發射率 $\varepsilon = 1.0$</strong> (100%)，能完美發射熱輻射而不反射環境雜訊。它是驗證校正參數
+                                (Calibration) 的唯一真理標準。
+                            </p>
+                        </div>
+                        <div>
+                            <span class="text-pink-400 font-bold block text-sm mb-1">工程用途</span>
+                            <p class="text-xs text-slate-400">
+                                用於修正感測器因組裝公差或加裝保護窗 (Window) 後產生的讀數誤差。透過測量已知溫度的黑體，逆向推導出系統所需的補償參數。
+                            </p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 2. Measuring Principle -->
+                <article class="glass-panel rounded-xl p-8">
+                    <h3 class="text-xl font-bold text-pink-300 mb-6">2. 測量原理：溫差檢測法</h3>
+
+                    <div class="flex flex-col md:flex-row gap-8 items-center mb-8">
+                        <div class="flex-1">
+                            <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                                熱傳感器並非直接測量絕對溫度，而是測量<strong>「目標物體」與「感測器晶片」</strong>之間的溫差能量。
+                            </p>
+                            <ul class="text-xs text-slate-400 space-y-2">
+                                <li class="flex items-center"><span class="text-pink-500 mr-2">▸</span>
+                                    <strong>黑體發射：</strong> 產生 8-14 $\mu m$ 長波紅外線。
+                                </li>
+                                <li class="flex items-center"><span class="text-pink-500 mr-2">▸</span>
+                                    <strong>差分感測：</strong> 像素電壓 $\propto (T_{target}^4 - T_{die}^4)$。
+                                </li>
+                                <li class="flex items-center"><span class="text-pink-500 mr-2">▸</span>
+                                    <strong>訊號重建：</strong> 處理晶片結合 Raw Data 與 $T_{die}$ 計算主要讀數。
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="w-full md:w-1/3 bg-slate-800 p-4 rounded-lg border border-slate-700 text-center">
+                            <span class="text-xs text-slate-500 uppercase tracking-wider mb-2 block">誤差修正模型</span>
+                            <div class="font-mono text-pink-400 text-sm">
+                                $T_{final} \approx \sigma \cdot (T_{raw} + \text{Offset})$
+                            </div>
+                            <div class="mt-2 text-[10px] text-slate-400 text-left px-2">
+                                • $\sigma$ (Sensitivity): 修正斜率 (如保護窗衰減)<br>
+                                • Offset: 修正截距 (如環境熱干擾)
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3. Theory Base -->
+                <article class="glass-panel rounded-xl p-8">
+                    <h3 class="text-xl font-bold text-pink-300 mb-6">3. 背後的物理理論</h3>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Theory 1 -->
+                        <div class="space-y-2">
+                            <h4 class="text-white font-bold text-sm border-b border-pink-500/30 pb-2">輻射發射率 (Emissivity)
+                            </h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                基於 <strong>斯蒂芬-波茲曼定律 ($P = \varepsilon \sigma_{sb} T^4$)</strong>。若使用非理想黑體 (如
+                                $\varepsilon=0.97$)，必須在晶片參數中設定對應發射率，否則高溫段會產生誤差。
+                            </p>
+                        </div>
+                        <!-- Theory 2 -->
+                        <div class="space-y-2">
+                            <h4 class="text-white font-bold text-sm border-b border-pink-500/30 pb-2">線性兩點校正 (Two-point)
+                            </h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                雖然熱輻射是非線性的，但在工作區間內可視為線性。利用<strong>高溫黑體</strong>與<strong>低溫黑體</strong>的兩點資料，計算出實際響應斜率：
+                            </p>
+                            <div class="bg-black/20 p-2 rounded text-[10px] font-mono text-pink-300 text-center">
+                                $\sigma_{new} = \frac{T_{readout} - T_{die}}{T_{blackbody} - T_{die}}$
+                            </div>
+                        </div>
+                        <!-- Theory 3 -->
+                        <div class="space-y-2">
+                            <h4 class="text-white font-bold text-sm border-b border-pink-500/30 pb-2">光學穿透率
+                                (Transmission)</h4>
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                矽保護窗會吸收能量。理論上，修正係數與穿透率成反比 ($\sigma \approx 1 / \tau_{av}$)。這是實作中調整 Sensitivity Factor
+                                的物理依據。
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Section 7: 關鍵校正參數與衰減補償 -->
+        <section>
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-emerald-500/20 text-emerald-400 text-2xl mr-4 border border-emerald-500/30">
+                    🧮</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">關鍵校正參數與衰減補償</h2>
+                    <p class="text-slate-400 text-sm mt-1">Calibration Parameters & Attenuation Compensation</p>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Detailed Window Compensation Section -->
+                <article class="glass-panel rounded-xl p-8 border-t-4 border-emerald-500">
+                    <h3 class="text-xl font-bold text-emerald-300 mb-4">保護視窗之訊號衰減補償 (σ)</h3>
+                    <p class="text-slate-300 mb-6 leading-relaxed">
+                        當在感測器前加裝 <strong>保護窗 (Protective Window)</strong> 時，材質（如矽 Si 或鍺
+                        Ge）會阻擋部分紅外線輻射，導致訊號變弱並使測得溫度低於實際值。此時必須調整 <strong>靈敏度因子 (Sensitivity Factor, σ)</strong> 來進行補償。
+                    </p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Method 1 -->
+                        <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+                            <h4 class="text-white font-bold mb-3 flex items-center">
+                                <span class="bg-emerald-500 text-slate-900 text-xs px-2 py-0.5 rounded mr-2">方法 1</span>
+                                簡易計算法 (基於穿透率)
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+                                若已知保護窗在 LWIR (8-14 μm) 波段的平均穿透率 (Transmission Rate, $\tau_{av}$)，可用此公式：
+                            </p>
+                            <div class="bg-black/30 p-4 rounded-lg text-center mb-4">
+                                <code class="text-emerald-400 text-lg font-mono">σ = 1.0 / τ_av</code>
+                            </div>
+                            <div class="text-[11px] text-slate-500 space-y-1">
+                                <p><strong>範例：</strong> 穿透率為 73% (0.73) 的矽晶圓。</p>
+                                <p><strong>計算：</strong> σ = 1.0 / 0.73 ≈ 1.37</p>
+                            </div>
+                        </div>
+
+                        <!-- Method 2 -->
+                        <div class="bg-slate-900/50 p-6 rounded-xl border border-slate-700">
+                            <h4 class="text-white font-bold mb-3 flex items-center">
+                                <span class="bg-emerald-500 text-slate-900 text-xs px-2 py-0.5 rounded mr-2">方法 2</span>
+                                實驗校正法 (基於黑體測量)
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+                                最精確的方法，利用標準黑體輻射源消除製造公差：
+                            </p>
+                            <ol class="text-[11px] text-slate-500 list-decimal list-inside space-y-2">
+                                <li>將黑體設定於高溫（建議 80°C）以獲得強訊號。</li>
+                                <li>將裝有保護窗的模組對準黑體。</li>
+                                <li>調整 σ 數值，直到感測器讀數與黑體溫度一致。</li>
+                                <li><strong>進階：</strong> 可計算「無視窗」與「有視窗」之資料斜率比值。</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Register Settings -->
+                    <div class="mt-8 bg-emerald-900/10 p-6 rounded-xl border border-emerald-500/20">
+                        <h4 class="text-sm font-bold text-white mb-4">如何寫入設定？</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="space-y-1">
+                                <span class="text-[10px] text-slate-500 uppercase tracking-wider">暫存器名稱</span>
+                                <p class="text-sm font-mono text-emerald-400">SENSITIVITY_FACTOR</p>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[10px] text-slate-500 uppercase tracking-wider">暫存器地址</span>
+                                <p class="text-sm font-mono text-emerald-400">0xC2</p>
+                            </div>
+                            <div class="space-y-1">
+                                <span class="text-[10px] text-slate-500 uppercase tracking-wider">數值格式</span>
+                                <p class="text-xs text-slate-300">浮點數因子 × 100 轉整數</p>
+                            </div>
+                        </div>
+                        <div
+                            class="mt-4 p-3 bg-black/40 rounded border border-slate-700 text-xs font-mono text-slate-400">
+                            範例：若因子為 1.23 → 寫入值 = 1.23 * 100 = 123 (0x7B)
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Emissivity & Offset -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <article class="glass-panel rounded-xl p-8">
+                        <h3 class="text-xl font-bold text-emerald-300 mb-4">發射率校正</h3>
+                        <div class="space-y-4">
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                依據目標材質調整。地址：<code>0xCA</code>，預設 <code>0x5F</code> (95%)。正確設定此值對絕對溫度準確性至關重要。
+                            </p>
+                            <div class="bg-slate-800/50 p-3 rounded text-[11px] text-slate-500 border border-slate-700">
+                                <strong>物理意義：</strong> 描述物體發射紅外能量相對於黑體的能力。
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="glass-panel rounded-xl p-8">
+                        <h3 class="text-xl font-bold text-emerald-300 mb-4">溫度偏移 (Offset)</h3>
+                        <div class="space-y-4">
+                            <p class="text-xs text-slate-400 leading-relaxed">
+                                消除環境或自發熱造成的截距誤差。地址：<code>0xCB</code>。
+                            </p>
+                            <div class="bg-slate-800/50 p-3 rounded text-[11px] text-slate-500 border border-slate-700">
+                                <strong>建議：</strong> 在校正靈敏度 (σ) 後，應針對室溫環境進行一次 Offset 校正以確保精度。
+                            </div>
+                            <div class="flex items-center bg-slate-900/50 p-2 rounded border border-emerald-500/20">
+                                <span class="text-xs text-emerald-400 font-mono">T_final = T_raw * σ + Offset</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Window Integration Warning -->
+                <div class="bg-orange-500/10 border-l-4 border-orange-500 p-4 rounded-r-lg">
+                    <h4 class="text-orange-400 font-bold text-sm mb-1">保護視窗整合注意事項</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        • <strong>物理距離：</strong> 建議視窗與鏡頭保持 1-2 mm 距離，以減少熱干擾。<br>
+                        • <strong>自發輻射：</strong> 視窗本身受熱後的輻射會導致基準偏移，需透過 Offset 補償。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 8: 開發注意事項與整合重點 -->
+        <section class="max-w-6xl mx-auto">
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-rose-500/20 text-rose-400 text-2xl mr-4 border border-rose-500/30">
+                    ⚠️</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">開發注意事項與整合重點</h2>
+                    <p class="text-slate-400 text-sm mt-1">Development Precautions & Integration Highlights</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Point 1: Thermal -->
+                <article
+                    class="glass-panel p-6 rounded-xl border-l-4 border-rose-500 hover:bg-rose-500/5 transition-all">
+                    <h4 class="text-rose-300 font-bold mb-3 flex items-center text-base">
+                        <span class="mr-2">🌡️</span> 熱管理與機構設計
+                    </h4>
+                    <ul class="text-xs text-slate-400 space-y-2 leading-relaxed">
+                        <li><strong class="text-slate-200">PCB 熱隔離：</strong> 建議在感測器下方區域進行 <span
+                                class="text-rose-400/80 uppercase">Cut-out</span> 處理，阻斷來自 MCU 或電源晶片的熱傳導。</li>
+                        <li><strong class="text-slate-300">機構間隙：</strong> 模組金屬面應避免直接接觸受熱不均的外殼，建議保留 <span
+                                class="font-bold">1-2mm 空氣層</span> 作為絕緣。</li>
+                        <li><strong class="text-slate-300">均溫狀態：</strong> 設計應確保感測器晶片與鏡頭座維持熱平衡，快速的外殼降溫或升溫會導致動態偏差。</li>
+                    </ul>
+                </article>
+
+                <!-- Point 2: Power -->
+                <article
+                    class="glass-panel p-6 rounded-xl border-l-4 border-amber-500 hover:bg-amber-500/5 transition-all">
+                    <h4 class="text-amber-300 font-bold mb-3 flex items-center text-base">
+                        <span class="mr-2">⚡</span> 高品質電源設計
+                    </h4>
+                    <ul class="text-xs text-slate-400 space-y-2 leading-relaxed">
+                        <li><strong class="text-slate-200">超低雜訊 LDO：</strong> 推薦使用輸出雜訊 <span
+                                class="italic text-amber-400/80">&lt; 6.5 µVRMS</span> 的 LDO 為感測器供電（如 LP5907）。</li>
+                        <li><strong class="text-slate-300">走線規劃：</strong> 電源走線應儘量短且寬，減少 <span class="uppercase">IR
+                                drop</span>。電壓波動會直接轉化為影像中的條紋雜訊或測溫誤差。</li>
+                    </ul>
+                </article>
+
+                <!-- Point 3: Software -->
+                <article
+                    class="glass-panel p-6 rounded-xl border-l-4 border-blue-500 hover:bg-blue-500/5 transition-all">
+                    <h4 class="text-blue-300 font-bold mb-3 flex items-center text-base">
+                        <span class="mr-2">💻</span> 軟體與暫存器控制
+                    </h4>
+                    <ul class="text-xs text-slate-400 space-y-2 leading-relaxed">
+                        <li><strong class="text-slate-200">揮發性設定：</strong> 校正暫存器（如 Sensitivity,
+                            Offset）在斷電後會重置，主機應在每次啟動時重新寫入。</li>
+                        <li><strong class="text-slate-300">增益切換限制：</strong> 自動增益切換瞬間會產生短暫條紋。若手動切換增益，建議暫停擷取並等待 <span
+                                class="font-bold">1s</span> 穩定。</li>
+                        <li><strong class="text-slate-300">啟動延遲：</strong> 系統重置後至少需等待 <span class="font-bold">1.5s</span>
+                            才能讀取資料，切勿在狀態暫存器就緒前通訊。</li>
+                    </ul>
+                </article>
+
+                <!-- Point 4: Limitations -->
+                <article
+                    class="glass-panel p-6 rounded-xl border-l-4 border-slate-500 hover:bg-slate-500/5 transition-all">
+                    <h4 class="text-slate-300 font-bold mb-3 flex items-center text-base">
+                        <span class="mr-2">⏹️</span> 系統限制與操作
+                    </h4>
+                    <ul class="text-xs text-slate-400 space-y-2 leading-relaxed">
+                        <li><strong class="text-slate-200">無機械快門 (Shutterless)：</strong> 長時間運作若出現殘影，需透過軟體演算法或短暫重新校正補償。
+                        </li>
+                        <li><strong class="text-slate-300">通訊時序：</strong> 若 I2C/SPI 輪詢速度過快且未考慮 <code>DATA_READY</code>
+                            訊號，可能導致資料撕裂或幀率下降。</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- Section 9: 工程術語表 -->
+        <section class="max-w-5xl mx-auto">
+            <h3 class="text-2xl font-bold text-white mb-6 pl-4 border-l-4 border-cyan-500">
+                📚 工程術語表 (Glossary)
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">LWIR (Long-Wave Infrared)</span>
+                    <span class="text-xs text-slate-400">長波紅外線，波長 8-14 μm。矽 (Si) 與鍺 (Ge) 視窗對此波段具有良好透明度。</span>
+                </div>
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">NETD (Noise Equivalent Temperature
+                        Difference)</span>
+                    <span class="text-xs text-slate-400">雜訊等效溫差。衡量感測器能辨識的最小溫度差異，數值越低靈敏度越高。</span>
+                </div>
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">FPA (Focal Plane Array)</span>
+                    <span class="text-xs text-slate-400">焦平面陣列。由多個感測像素組成的二維陣列，位於鏡頭焦點處。</span>
+                </div>
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">PTAT (Proportional to Absolute
+                        Temperature)</span>
+                    <span class="text-xs text-slate-400">與絕對溫度成正比的數值，用於追蹤感測器內部溫度變化。</span>
+                </div>
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">BPC (Bad Pixel Correction)</span>
+                    <span class="text-xs text-slate-400">壞點修正。利用鄰近正常像素的溫度估算值來替換壞點讀數。</span>
+                </div>
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">ADC (Analog-to-Digital Converter)</span>
+                    <span class="text-xs text-slate-400">類比數位轉換器。將連續的類比訊號轉換為離散的數位數值。</span>
+                </div>
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">Isothermal State (均溫狀態)</span>
+                    <span class="text-xs text-slate-400">感測器晶片與鏡頭座溫度一致的理想狀態，可將溫度梯度誤差降至最低。</span>
+                </div>
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">Emissivity (發射率)</span>
+                    <span class="text-xs text-slate-400">物體發射紅外輻射的能力比值，理想黑體為 1.0，人體皮膚約 0.98。</span>
+                </div>
+                <div class="glass-panel p-4 rounded-lg">
+                    <span class="block text-cyan-400 font-bold text-sm">WLVP (Wafer-Level Vacuum Packaging)</span>
+                    <span class="text-xs text-slate-400">晶圓級真空封裝。阻斷熱傳導與對流，提升感測器熱靈敏度的關鍵技術。</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 10: 系統規格參數與評估指南 -->
+        <section class="max-w-6xl mx-auto">
+            <div class="flex items-center mb-8">
+                <div
+                    class="w-12 h-12 flex items-center justify-center rounded-xl bg-slate-500/20 text-slate-400 text-2xl mr-4 border border-slate-500/30">
+                    📋</div>
+                <div>
+                    <h2 class="text-3xl font-bold text-white">系統規格參數與評估指南</h2>
+                    <p class="text-slate-400 text-sm mt-1">System Specifications & Evaluation Framework</p>
+                </div>
+            </div>
+
+            <div class="space-y-12">
+                <!-- Part 1: Hardware Specs -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Sensor Module -->
+                    <article class="glass-panel rounded-xl overflow-hidden">
+                        <div class="bg-slate-800/80 px-6 py-4 border-b border-slate-700">
+                            <h3 class="text-lg font-bold text-white flex items-center">
+                                <span class="mr-2">📷</span> 熱成像感測器模組
+                            </h3>
+                        </div>
+                        <div class="p-0">
+                            <table class="w-full text-left text-xs text-slate-300">
+                                <thead class="bg-slate-900/40 text-slate-500 uppercase tracking-tighter">
+                                    <tr>
+                                        <th class="px-6 py-3 font-medium">參數項目</th>
+                                        <th class="px-6 py-3 font-medium">規格數值 / 意義</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    <tr>
+                                        <td class="px-6 py-3 bg-slate-800/20 font-medium">解析度 (Resolution)</td>
+                                        <td class="px-6 py-3">80 (H) x 62 (V) / 總畫素 4,960 點</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-slate-800/20 font-medium">波長範圍 (Spectral)</td>
+                                        <td class="px-6 py-3">8 ~ 14 μm (LWIR)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-slate-800/20 font-medium">熱靈敏度 (NETD)</td>
+                                        <td class="px-6 py-3">125 ~ 150 mK (數值越低越靈敏)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-slate-800/20 font-medium">最大幀率 (FPS)</td>
+                                        <td class="px-6 py-3">高達 29.3 FPS (動態影像流暢)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-slate-800/20 font-medium">測溫範圍 (Scene)</td>
+                                        <td class="px-6 py-3">-20°C 至 >400°C (具備增益切換)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-slate-800/20 font-medium">感測技術 (Tech)</td>
+                                        <td class="px-6 py-3">WLVP 混合架構 (晶圓級真空封裝)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <!-- Processor Config -->
+                    <article class="glass-panel rounded-xl overflow-hidden">
+                        <div class="bg-indigo-900/20 px-6 py-4 border-b border-indigo-500/30">
+                            <h3 class="text-lg font-bold text-white flex items-center">
+                                <span class="mr-2">🧠</span> 協同處理晶片
+                            </h3>
+                        </div>
+                        <div class="p-0">
+                            <table class="w-full text-left text-xs text-slate-300">
+                                <thead class="bg-slate-900/40 text-slate-500 uppercase tracking-tighter">
+                                    <tr>
+                                        <th class="px-6 py-3 font-medium">參數項目</th>
+                                        <th class="px-6 py-3 font-medium">規格數值 / 意義</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800">
+                                    <tr>
+                                        <td class="px-6 py-3 bg-indigo-900/5 font-medium">封裝形式 (Package)</td>
+                                        <td class="px-6 py-3">QFN33 (5x5 mm) 小型貼片</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-indigo-900/5 font-medium">介面支援 (Interface)</td>
+                                        <td class="px-6 py-3">I2C + SPI / USB (虛擬 COM)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-indigo-900/5 font-medium">工作電流 (Current)</td>
+                                        <td class="px-6 py-3">~60 mA (擷取模式) / ~4 mA (休眠)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-indigo-900/5 font-medium">處理功能 (ISP)</td>
+                                        <td class="px-6 py-3">BPC 壞點修復、濾波、溫度轉換</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-indigo-900/5 font-medium">啟動時間 (Bootup)</td>
+                                        <td class="px-6 py-3">1.5 ~ 3 秒 (包含感測器自檢)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-3 bg-indigo-900/5 font-medium">資料輸出</td>
+                                        <td class="px-6 py-3">直接輸出 Radiometric Temperature (dK)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+
+                <!-- Part 2: Detailed Evaluation Framework (Updated) -->
+                <div class="bg-slate-800/30 p-8 rounded-2xl border border-slate-700/50">
+                    <h3 class="text-2xl font-bold text-white mb-8 text-center flex items-center justify-center">
+                        <span class="mr-3 text-3xl">⚖️</span> 評估熱傳感器的四大關鍵指標
+                    </h3>
+
+                    <div class="space-y-8">
+
+                        <!-- 1. Core Imaging -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b border-slate-700/50">
+                            <div class="lg:col-span-3">
+                                <h4 class="text-lg font-bold text-cyan-400 mb-2">1. 核心成像效能</h4>
+                                <span class="text-xs text-slate-500 uppercase tracking-wider">Core Imaging
+                                    Performance</span>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                    決定影像清晰度與細節的最基本指標。
+                                </p>
+                            </div>
+                            <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- Resolution -->
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-cyan-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">解析度 (Resolution)</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        像素陣列大小。<br>
+                                        <span class="text-cyan-500/80 font-medium">評估：</span> 越高細節越豐富。例 80x62 (4960 點)
+                                        屬入門至中階，適合偵測人體存在、電器過熱或手勢識別。
+                                    </p>
+                                </div>
+                                <!-- NETD -->
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-cyan-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">熱靈敏度 (NETD)</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        能區分的最小溫差 (mK)。<br>
+                                        <span class="text-cyan-500/80 font-medium">評估：</span>
+                                        數值越低畫面越乾淨。若需觀察牆壁滲水紋理需極低值；一般熱點偵測 150mK 足夠。
+                                    </p>
+                                </div>
+                                <!-- FPS -->
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-cyan-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">幀率 (Frame Rate)</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        每秒畫面更新次數。<br>
+                                        <span class="text-cyan-500/80 font-medium">評估：</span> 接近 30 FPS
+                                        對於捕捉移動物體與手勢識別至關重要；過低會有殘影。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Temperature Measurement -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b border-slate-700/50">
+                            <div class="lg:col-span-3">
+                                <h4 class="text-lg font-bold text-amber-400 mb-2">2. 測溫能力與範圍</h4>
+                                <span class="text-xs text-slate-500 uppercase tracking-wider">Measurement & Range</span>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                    若應用需讀出具體溫度而非僅看冷熱分布，此為核心。
+                                </p>
+                            </div>
+                            <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- Scene Range -->
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-amber-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">場景溫寬 (Range)</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        <span class="text-amber-500/80">高增益：</span> -20~120°C (高精度)。<br>
+                                        <span class="text-amber-500/80">低增益：</span> 可達 400°C+ (靈敏度降)。<br>需涵蓋目標應用區間。
+                                    </p>
+                                </div>
+                                <!-- Accuracy -->
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-amber-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">準確度 (Accuracy)</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        通常為 ±2°C 或 ±3%。<br>
+                                        <span class="text-amber-500/80 font-medium">注意：</span> 這是基於完美的熱隔離設計與正確校正後的結果。
+                                    </p>
+                                </div>
+                                <!-- Radiometry -->
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-amber-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">輻射測量 (Radiometry)</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        能否直接輸出溫度值？<br>
+                                        <span class="text-amber-500/80 font-medium">評估：</span> 直出溫度能大幅減輕 MCU 運算負擔與開發難度。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. Optical -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-8 border-b border-slate-700/50">
+                            <div class="lg:col-span-3">
+                                <h4 class="text-lg font-bold text-purple-400 mb-2">3. 光學特性</h4>
+                                <span class="text-xs text-slate-500 uppercase tracking-wider">Optical
+                                    Characteristics</span>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                    鏡頭決定了感測器能「看」多廣與多遠。
+                                </p>
+                            </div>
+                            <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- FOV -->
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-purple-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">視角 (FOV)</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        <span class="text-purple-400">廣角 (90°+)：</span> 適合室內監控、人員計數。<br>
+                                        <span class="text-purple-400">窄角 (45°)：</span> 適合遠距離測量特定物件。<br>需依場景距離選擇。
+                                    </p>
+                                </div>
+                                <!-- Lens Material -->
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-purple-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">鏡頭材質</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        <span class="text-purple-400">矽 (Si)：</span> 成本低，穿透率稍差。<br>
+                                        <span class="text-purple-400">鍺 (Ge)：</span> 效能最好但昂貴。<br>依成本與靈敏度需求權衡。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. System -->
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                            <div class="lg:col-span-3">
+                                <h4 class="text-lg font-bold text-emerald-400 mb-2">4. 系統整合</h4>
+                                <span class="text-xs text-slate-500 uppercase tracking-wider">System Integration</span>
+                                <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                                    影響開發難度與產品可靠度的功能。
+                                </p>
+                            </div>
+                            <div class="lg:col-span-9 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-emerald-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">無快門 (Shutterless)</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        無機械快門校正時的卡頓，提供連續影像，對 AI 分析與即時監控至關重要。
+                                    </p>
+                                </div>
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-emerald-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">介面與功耗</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        支援標準 SPI/I2C 介面。低功耗 (< 50mW) 適合電池供電攜帶式裝置。 </p>
+                                </div>
+                                <div
+                                    class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 hover:border-emerald-500/50 transition-colors">
+                                    <strong class="text-white text-sm block mb-1">熱衝擊穩定性</strong>
+                                    <p class="text-[11px] text-slate-400 leading-relaxed">
+                                        抗環境溫變能力。需搭配機構的 <span class="text-emerald-400">空氣間隙</span> 與 <span
+                                            class="text-emerald-400">隔熱墊</span> 設計。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Summary Priority -->
+                    <div
+                        class="mt-8 bg-gradient-to-r from-slate-900 to-slate-800 p-6 rounded-xl border border-slate-600 flex flex-col md:flex-row items-center justify-between shadow-lg">
+                        <div class="mb-4 md:mb-0">
+                            <h4 class="text-white font-bold mb-1 flex items-center"><span class="text-xl mr-2">📝</span>
+                                評估順序建議</h4>
+                            <p class="text-xs text-slate-400">依照專案需求進行篩選：</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 text-xs font-mono">
+                            <div class="flex items-center space-x-2">
+                                <span
+                                    class="bg-cyan-900/40 text-cyan-200 px-3 py-1.5 rounded-lg border border-cyan-700/50">1.
+                                    解析度</span>
+                                <span class="text-slate-500">→</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span
+                                    class="bg-amber-900/40 text-amber-200 px-3 py-1.5 rounded-lg border border-amber-700/50">2.
+                                    測溫範圍</span>
+                                <span class="text-slate-500">→</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-slate-700 text-white px-3 py-1.5 rounded-lg border border-slate-500">3.
+                                    NETD</span>
+                                <span class="text-slate-500">→</span>
+                            </div>
+                            <div
+                                class="bg-emerald-900/40 text-emerald-200 px-3 py-1.5 rounded-lg border border-emerald-700/50">
+                                4. 功能性 (Shutterless)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="max-w-5xl mx-auto">
+            <h3 class="text-2xl font-bold text-white mb-6 pl-4 border-l-4 border-cyan-500">
+                💡 工程師常見問答 (Technical FAQ)
+            </h3>
+            <div class="space-y-4">
+                <details class="glass-panel rounded-lg group">
+                    <summary class="cursor-pointer p-4 font-bold text-slate-200 flex justify-between items-center">
+                        Q: 增益控制 (Gain Control) 如何影響測量範圍與靈敏度？
+                        <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-400 border-t border-slate-700/50 mt-2">
+                        <p class="mb-2">透過增益暫存器控制模組範圍：</p>
+                        <ul class="list-disc list-inside">
+                            <li><strong>高增益 (High Gain)：</strong> 靈敏度 (NETD) 最佳，雜訊最低，但測溫上限較低（約 120°C）。</li>
+                            <li><strong>低增益 (Low Gain)：</strong> 犧牲部分靈敏度，換取高達 400°C 以上的寬廣測溫範圍。</li>
+                            <li><strong>自動增益 (Auto)：</strong> 系統依場景溫度自動切換，但在臨界點可能發生頻繁跳動。</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="glass-panel rounded-lg group">
+                    <summary class="cursor-pointer p-4 font-bold text-slate-200 flex justify-between items-center">
+                        Q: 若必須將感測器置於發熱的塑膠外殼內，有何緩解建議？
+                        <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-400 border-t border-slate-700/50 mt-2">
+                        <p>這是不利於測量的環境。建議措施：</p>
+                        <ol class="list-decimal list-inside mt-2 space-y-1">
+                            <li><strong>極大化距離：</strong>將感測器儘可能遠離熱源元件。</li>
+                            <li><strong>增加熱阻：</strong>在 PCB 上感測器周圍進行挖空 (Cut-out)，並在感測器與 PCB 間加裝絕緣墊。</li>
+                            <li><strong>空氣間隙：</strong>確保感測器背板與塑膠外殼不直接接觸，保留空氣層作為絕緣。</li>
+                        </ol>
+                    </div>
+                </details>
+
+                <details class="glass-panel rounded-lg group">
+                    <summary class="cursor-pointer p-4 font-bold text-slate-200 flex justify-between items-center">
+                        Q: 為什麼讀取的溫度總是偏低？如何校正？
+                        <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-400 border-t border-slate-700/50 mt-2">
+                        <p class="mb-2">溫度偏低通常有以下原因：</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li><strong>保護窗衰減：</strong>未設定正確的靈敏度因子 (Sensitivity Factor)。參考 Section 7 的補償公式。</li>
+                            <li><strong>發射率設定錯誤：</strong>測量金屬或反光表面時，需降低發射率參數（暫存器 0xCA）。</li>
+                            <li><strong>視窗髒汙或結露：</strong>清潔保護窗表面，確保無遮蔽物。</li>
+                        </ul>
+                    </div>
+                </details>
+
+                <details class="glass-panel rounded-lg group">
+                    <summary class="cursor-pointer p-4 font-bold text-slate-200 flex justify-between items-center">
+                        Q: SPI 讀取的資料全為零或亂碼，如何排查？
+                        <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-400 border-t border-slate-700/50 mt-2">
+                        <p class="mb-2">常見通訊問題排查步驟：</p>
+                        <ol class="list-decimal list-inside space-y-1">
+                            <li>確認 <code>DATA_READY</code> 接腳已拉高後才讀取。</li>
+                            <li>檢查 SPI 模式是否為 Mode 0（CPOL=0, CPHA=0）。</li>
+                            <li>確認 I2C 已先寫入 0xB1 啟動串流模式。</li>
+                            <li>檢查時脈頻率是否超過感測器規格上限。</li>
+                        </ol>
+                    </div>
+                </details>
+
+                <details class="glass-panel rounded-lg group">
+                    <summary class="cursor-pointer p-4 font-bold text-slate-200 flex justify-between items-center">
+                        Q: 如何判斷感測器是否需要重新校正？
+                        <span class="text-cyan-400 group-open:rotate-180 transition-transform">▼</span>
+                    </summary>
+                    <div class="p-4 pt-0 text-sm text-slate-400 border-t border-slate-700/50 mt-2">
+                        <p class="mb-2">以下情況建議重新進行黑體校正：</p>
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>更換或加裝保護視窗後。</li>
+                            <li>長時間運作後出現明顯溫度漂移。</li>
+                            <li>機構設計變更導致感測器熱環境改變。</li>
+                            <li>產品出貨前的品質驗證階段。</li>
+                        </ul>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <section class="max-w-4xl mx-auto text-center py-12">
+            <div class="inline-block p-1 bg-gradient-to-r from-cyan-500 via-purple-500 to-orange-500 rounded-full mb-6">
+            </div>
+            <p class="text-slate-400 text-lg leading-relaxed">
+                高精度的熱成像應用不僅依賴優秀的感測器，更取決於對<strong>物理熱學</strong>的尊重與嚴謹的<strong>系統校正</strong>。<br>
+                透過掌握視窗補償係數、實施嚴格的熱隔離設計，並善用處理晶片的濾波能力，開發者將能克服環境挑戰，實現可靠的輻射測溫產品。
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full bg-slate-950 border-t border-slate-800 py-8 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-slate-500 text-xs mb-2">
+                <a href="https://wellstsai.com" target="_blank"
+                    class="hover:text-cyan-400 transition-colors duration-200 border-b border-transparent hover:border-cyan-400 pb-0.5">
+                    Generated by wellstsai.com
+                </a>
+            </p>
+            <p class="text-slate-600 text-[10px] tracking-wider uppercase">
+                撰寫日期：2025-12-23
+            </p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
