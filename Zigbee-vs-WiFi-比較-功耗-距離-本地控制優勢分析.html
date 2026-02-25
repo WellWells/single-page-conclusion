@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/Zigbee-vs-WiFi-%E6%AF%94%E8%BC%83-%E5%8A%9F%E8%80%97-%E8%B7%9D%E9%9B%A2-%E6%9C%AC%E5%9C%B0%E6%8E%A7%E5%88%B6%E5%84%AA%E5%8B%A2%E5%88%86%E6%9E%90.png">
+    <meta name="twitter:description" content="比較 Zigbee 與 WiFi 智慧家庭應用。探討 Zigbee 在低功耗、本地控制、Mesh 網路的優勢，以及 ESP32-C6 實測 260 公尺的驚人距離。">
+    <meta name="twitter:title" content="Zigbee vs. WiFi 比較：功耗、距離與本地控制優勢分析">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/Zigbee-vs-WiFi-%E6%AF%94%E8%BC%83-%E5%8A%9F%E8%80%97-%E8%B7%9D%E9%9B%A2-%E6%9C%AC%E5%9C%B0%E6%8E%A7%E5%88%B6%E5%84%AA%E5%8B%A2%E5%88%86%E6%9E%90.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/Zigbee-vs-WiFi-%E6%AF%94%E8%BC%83-%E5%8A%9F%E8%80%97-%E8%B7%9D%E9%9B%A2-%E6%9C%AC%E5%9C%B0%E6%8E%A7%E5%88%B6%E5%84%AA%E5%8B%A2%E5%88%86%E6%9E%90.html">
+    <meta property="og:description" content="比較 Zigbee 與 WiFi 智慧家庭應用。探討 Zigbee 在低功耗、本地控制、Mesh 網路的優勢，以及 ESP32-C6 實測 260 公尺的驚人距離。">
+    <meta property="og:title" content="Zigbee vs. WiFi 比較：功耗、距離與本地控制優勢分析">
+    <meta name="description" content="比較 Zigbee 與 WiFi 智慧家庭應用。探討 Zigbee 在低功耗、本地控制、Mesh 網路的優勢，以及 ESP32-C6 實測 260 公尺的驚人距離。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 移除了「深度解析」等詞彙 -->
+    <title>Zigbee vs. WiFi：智慧家庭的終極對決</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 基本樣式 --- */
+        body {
+            font-family: 'Noto+Sans+TC', 'Noto Sans TC', sans-serif;
+            background-color: #0f172a;
+            /* slate-900 */
+            color: #e2e8f0;
+            /* slate-200 */
+            overscroll-behavior: none;
+        }
+
+        /* --- 漸層文字 --- */
+        .gradient-text {
+            /* 規範：上亮下深漸層 */
+            background-image: linear-gradient(to bottom, #38bdf8, #a78bfa);
+            /* from-sky-400 to-purple-400 */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- 卡片樣式 --- */
+        .card {
+            background-color: rgba(15, 23, 42, 0.7);
+            /* slate-900/70 */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #334155;
+            /* slate-700 */
+            border-radius: 0.75rem;
+            /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* shadow-lg */
+        }
+
+        .card-bright {
+            background-color: rgba(30, 41, 59, 0.7);
+            /* slate-800/70 */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #475569;
+            /* slate-600 */
+            border-radius: 0.75rem;
+            /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* shadow-lg */
+        }
+
+        /* --- 關鍵字 Tooltip --- */
+        .keyword {
+            border-bottom: 2px dotted #22d3ee;
+            /* cyan-400 */
+            cursor: help;
+            position: relative;
+        }
+
+        #tooltip {
+            position: absolute;
+            display: none;
+            padding: 0.75rem;
+            /* p-3 */
+            max-width: 90vw;
+            /* 窄螢幕優化 */
+            width: 320px;
+            /* 預設寬度 */
+            z-index: 50;
+            pointer-events: none;
+            /* 避免干擾滑鼠事件 */
+
+            /* 樣式：半透明深色、亮邊框、圓角、陰影 */
+            background-color: rgba(30, 41, 59, 0.9);
+            /* slate-800/90 */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid #64748b;
+            /* slate-500 */
+            border-radius: 0.5rem;
+            /* rounded-lg */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+
+            /* 動畫 */
+            transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        #tooltip.visible {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #tooltip h3 {
+            font-weight: 700;
+            color: #7dd3fc;
+            /* sky-300 */
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #334155;
+            /* slate-700 */
+            padding-bottom: 0.5rem;
+        }
+
+        #tooltip p {
+            font-size: 0.875rem;
+            /* text-sm */
+            color: #cbd5e1;
+            /* slate-300 */
+            line-height: 1.6;
+        }
+
+        #tooltip code {
+            background-color: #0f172a;
+            /* slate-900 */
+            color: #f87171;
+            /* red-400 */
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-200">
+
+    <!-- 主容器，為 fixed footer 預留空間 -->
+    <div class="relative min-h-screen pb-20">
+
+        <!-- Header / Hero 區塊 -->
+        <header class="py-16 md:py-24 text-center overflow-hidden relative">
+            <!-- 背景漸層模糊 -->
+            <div class="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-slate-800 to-transparent opacity-50 -z-10">
+            </div>
+
+            <div class="container mx-auto px-4">
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
+                    <!-- 規範：Emoji 不上漸層，僅純文字套用 -->
+                    <span class="gradient-text">Zigbee vs. WiFi</span>
+                    <span class="text-white">：智慧家庭的終極對決？</span>
+                    <!-- 將 Emoji 獨立出來 -->
+                    <span class="ml-2">📡</span>
+                </h1>
+                <!-- 移除了「深入解析」 -->
+                <p class="mt-6 text-lg md:text-xl text-slate-400 max-w-3xl mx-auto">
+                    解析 <span class="keyword" data-keyword="Zigbee">Zigbee</span> 的功耗、距離、本地控制優勢，以及它如何挑戰 <span
+                        class="keyword" data-keyword="WiFi">WiFi</span> 在微控制器與智慧家庭的主導地位。
+                </p>
+            </div>
+        </header>
+
+        <!-- 主內容區 -->
+        <main class="container mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- 1. 文章摘要卡片 -->
+            <section class="mb-12">
+                <div
+                    class="card max-w-4xl mx-auto p-6 md:p-8 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl">
+                    <h2 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">🚀</span><span class="gradient-text">重點摘要</span>
+                    </h2>
+                    <p class="text-slate-300 mb-4">
+                        當我們以為 <span class="keyword" data-keyword="WiFi">WiFi</span> 統治了無線世界時，<span class="keyword"
+                            data-keyword="Zigbee">Zigbee</span> 卻在智慧家庭領域悄然崛起。本文將比較兩者的關鍵差異，特別是在功耗、傳輸距離和本地控制方面的巨大分野。
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 text-slate-300">
+                        <!-- 將「紙鎮」改為「失去作用」或「無法使用」 -->
+                        <li><strong>本地控制：</strong> <span class="keyword" data-keyword="Zigbee">Zigbee</span>
+                            通常不依賴外部雲端，避免裝置因廠商倒閉而<strong>失去作用</strong>。</li>
+                        <li><strong>驚人距離：</strong> <span class="keyword" data-keyword="ESP32-C6">ESP32-C6</span> 的 <span
+                                class="keyword" data-keyword="Zigbee">Zigbee</span> 實測距離可達 <strong>260公尺</strong>，遠超
+                            <span class="keyword" data-keyword="ESP-NOW">ESP-NOW</span>。
+                        </li>
+                        <li><strong>極致功耗：</strong> <span class="keyword" data-keyword="Zigbee">Zigbee</span>
+                            裝置的待機與傳輸功耗遠低於 <span class="keyword" data-keyword="WiFi">WiFi</span>，差距可達數百倍。</li>
+                        <li><strong>網狀網路：</strong> 透過 <span class="keyword" data-keyword="Zigbee-Router">Zigbee
+                                路由器</span> 裝置，可自動建立強大的 <span class="keyword" data-keyword="Mesh">Mesh 網狀網路</span>。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 2. 主體內容分段 (Grid) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
+
+                <!-- 2.1 Zigbee 入門與設定 -->
+                <section class="card-bright p-6 md:p-8 space-y-4">
+                    <h3 class="text-2xl font-bold mb-3">
+                        <span class="mr-2">🏠</span><span class="gradient-text">Zigbee 入門：不只是 WiFi</span>
+                    </h3>
+                    <p>
+                        與 <span class="keyword" data-keyword="WiFi">WiFi</span> 裝置直接連上家中路由器不同，<span class="keyword"
+                            data-keyword="Zigbee">Zigbee</span> 雖然也使用 2.4GHz 頻段，但它需要一個專屬的硬體——<strong><span
+                                class="keyword" data-keyword="Coordinator">Zigbee 協調器</span></strong>（通常是 USB Dongle）。
+                    </p>
+                    <p>
+                        所有 <span class="keyword" data-keyword="End-Device">終端裝置</span>（如感測器、按鈕）都會連接到這個協調器，再由協調器（例如插入
+                        <span class="keyword" data-keyword="HomeAssistant">HomeAssistant</span> 主機）統一管理。
+                    </p>
+                    <div class="card p-4 text-center">
+                        <span class="text-6xl">📡</span>
+                        <p class="font-semibold mt-2 text-slate-300">協調器 (Dongle) 是網路核心</p>
+                    </div>
+                </section>
+
+                <!-- 2.2 本地 vs 雲端 -->
+                <section class="card-bright p-6 md:p-8 space-y-4">
+                    <h3 class="text-2xl font-bold mb-3">
+                        <span class="mr-2">☁️</span><span class="gradient-text">本地 V.S. 雲端：Zigbee 的優勢</span>
+                    </h3>
+                    <p>
+                        許多 <span class="keyword" data-keyword="WiFi">WiFi</span>
+                        智慧裝置（如恆溫器）嚴重依賴製造商的<strong>雲端服務</strong>。這意味著資料需要上傳雲端，<span class="keyword"
+                            data-keyword="HomeAssistant">HomeAssistant</span> 才能存取。
+                    </p>
+                    <p>
+                        <!-- 將「紙鎮」改為「失去作用」 -->
+                        <strong>這有巨大風險：</strong>如果製造商倒閉或停止服務，你的 <span class="keyword" data-keyword="WiFi">WiFi</span>
+                        裝置可能瞬間<strong>失去作用</strong>。
+                    </p>
+                    <p>
+                        <span class="keyword" data-keyword="Zigbee">Zigbee</span> 裝置則大多直接與本地的 <span class="keyword"
+                            data-keyword="Coordinator">協調器</span> 通訊，實現<strong>完全本地化管理</strong>，不受制於人。
+                    </p>
+                    <div class="card p-4 text-center bg-red-900/30 border-red-700">
+                        <span class="text-6xl">🧱</span>
+                        <!-- 將「磚塊」改為「潛在的風險」 -->
+                        <p class="font-semibold mt-2 text-red-300">依賴雲端 = 潛在的風險</p>
+                    </div>
+                </section>
+
+                <!-- 2.3 ESP32 整合 -->
+                <section class="card-bright p-6 md:p-8 space-y-4">
+                    <h3 class="text-2xl font-bold mb-3">
+                        <span class="mr-2">💻</span><span class="gradient-text">ESP32 整合：開發者的遊樂場</span>
+                    </h3>
+                    <p>
+                        <span class="keyword" data-keyword="Zigbee">Zigbee</span> 不再只是智慧家庭產品的專利。樂鑫 (Espressif) 推出了兩款支援
+                        <span class="keyword" data-keyword="Zigbee">Zigbee</span> 的晶片：
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 pl-2">
+                        <li><strong><span class="keyword" data-keyword="ESP32-C6">ESP32-C6</span>：</strong> 支援 WiFi
+                            6、Bluetooth 5 (LE) 和 <span class="keyword" data-keyword="Zigbee">Zigbee</span>。</li>
+                        <li><strong><span class="keyword" data-keyword="ESP32-H2">ESP32-H2</span>：</strong> 支援 Bluetooth
+                            5 (LE) 和 <span class="keyword" data-keyword="Zigbee">Zigbee</span>（更輕量）。</li>
+                    </ul>
+                    <p>
+                        透過 Arduino ESP32 核心提供的範例，開發者可以輕鬆將 ESP32 進行程式設為 <span class="keyword"
+                            data-keyword="Coordinator">協調器</span> 或 <span class="keyword"
+                            data-keyword="End-Device">終端裝置</span>（如開關或燈），甚至能被 <span class="keyword"
+                            data-keyword="HomeAssistant">HomeAssistant</span> 自動發現。
+                    </p>
+                </section>
+
+                <!-- 2.4 Mesh 網路 -->
+                <section class="card-bright p-6 md:p-8 space-y-4">
+                    <h3 class="text-2xl font-bold mb-3">
+                        <span class="mr-2">🕸️</span><span class="gradient-text">網狀網路 (Mesh) 之力</span>
+                    </h3>
+                    <p>
+                        <span class="keyword" data-keyword="Zigbee">Zigbee</span> 的一大優勢是 <span class="keyword"
+                            data-keyword="Mesh">Mesh 網狀網路</span>。你不必擔心單一 <span class="keyword"
+                            data-keyword="Coordinator">協調器</span> 的訊號覆蓋範圍。
+                    </p>
+                    <p>
+                        許多<strong>使用市電（插電）</strong>的 <span class="keyword" data-keyword="Zigbee">Zigbee</span>
+                        裝置，例如智慧燈泡或插座，會自動扮演 <strong><span class="keyword" data-keyword="Zigbee-Router">Zigbee 路由器</span>
+                            (Router)</strong> 的角色。
+                    </p>
+                    <p>
+                        這些 <span class="keyword" data-keyword="Zigbee-Router">路由器</span> 會接收並轉發來自其他 <span
+                            class="keyword" data-keyword="End-Device">終端裝置</span> 的訊號，自動擴展整個網路的覆蓋範圍和可靠性，形成一個強大的網狀結構。
+                    </p>
+                    <div class="card p-4 text-center bg-blue-900/30 border-blue-700">
+                        <span class="text-6xl">💡</span>
+                        <p class="font-semibold mt-2 text-blue-300">插電裝置 = 自動訊號延伸器</p>
+                    </div>
+                </section>
+
+                <!-- 2.5 距離測試 (表格) -->
+                <section class="card-bright p-6 md:p-8 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">📡</span><span class="gradient-text">實測對決：驚人的傳輸距離</span>
+                    </h3>
+                    <p class="mb-4">
+                        在相同的戶外測試點，<span class="keyword" data-keyword="Zigbee">Zigbee</span> 的表現令人驚艷，尤其是 <span
+                            class="keyword" data-keyword="ESP32-C6">ESP32-C6</span>，其距離遠遠超出了預期。
+                    </p>
+                    <div class="overflow-x-auto rounded-lg border border-slate-700">
+                        <table class="w-full min-w-max text-left text-slate-300">
+                            <thead class="bg-slate-800 text-slate-200">
+                                <tr>
+                                    <th class="p-4 font-semibold">通訊協定</th>
+                                    <th class="p-4 font-semibold">測試裝置</th>
+                                    <th class="p-4 font-semibold">實測距離 (GPS)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700">
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">通用 RF</td>
+                                    <td class="p-4">N/A</td>
+                                    <td class="p-4">~ 40 公尺</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4"><span class="keyword" data-keyword="ESP-NOW">ESP-NOW</span></td>
+                                    <td class="p-4">ESP32</td>
+                                    <td class="p-4">~ 110 公尺</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4"><span class="keyword" data-keyword="Zigbee">Zigbee</span></td>
+                                    <td class="p-4"><span class="keyword" data-keyword="ESP32-H2">ESP32-H2</span></td>
+                                    <td class="p-4">~ 85 公尺</td>
+                                </tr>
+                                <tr class="bg-emerald-900/30 hover:bg-emerald-800/50 transition-colors">
+                                    <td class="p-4 font-bold text-emerald-300"><span class="keyword"
+                                            data-keyword="Zigbee">Zigbee</span></td>
+                                    <td class="p-4 font-bold text-emerald-300"><span class="keyword"
+                                            data-keyword="ESP32-C6">ESP32-C6</span></td>
+                                    <td class="p-4 font-bold text-emerald-300 text-lg"><strong>🔥 260 公尺</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 2.5.1 新增：C6 距離解密 -->
+                <section class="card-bright p-6 md:p-8 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">🔬</span><span class="gradient-text">C6 距離解密：為何是 260 公尺？</span>
+                    </h3>
+                    <p class="mb-4">
+                        <span class="keyword" data-keyword="ESP32-C6">ESP32-C6</span> 達到 260 公尺的驚人表現，遠超 H2，這主要歸功於其更強大的
+                        RF (射頻) 硬體設計。
+                    </p>
+
+                    <!-- 效能差異表格 -->
+                    <div class="overflow-x-auto rounded-lg border border-slate-700 mb-6">
+                        <table class="w-full min-w-max text-left text-slate-300">
+                            <thead class="bg-slate-800 text-slate-200">
+                                <tr>
+                                    <th class="p-4 font-semibold">比較項目</th>
+                                    <th class="p-4 font-semibold">ESP32-H2 (基礎型)</th>
+                                    <th class="p-4 font-semibold">ESP32-C6 (高效能)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700">
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">連接選項</td>
+                                    <td class="p-4">僅 802.15.4 + BLE 5</td>
+                                    <td class="p-4 font-medium text-cyan-300"><strong>WiFi 6</strong> + 802.15.4 + BLE 5
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">RF 子系統</td>
+                                    <td class="p-4">基礎設計</td>
+                                    <td class="p-4 font-medium text-cyan-300">完整高效能 RF 元件</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">功率放大器 (PA)</td>
+                                    <td class="p-4">標準</td>
+                                    <td class="p-4 font-medium text-cyan-300"><strong>增強型</strong></td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">低雜訊放大器 (LNA)</td>
+                                    <td class="p-4">✗</td>
+                                    <td class="p-4 font-medium text-cyan-300"><strong>✓</strong></td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">天線開關</td>
+                                    <td class="p-4">✗</td>
+                                    <td class="p-4 font-medium text-cyan-300"><strong>✓</strong></td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">RF Balun</td>
+                                    <td class="p-4">✗</td>
+                                    <td class="p-4 font-medium text-cyan-300"><strong>✓</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- C6 突出原因 -->
+                    <h4 class="text-xl font-semibold mt-6 mb-3 text-slate-100">C6 表現突出的主因</h4>
+                    <ul class="list-disc list-inside space-y-2 text-slate-300">
+                        <li><strong>RF 硬體優勢：</strong><span class="keyword" data-keyword="ESP32-C6">ESP32-C6</span> 為了支援
+                            WiFi 6，內建了更完整的 RF 子系統，包括<strong>功率放大器 (PA)</strong> 和<strong>低雜訊放大器 (LNA)</strong>。這些元件在 2.4
+                            GHz 頻段對 <span class="keyword" data-keyword="Zigbee">Zigbee</span> 同樣有效，大幅提升了發射功率和接收靈敏度。</li>
+                        <li><strong>天線與匹配：</strong>C6 支援外部天線，若測試中使用了適當的外部天線（如 3-5 dBi 增益），相較於 PCB 天線，可將通訊距離顯著提升 1.5 至
+                            2.5 倍。</li>
+                    </ul>
+
+                    <!-- 環境因素 -->
+                    <h4 class="text-xl font-semibold mt-6 mb-3 text-slate-100">實測環境因素</h4>
+                    <ul class="list-disc list-inside space-y-2 text-slate-300">
+                        <li><strong>開放空間：</strong>無遮擋的戶外場景，避免了訊號的多路徑衰減。</li>
+                        <li><strong>天線狀態：</strong>正確的天線擺放角度和高度。</li>
+                        <li><strong>低干擾：</strong>測試地的 2.4 GHz ISM 頻段可能相對乾淨。</li>
+                    </ul>
+
+                    <p class="mt-4"><strong>啟示：</strong>此測試也驗證了 802.15.4/<span class="keyword"
+                            data-keyword="Zigbee">Zigbee</span> 協定，在搭配優質硬體（如 C6）時，其距離表現能超越 <span class="keyword"
+                            data-keyword="ESP-NOW">ESP-NOW</span>（其理論上限約 200m，但實際常受限於較簡易的 RF 設計）。</p>
+
+                    <p class="mt-4 text-slate-400 text-sm">
+                        💡 <strong>進階建議：</strong>若要進一步擴展，可考慮外接更高增益的天線，或在符合 IEEE 802.15.4 功率限制下外接 PA/LNA 模組，理論上還能延伸至 400+
+                        公尺。
+                    </p>
+                </section>
+
+                <!-- 2.6 功耗測試 (表格) -->
+                <section class="card-bright p-6 md:p-8 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">🔋</span><span class="gradient-text">終極功耗：Zigbee 的省電之王</span>
+                    </h3>
+                    <p class="mb-4">
+                        對於電池供電的裝置，功耗是決勝關鍵。透過比較相同功能的 <span class="keyword" data-keyword="WiFi">WiFi</span> 智慧按鈕和 <span
+                            class="keyword" data-keyword="Zigbee">Zigbee</span> 智慧按鈕，差距一目了然。
+                    </p>
+                    <div class="overflow-x-auto rounded-lg border border-slate-700">
+                        <table class="w-full min-w-max text-left text-slate-300">
+                            <thead class="bg-slate-800 text-slate-200">
+                                <tr>
+                                    <th class="p-4 font-semibold">比較項目</th>
+                                    <th class="p-4 font-semibold">WiFi 智慧按鈕 (2通道)</th>
+                                    <th class="p-4 font-semibold">Zigbee 智慧按鈕 (2通道)</th>
+                                    <th class="p-4 font-semibold">差距</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700">
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">待機電流 (Idle)</td>
+                                    <td class="p-4">~ 15.4 <span class="keyword" data-keyword="uA">uA</span></td>
+                                    <td class="p-4 font-medium text-cyan-300">~ 2.55 <span class="keyword"
+                                            data-keyword="uA">uA</span></td>
+                                    <td class="p-4 font-medium text-cyan-300">⬇️ WiFi 功耗的 1/6</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">單次傳輸耗能</td>
+                                    <td class="p-4">~ 500 <span class="keyword" data-keyword="uWh">uWh</span></td>
+                                    <td class="p-4 font-bold text-cyan-300 text-lg">~ 1.1 <span class="keyword"
+                                            data-keyword="uWh">uWh</span></td>
+                                    <td class="p-4 font-bold text-cyan-300 text-lg">⬇️ WiFi 功耗的 1/450</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-slate-400 text-sm">
+                        ⚠️ <strong>注意：</strong><span class="keyword" data-keyword="Zigbee">Zigbee</span>
+                        的低功耗也伴隨著低資料傳輸率（更新韌體可能花費10分鐘），它不適合高速串流，而是專為低頻寬、低功耗的感測與控制而生。
+                    </p>
+                </section>
+
+                <!-- 
+                =========================================
+                == 新增內容開始
+                =========================================
+                -->
+
+                <!-- 2.7 核心定位 -->
+                <section class="card-bright p-6 md:p-8 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">🎯</span><span class="gradient-text">核心定位：根本上的不同</span>
+                    </h3>
+                    <p class="mb-3"><span class="keyword" data-keyword="Zigbee">Zigbee</span>
+                        是專為<strong>低功耗物聯網裝置</strong>（如感測器）設計的網狀網路協定，核心是省電和大規模連接。</p>
+                    <p><span class="keyword" data-keyword="WiFi">WiFi</span>
+                        則是為<strong>高速寬頻無線上網</strong>而生，適合處理影片、遊戲等資料密集的應用。</p>
+                    <p class="mt-3 font-semibold text-slate-200">兩者解決的問題完全不同，關鍵是依據您的「應用場景」來選擇。</p>
+                </section>
+
+                <!-- 2.8 技術特性對比 -->
+                <section class="card-bright p-6 md:p-8 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">📊</span><span class="gradient-text">技術特性總覽</span>
+                    </h3>
+                    <div class="overflow-x-auto rounded-lg border border-slate-700">
+                        <table class="w-full min-w-max text-left text-slate-300">
+                            <thead class="bg-slate-800 text-slate-200">
+                                <tr>
+                                    <th class="p-4 font-semibold">特性</th>
+                                    <th class="p-4 font-semibold">Zigbee</th>
+                                    <th class="p-4 font-semibold">WiFi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700">
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">網路拓撲</td>
+                                    <td class="p-4 font-medium text-cyan-300">網狀網 (Mesh)</td>
+                                    <td class="p-4">星型 (連接中心路由器)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">頻段</td>
+                                    <td class="p-4">2.4 GHz ISM</td>
+                                    <td class="p-4">2.4 GHz + 5 GHz (部分 6 GHz)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">資料速率</td>
+                                    <td class="p-4 font-medium text-red-300">最高 250 kbps</td>
+                                    <td class="p-4 font-medium text-emerald-300">11 Mbps - 9.6 Gbps+</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">典型範圍</td>
+                                    <td class="p-4">10-100 公尺/裝置</td>
+                                    <td class="p-4">30-50 公尺/路由器</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">功耗</td>
+                                    <td class="p-4 font-medium text-emerald-300">極低 (6月-2年電池壽命)</td>
+                                    <td class="p-4 font-medium text-red-300">較高 (需經常充電)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">裝置連接數</td>
+                                    <td class="p-4 font-medium text-emerald-300">理論 65,000+ 節點</td>
+                                    <td class="p-4">取決於路由器能力</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">即時延遲</td>
+                                    <td class="p-4">15-30 ms (優秀)</td>
+                                    <td class="p-4">取決於應用程式</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 2.9 優缺點 - Zigbee -->
+                <section class="card-bright p-6 md:p-8 space-y-4">
+                    <h3 class="text-2xl font-bold mb-3 text-emerald-400">
+                        👍 Zigbee 優勢
+                    </h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-300">
+                        <li><strong>低功耗：</strong>電池可使用 6 個月至 2 年，適合無線感測器。</li>
+                        <li><strong>網狀擴展性：</strong>每個插電裝置都能中繼訊號，自動擴展覆蓋範圍。</li>
+                        <li><strong>大規模聯網：</strong>理論上支援 65,000 個節點。</li>
+                        <li><strong>安全性：</strong>使用 128 位 AES 加密，並有資料完整性檢查。</li>
+                        <li><strong>裝置成本低：</strong>單個 <span class="keyword" data-keyword="Zigbee">Zigbee</span> 裝置通常較便宜。
+                        </li>
+                    </ul>
+                    <h3 class="text-2xl font-bold mt-6 mb-3 text-red-400">
+                        👎 Zigbee 劣勢
+                    </h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-300">
+                        <li><strong>需要中樞 (Hub)：</strong>不能直接連網，需購買額外的<span class="keyword"
+                                data-keyword="Coordinator">協調器</span>/閘道器。</li>
+                        <li><strong>資料速率低：</strong>最高 250 kbps，無法串流影片或音樂。</li>
+                        <li><strong>相容性問題：</strong>不同製造商的產品相容性過去曾有挑戰。</li>
+                        <li><strong>開發難度高：</strong>產品開發週期相對較長。</li>
+                    </ul>
+                </section>
+
+                <!-- 2.10 優缺點 - WiFi -->
+                <section class="card-bright p-6 md:p-8 space-y-4">
+                    <h3 class="text-2xl font-bold mb-3 text-emerald-400">
+                        👍 WiFi 優勢
+                    </h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-300">
+                        <li><strong>無需中樞：</strong>直接連接家中現有的路由器，立即使用。</li>
+                        <li><strong>高速率：</strong>最新 WiFi 6/7 提供數 Gbps 速度，適合各種應用。</li>
+                        <li><strong>遠端存取：</strong>容易實現雲端控制和跨地域存取。</li>
+                        <li><strong>豐富應用：</strong>完美支援影像串流、語音通話、遊戲。</li>
+                        <li><strong>通用性：</strong>幾乎所有手機、電腦都支援 WiFi。</li>
+                    </ul>
+                    <h3 class="text-2xl font-bold mt-6 mb-3 text-red-400">
+                        👎 WiFi 劣勢
+                    </h3>
+                    <ul class="list-disc list-inside space-y-2 text-slate-300">
+                        <li><strong>高功耗：</strong>電池供電裝置需要經常充電。</li>
+                        <li><strong>成本：</strong>支援 WiFi 的晶片和裝置通常較貴。</li>
+                        <li><strong>干擾問題：</strong>2.4 GHz 頻段擁擠，易受其他裝置干擾。</li>
+                        <li><strong>星型依賴：</strong>所有裝置依賴單一路由器，訊號死角需擴展器。</li>
+                        <li><strong>擴展器效能：</strong>傳統擴展器（Extender）會使訊號強度減半。</li>
+                    </ul>
+                </section>
+
+                <!-- 2.11 成本結構 - Zigbee -->
+                <section class="card-bright p-6 md:p-8 space-y-4">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">💸</span><span class="gradient-text">Zigbee 成本結構</span>
+                    </h3>
+                    <div class="overflow-x-auto rounded-lg border border-slate-700">
+                        <table class="w-full min-w-max text-left text-slate-300">
+                            <thead class="bg-slate-800 text-slate-200">
+                                <tr>
+                                    <th class="p-4 font-semibold">項目</th>
+                                    <th class="p-4 font-semibold">參考價格 (USD)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700">
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">Zigbee Hub/Gateway (閘道器)</td>
+                                    <td class="p-4">$14 - $50</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">Zigbee 智慧開關</td>
+                                    <td class="p-4">$22 - $50</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">Zigbee 燈泡/感應器</td>
+                                    <td class="p-4">$15 - $40</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ul class="list-disc list-inside space-y-2 mt-4 text-slate-300">
+                        <li><strong>初始投資：</strong>中等 (需要購買 Hub + 裝置)。</li>
+                        <li><strong>長期成本：</strong>低 (裝置本身便宜，無額外營運費用)。</li>
+                    </ul>
+                </section>
+
+                <!-- 2.12 成本結構 - WiFi -->
+                <section class="card-bright p-6 md:p-8 space-y-4">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">💰</span><span class="gradient-text">WiFi 成本結構</span>
+                    </h3>
+                    <div class="overflow-x-auto rounded-lg border border-slate-700">
+                        <table class="w-full min-w-max text-left text-slate-300">
+                            <thead class="bg-slate-800 text-slate-200">
+                                <tr>
+                                    <th class="p-4 font-semibold">項目</th>
+                                    <th class="p-4 font-semibold">參考價格 (USD)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700">
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">WiFi 6 路由器 (AX3000)</td>
+                                    <td class="p-4">$70 - $100+</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">WiFi 6E/7 網狀系統 (Mesh)</td>
+                                    <td class="p-4">$300 - $1,500+</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">WiFi 智慧裝置</td>
+                                    <td class="p-4">$20 - $100+ (通常更貴)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50 transition-colors">
+                                    <td class="p-4">WiFi 範圍擴展器</td>
+                                    <td class="p-4">$30 - $100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <ul class="list-disc list-inside space-y-2 mt-4 text-slate-300">
+                        <li><strong>初始投資：</strong>中等到高 (若已有路由器則較低)。</li>
+                        <li><strong>長期成本：</strong>中等 (裝置本身較貴)。</li>
+                    </ul>
+                </section>
+
+                <!-- 2.13 應用場景指南 -->
+                <section class="card-bright p-6 md:p-8 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">🤔</span><span class="gradient-text">如何選擇：應用場景指南</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 選擇 Zigbee -->
+                        <div class="card p-5">
+                            <h4 class="text-xl font-semibold mb-3 text-emerald-300">✅ 選擇 Zigbee 的情況</h4>
+                            <ul class="list-disc list-inside space-y-2 text-slate-300">
+                                <li>需要<strong>超多裝置</strong>聯網 (如 100+ 裝置)。</li>
+                                <li>裝置需<strong>電池供電</strong>且要求長期使用。</li>
+                                <li>對即時性要求高 (15-30 ms 延遲)。</li>
+                                <li>家中 <span class="keyword" data-keyword="WiFi">WiFi</span> 已很擁擠，不想增加干擾。</li>
+                                <li>資料量小（如開關、溫濕度）。</li>
+                                <li class="mt-2 pt-2 border-t border-slate-700">
+                                    <strong>案例：</strong>溫濕度傳感器、智慧門鎖、燈光控制、動作感應器。
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 選擇 WiFi -->
+                        <div class="card p-5">
+                            <h4 class="text-xl font-semibold mb-3 text-sky-300">✅ 選擇 WiFi 的情況</h4>
+                            <ul class="list-disc list-inside space-y-2 text-slate-300">
+                                <li>需要<strong>立即使用</strong> (不想買額外 Hub)。</li>
+                                <li>需要<strong>高速資料</strong>傳輸。</li>
+                                <li>需要跨網路或遠端存取。</li>
+                                <li>裝置總數量有限 (如 < 50 個)。</li>
+                                <li>開發者已有相關經驗。</li>
+                                <li class="mt-2 pt-2 border-t border-slate-700">
+                                    <strong>案例：</strong>安全監控攝影機、智慧電視、遊戲主機、串流音響。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 混合策略 -->
+                    <div class="card p-5 mt-6 bg-indigo-900/30 border-indigo-700">
+                        <h4 class="text-xl font-semibold mb-3 text-indigo-300">💡 混合策略：最佳方案</h4>
+                        <p class="text-slate-300">許多使用者採用混合方案：用 <span class="keyword" data-keyword="WiFi">WiFi</span>
+                            處理影像、高頻寬應用；用 <span class="keyword" data-keyword="Zigbee">Zigbee</span>
+                            處理感測器、低功耗裝置。這樣能同時享受兩者優勢，最佳化整體成本與效能。</p>
+                    </div>
+                </section>
+
+                <!-- 2.14 Matter 與 Apple Home -->
+                <section class="card-bright p-6 md:p-8 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">🧩</span><span class="gradient-text">關鍵補充：Matter 與 Apple Home</span>
+                    </h3>
+                    <!-- Matter 定位 -->
+                    <div class="mb-6">
+                        <h4 class="text-xl font-semibold mb-3 text-slate-100">1. <span class="keyword"
+                                data-keyword="Matter">Matter</span> 的定位</h4>
+                        <p class="text-slate-300 mb-2">
+                            <span class="keyword" data-keyword="Matter">Matter</span> <strong>不是</strong> <span
+                                class="keyword" data-keyword="Zigbee">Zigbee</span> 或 <span class="keyword"
+                                data-keyword="WiFi">WiFi</span> 的替代品。它是一個「通訊標準層」，可以在多種底層無線協定（包括 WiFi、Thread）上運行。
+                        </p>
+                        <p class="text-slate-300">
+                            一個 <span class="keyword" data-keyword="Matter">Matter</span> 閘道器可以同時支援 <span class="keyword"
+                                data-keyword="Zigbee">Zigbee</span>、<span class="keyword"
+                                data-keyword="WiFi">WiFi</span>、Thread 等，並將它們統一轉換為 <span class="keyword"
+                                data-keyword="Matter">Matter</span> 格式，實現跨協定互聯。
+                        </p>
+                        <p class="mt-2 text-slate-400 text-sm"><strong>簡單說：</strong><span class="keyword"
+                                data-keyword="Matter">Matter</span> 是上層的「共同語言」，<span class="keyword"
+                                data-keyword="Zigbee">Zigbee</span>/<span class="keyword"
+                                data-keyword="WiFi">WiFi</span> 是底層的「傳輸方式」。</object></p>
+                    </div>
+                    <!-- Apple Home -->
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 text-slate-100">2. Apple Home 如何支援 Zigbee？</h4>
+                        <p class="text-slate-300 mb-2">
+                            Apple Home (HomeKit) <strong>不能直接</strong>支援 <span class="keyword"
+                                data-keyword="Zigbee">Zigbee</span> 裝置，但可以透過「相容的 Zigbee 閘道器（橋接器）」間接支援。
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 pl-2 text-slate-300">
+                            <li><strong>方案 1 (HomeKit 閘道器)：</strong>購買支援 HomeKit 的 <span class="keyword"
+                                    data-keyword="Zigbee">Zigbee</span> 閘道器（如 Aqara、VIZO）。<span class="keyword"
+                                    data-keyword="Zigbee">Zigbee</span> 裝置連到閘道器，閘道器再橋接到 Apple Home。</li>
+                            <li><strong>方案 2 (<span class="keyword" data-keyword="Matter">Matter</span>
+                                    閘道器)：</strong>使用支援 <span class="keyword" data-keyword="Matter">Matter</span> 的 <span
+                                    class="keyword" data-keyword="Zigbee">Zigbee</span> 閘道器，透過 <span class="keyword"
+                                    data-keyword="Matter">Matter</span> 協定連接 Apple HomeKit，相容性更廣。</li>
+                        </ul>
+                        <p class="mt-2 text-slate-400 text-sm"><strong>重點：</strong>便宜的通用 <span class="keyword"
+                                data-keyword="Zigbee">Zigbee</span> 裝置（如淘寶、AliExpress 產品）不能直接在 Apple Home
+                            使用，必須透過上述認證的閘道器。
+                        </p>
+                    </div>
+                </section>
+
+                <!-- 
+                =========================================
+                == 新增內容結束
+                =========================================
+                -->
+
+            </div> <!-- /Grid -->
+
+            <!-- 3. 結論 -->
+            <section class="my-12 md:my-16">
+                <div class="card max-w-4xl mx-auto p-6 md:p-8">
+                    <h2 class="text-2xl font-bold mb-4">
+                        <span class="mr-2">🏆</span><span class="gradient-text">總結：Zigbee 值得嗎？</span>
+                    </h2>
+                    <p class="text-slate-300 text-lg leading-relaxed">
+                        在了解 <span class="keyword" data-keyword="Zigbee">Zigbee</span>
+                        之後，它無疑是智慧家庭和物聯網專案的強力競爭者。它不僅<strong>通常更便宜</strong>，其<strong>本地控制</strong>的特性更提供了 <span
+                            class="keyword" data-keyword="WiFi">WiFi</span> 雲端裝置無法比擬的<strong>可靠性與隱私性</strong>。
+                    </p>
+                    <p class="text-slate-300 text-lg leading-relaxed mt-4">
+                        雖然 <span class="keyword" data-keyword="WiFi">WiFi</span>
+                        在高頻寬應用上仍無法被取代，但在感測器、開關等低功耗、長距離、高可靠性的應用場景中，<span class="keyword"
+                            data-keyword="Zigbee">Zigbee</span> 絕對是更優秀的選擇。若預算有限且只需基本自動化，<span class="keyword"
+                            data-keyword="Zigbee">Zigbee</span> 長期成本更低；若已有 <span class="keyword"
+                            data-keyword="WiFi">WiFi</span> 網路且需立即啟動，<span class="keyword"
+                            data-keyword="WiFi">WiFi</span> 部署更快。
+                    </p>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Tooltip 元素 (預設隱藏) -->
+    <div id="tooltip"></div>
+
+    <!-- Footer -->
+    <footer
+        class="fixed bottom-0 left-0 right-0 bg-gray-950/80 backdrop-blur-sm border-t border-slate-800 text-center p-4 z-40">
+        <p class="text-xs text-slate-500">
+            Generated by <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="text-slate-400 hover:text-sky-400 transition-colors">wellstsai.com</a>
+            <span class="mx-2">|</span>
+            撰寫日期：2025-11-04
+        </p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- 1. Tooltip 定義 ---
+            // 集中管理所有關鍵字的定義
+            const tooltipDefs = {
+                "Zigbee": {
+                    title: "Zigbee (Z 字蜂)",
+                    desc: "一種低功耗、低速率、短距離的無線通訊協定，專為物聯網 (IoT) 和智慧家庭設計。",
+                    details: "它使用 2.4GHz 頻段（與 WiFi 相同），但功耗極低，並支援 <span class='keyword' data-keyword='Mesh'>Mesh 網狀網路</span>，使其非常可靠。"
+                },
+                "WiFi": {
+                    title: "Wi-Fi (Wireless Fidelity)",
+                    desc: "一種基於 IEEE 802.11 標準的無線區域網路 (WLAN) 技術。",
+                    details: "專為高頻寬、高速資料傳輸（如上網、串流）而設計，但代價是功耗相對較高。"
+                },
+                "ESP32-C6": {
+                    title: "ESP32-C6",
+                    desc: "樂鑫 (Espressif) 推出的一款高效能、低功耗 RISC-V 微控制器。",
+                    details: "它整合了 2.4 GHz Wi-Fi 6、Bluetooth 5 (LE) 以及 Zigbee 3.0 / Thread (802.15.4) 功能。"
+                },
+                "ESP32-H2": {
+                    title: "ESP32-H2",
+                    desc: "樂鑫 (Espressif) 推出的一款專注於連接性的 RISC-V 微控制器。",
+                    details: "它主要支援 Bluetooth 5 (LE) 和 Zigbee 3.0 / Thread (802.15.4)，不包含 Wi-Fi 功能。"
+                },
+                "HomeAssistant": {
+                    title: "Home Assistant (HA)",
+                    desc: "一個功能強大、開源的智慧家庭自動化平台。",
+                    details: "HA 專注於本地控制和隱私保護，可以整合數千種不同的裝置和服務。"
+                },
+                "Coordinator": {
+                    title: "Zigbee 協調器 (Coordinator)",
+                    desc: "Zigbee 網路的大腦和中心控制器。",
+                    details: "它負責建立網路、管理裝置加入、分配位址，並作為網路與其他系統（如 HomeAssistant）溝通的橋樑。"
+                },
+                "End-Device": {
+                    title: "Zigbee 終端裝置 (End Device)",
+                    desc: "Zigbee 網路中的末端節點，通常由電池供電。",
+                    details: "例如門窗感測器、溫濕度計或無線按鈕。它們會進入深度睡眠以節省電力，只在需要時才喚醒並發送資料。"
+                },
+                "Zigbee-Router": {
+                    title: "Zigbee 路由器 (Router)",
+                    desc: "Zigbee 網路中的訊號中繼器。",
+                    details: "通常是市電供電裝置（如智慧燈泡、插座）。它們會保持喚醒，負責轉發來自 <span class='keyword' data-keyword='End-Device'>終端裝置</span> 或其他路由器的訊號，以擴展網路範圍。"
+                },
+                "Mesh": {
+                    title: "網狀網路 (Mesh Network)",
+                    desc: "一種網路拓撲結構，其中節點（裝置）相互連接，共同合作來傳遞資料。",
+                    details: "如果某個節點故障，資料會自動尋找替代路徑，大幅提高網路的可靠性和覆蓋範圍。Zigbee 和 Thread 都是典型的 Mesh 網路。"
+                },
+                "ESP-NOW": {
+                    title: "ESP-NOW",
+                    desc: "樂鑫 (Espressif) 開發的一種低功耗、點對點的快速通訊協定。",
+                    details: "它允許 ESP 裝置之間直接通訊，無需透過 <span class='keyword' data-keyword='WiFi'>WiFi</span> 路由器，延遲極低，適合用於遙控或快速觸發。"
+                },
+                "uA": {
+                    title: "uA (Microampere)",
+                    desc: "微安培，電流的測量單位。",
+                    details: "1 安培 (A) = 1,000,000 微安培 (uA)。這是衡量待機功耗時常用的極小單位。"
+                },
+                "uWh": {
+                    title: "uWh (Microwatt-hour)",
+                    desc: "微瓦時，電能的測量單位。",
+                    details: "1 瓦時 (Wh) = 1,000,000 微瓦時 (uWh)。用於衡量單次操作（如傳送一次訊號）所消耗的總能量。"
+                },
+                "Matter": {
+                    title: "Matter",
+                    desc: "一個新興的智慧家庭連接標準，旨在統一不同品牌和生態系統的裝置。",
+                    details: "Matter 不是一個無線協定，而是一個在現有協定（如 Wi-Fi, Thread, 乙太網路）之上運行的應用層。它的目標是讓支援 Matter 的裝置（無論底層用什麼技術）都能無縫協同工作。"
+                }
+            };
+
+            // --- 2. Tooltip DOM 元素 ---
+            const tooltipElement = document.getElementById('tooltip');
+            const allKeywords = document.querySelectorAll('.keyword');
+
+            if (!tooltipElement) return;
+
+            // --- 3. Tooltip 事件綁定 ---
+            allKeywords.forEach(keyword => {
+                const key = keyword.dataset.keyword;
+                if (!tooltipDefs[key]) return;
+
+                // 滑鼠移入：顯示並設定內容
+                keyword.addEventListener('mouseenter', (e) => {
+                    const content = tooltipDefs[key];
+                    tooltipElement.innerHTML = `
+                        <h3>${content.title}</h3>
+                        <p>${content.desc}</p>
+                        ${content.details ? `<p class="mt-2 pt-2 border-t border-slate-700 text-slate-400">${content.details}</p>` : ''}
+                    `;
+                    // 重新定位並顯示
+                    positionTooltip(e);
+                    tooltipElement.classList.add('visible');
+                });
+
+                // 滑鼠移動：即時更新位置
+                keyword.addEventListener('mousemove', (e) => {
+                    positionTooltip(e);
+                });
+
+                // 滑鼠移出：隱藏
+                keyword.addEventListener('mouseleave', () => {
+                    tooltipElement.classList.remove('visible');
+                });
+            });
+
+            // --- 4. Tooltip 定位演算法 (RWD + 邊界偵測) ---
+            function positionTooltip(e) {
+                if (!tooltipElement.classList.contains('visible')) return;
+
+                const mouseX = e.pageX;
+                const mouseY = e.pageY;
+
+                // 取得 viewport 尺寸 (考慮滾動)
+                const viewportWidth = document.documentElement.clientWidth;
+                const viewportHeight = document.documentElement.clientHeight;
+                const scrollY = window.scrollY;
+
+                // 取得 tooltip 渲染後的尺寸
+                const tooltipWidth = tooltipElement.offsetWidth;
+                const tooltipHeight = tooltipElement.offsetHeight;
+
+                const margin = 15; // 邊界留白
+
+                let newLeft = mouseX + margin;
+                let newTop = mouseY + margin;
+
+                // 偵測右邊界
+                // (mouseX - scrollX) 是滑鼠在 viewport 內的 X 座標
+                if ((mouseX - window.scrollX) + tooltipWidth + (margin * 2) > viewportWidth) {
+                    newLeft = mouseX - tooltipWidth - margin;
+                }
+
+                // 偵測左邊界 (切換後)
+                if ((newLeft - window.scrollX) < margin) {
+                    newLeft = margin + window.scrollX;
+                }
+
+                // 偵測下邊界
+                if ((mouseY - scrollY) + tooltipHeight + (margin * 2) > viewportHeight) {
+                    newTop = mouseY - tooltipHeight - margin;
+                }
+
+                // 偵測上邊界 (切換後)
+                if ((newTop - scrollY) < margin) {
+                    newTop = scrollY + margin;
+                }
+
+                // 套用最終位置
+                tooltipElement.style.left = `${newLeft}px`;
+                tooltipElement.style.top = `${newTop}px`;
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

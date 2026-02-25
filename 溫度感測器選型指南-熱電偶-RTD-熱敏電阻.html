@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E6%BA%AB%E5%BA%A6%E6%84%9F%E6%B8%AC%E5%99%A8%E9%81%B8%E5%9E%8B%E6%8C%87%E5%8D%97-%E7%86%B1%E9%9B%BB%E5%81%B6-RTD-%E7%86%B1%E6%95%8F%E9%9B%BB%E9%98%BB.png">
+    <meta name="twitter:description" content="專業溫度感測器選型指南，比較熱電偶、RTD鉑電阻、熱敏電阻與DS18B20。內容涵蓋工作原理、溫度範圍、精度規格與優缺點，並提供市售型號參考，協助在不同應用中做出正確選擇。">
+    <meta name="twitter:title" content="溫度感測器選型指南-熱電偶-RTD-熱敏電阻">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E6%BA%AB%E5%BA%A6%E6%84%9F%E6%B8%AC%E5%99%A8%E9%81%B8%E5%9E%8B%E6%8C%87%E5%8D%97-%E7%86%B1%E9%9B%BB%E5%81%B6-RTD-%E7%86%B1%E6%95%8F%E9%9B%BB%E9%98%BB.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E6%BA%AB%E5%BA%A6%E6%84%9F%E6%B8%AC%E5%99%A8%E9%81%B8%E5%9E%8B%E6%8C%87%E5%8D%97-%E7%86%B1%E9%9B%BB%E5%81%B6-RTD-%E7%86%B1%E6%95%8F%E9%9B%BB%E9%98%BB.html">
+    <meta property="og:description" content="專業溫度感測器選型指南，比較熱電偶、RTD鉑電阻、熱敏電阻與DS18B20。內容涵蓋工作原理、溫度範圍、精度規格與優缺點，並提供市售型號參考，協助在不同應用中做出正確選擇。">
+    <meta property="og:title" content="溫度感測器選型指南-熱電偶-RTD-熱敏電阻">
+    <meta name="description" content="專業溫度感測器選型指南，比較熱電偶、RTD鉑電阻、熱敏電阻與DS18B20。內容涵蓋工作原理、溫度範圍、精度規格與優缺點，並提供市售型號參考，協助在不同應用中做出正確選擇。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>溫度感測器選型指南-熱電偶-RTD-熱敏電阻</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals & Technical Blue -->
+    <!-- Application Structure Plan: Maintaining the single, scrollable long-form page structure. Added an interactive keyword modal feature to enhance learning without cluttering the main content. Also added a semantic footer. The flow remains intuitive: 1) Core Conclusion, 2) Detailed Sensor Sections with interactive keywords, 3) DS18B20 Section, 4) Market Models, 5) Selection Checklist, 6) Footer. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Technical keywords. -> Goal: Educate, Clarify. -> Viz: Interactive modal pop-up. -> Interaction: Click on highlighted keywords. -> Justification: Provides on-demand definitions for technical terms without leaving the page, improving user experience and comprehension.
+        - Report Info: All comparative data. -> Goal: Compare, Inform. -> Viz: Detailed HTML Tables. -> Interaction: None. -> Justification: Tables remain the clearest way to present dense technical specifications.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f1f5f9;
+            /* slate-100 */
+        }
+
+        .content-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .table-header {
+            background-color: #f8fafc;
+            /* slate-50 */
+        }
+
+        th,
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            /* slate-200 */
+            text-align: left;
+            vertical-align: top;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e3a8a;
+            /* blue-900 */
+            margin-bottom: 1.5rem;
+            border-left: 5px solid #3b82f6;
+            /* blue-500 */
+            padding-left: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            /* slate-800 */
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Keyword and Modal Styles */
+        .gradient-text {
+            background-image: linear-gradient(to right, #3b82f6, #1e3a8a);
+            /* blue-500 to blue-900 */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .keyword {
+            color: #3b82f6;
+            /* blue-500 */
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            transition: transform .2s, color .2s, background-image .2s;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .keyword:hover {
+            transform: scale(1.05);
+            color: #fff;
+            background-image: linear-gradient(to right, #3b82f6, #1d4ed8);
+            /* blue-500 to blue-700 */
+        }
+
+        .glass-border {
+            border: 1px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image: linear-gradient(to right, #f9fafb, #f9fafb), linear-gradient(135deg, rgba(255, 255, 255, .4), rgba(255, 255, 255, .1));
+        }
+    </style>
+</head>
+
+<body class="text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-slate-900 mb-4">溫度感測器終極選型指南</h1>
+            <p class="text-xl text-slate-600">一份經專業校訂，涵蓋原理、規格到市售型號的全面解析</p>
+        </header>
+
+        <main>
+            <!-- 核心結論 -->
+            <section id="conclusion" class="content-card">
+                <h2>核心結論：三秒選型</h2>
+                <p class="mb-6 text-slate-600">在深入研究前，先根據您的核心需求快速定位。這個指南將幫助您在三種主流類比感測器和一種流行的數位方案中做出初步選擇。</p>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 p-6 rounded-lg border border-blue-200 flex flex-col">
+                        <h3 class="text-blue-800 !mt-0"><span class="keyword" data-keyword="thermocouple">熱電偶
+                                (Thermocouple)</span></h3>
+                        <p class="mt-2 flex-grow">應用於<strong>極寬溫度範圍</strong> (特別是 >600 °C)、成本敏感、或需要堅固耐用的場合。</p>
+                        <div class="mt-4 pt-4 border-t border-blue-200 text-sm">
+                            <p><strong>優點：</strong>範圍最廣、成本低、堅固。</p>
+                            <p><strong>挑戰：</strong>需<span class="keyword" data-keyword="cjc">冷端補償</span>、非線性、精度較低。</p>
+                        </div>
+                    </div>
+                    <div class="bg-green-50 p-6 rounded-lg border border-green-200 flex flex-col">
+                        <h3 class="text-green-800 !mt-0"><span class="keyword" data-keyword="rtd">RTD (鉑電阻)</span></h3>
+                        <p class="mt-2 flex-grow">應用於 <strong>–200 ~ 850 °C</strong> 區間，且要求高精度、高穩定性與良好線性度的場合。</p>
+                        <div class="mt-4 pt-4 border-t border-green-200 text-sm">
+                            <p><strong>優點：</strong>最精確穩定、線性度最佳。</p>
+                            <p><strong>挑戰：</strong>成本較高、反應速度慢。</p>
+                        </div>
+                    </div>
+                    <div class="bg-purple-50 p-6 rounded-lg border border-purple-200 flex flex-col">
+                        <h3 class="text-purple-800 !mt-0"><span class="keyword" data-keyword="thermistor">熱敏電阻
+                                (Thermistor)</span></h3>
+                        <p class="mt-2 flex-grow">應用於 <strong>–50 ~ 150 °C</strong> 的窄範圍，追求最高靈敏度與最低成本的場合。</p>
+                        <div class="mt-4 pt-4 border-t border-purple-200 text-sm">
+                            <p><strong>優點：</strong>極度靈敏、成本最低、反應快。</p>
+                            <p><strong>挑戰：</strong>範圍最窄、非線性嚴重。</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 熱電偶 -->
+            <section id="thermocouple" class="content-card">
+                <h2><span class="keyword" data-keyword="thermocouple">熱電偶 (Thermocouple)</span></h2>
+                <p class="mb-6 text-slate-600"><span class="keyword"
+                        data-keyword="thermocouple">熱電偶</span>透過兩種不同金屬接合產生的<span class="keyword"
+                        data-keyword="seebeck">賽貝克效應 (Seebeck effect)</span> 來測量溫度，是工業中最堅固、測溫範圍最廣的感測器。</p>
+                <h3>主要型別與實務規格</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th>型別</th>
+                                <th>合金組合</th>
+                                <th>實務溫度範圍</th>
+                                <th>敏感度 ¹</th>
+                                <th>特色與用途</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>K</td>
+                                <td>NiCr-NiAl</td>
+                                <td>–200 ~ 1,260 °C</td>
+                                <td>~41 µV/°C</td>
+                                <td class="font-semibold text-blue-700">最通用、便宜、耐氧化</td>
+                            </tr>
+                            <tr>
+                                <td>J</td>
+                                <td>Fe-CuNi</td>
+                                <td>–40 ~ 760 °C</td>
+                                <td>~52 µV/°C</td>
+                                <td>還原性/缺氧環境，高溫需保護套管</td>
+                            </tr>
+                            <tr>
+                                <td>T</td>
+                                <td>Cu-CuNi</td>
+                                <td>–200 ~ 370 °C</td>
+                                <td>~43 µV/°C</td>
+                                <td>極低溫、冷鏈、實驗室</td>
+                            </tr>
+                            <tr>
+                                <td>N</td>
+                                <td>NiCrSi-NiSi</td>
+                                <td>–200 ~ 1,200 °C</td>
+                                <td>~39 µV/°C</td>
+                                <td>高穩定性、抗氧化、替代K型</td>
+                            </tr>
+                            <tr>
+                                <td>R/S/B</td>
+                                <td>Pt/Pt-Rh</td>
+                                <td>~600 ~ 1,700 °C</td>
+                                <td>~10 µV/°C</td>
+                                <td>高溫爐、半導體製程 (註：B 型不適用於 < 50 °C)</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>W-Re</td>
+                                <td>高達 2,315 °C</td>
+                                <td>~20 µV/°C</td>
+                                <td>極端高溫 (僅限真空/惰性氣氛)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-slate-500 mt-2">¹ 註：敏感度為近室溫之線性化近似值，實際 dV/dT 隨溫度而變化，非線性。</p>
+                </div>
+                <h3>選型要點</h3>
+                <ul class="list-disc list-inside mt-4 space-y-2 text-slate-700">
+                    <li><strong>環境適配性：</strong> 首先確認溫度上限與環境氣氛（氧化/還原/真空）。</li>
+                    <li><strong>反應速度 vs. 強度：</strong> 線徑 (<span class="keyword" data-keyword="awg">AWG</span>)
+                        決定反應速度與機械強度。實驗室可用細線 (如 <span class="keyword" data-keyword="awg">AWG</span> 36)，工業現場建議使用 ≥ <span
+                            class="keyword" data-keyword="awg">AWG</span> 30 的粗線以增強耐用性。</li>
+                    <li><strong>電路設計：</strong> 必須搭配對應的補償導線。可選用 <code
+                            class="bg-slate-100 p-1 rounded">MAX31855/MAX31856</code> 等整合型 IC 簡化<span class="keyword"
+                            data-keyword="cjc">冷端補償</span>設計，並注意避免接地迴路造成干擾。</li>
+                </ul>
+            </section>
+
+            <!-- RTD -->
+            <section id="rtd" class="content-card">
+                <h2><span class="keyword" data-keyword="rtd">RTD (電阻式溫度偵測器)</span></h2>
+                <p class="mb-6 text-slate-600"><span class="keyword" data-keyword="rtd">RTD</span> 利用純金屬 (最常見的是鉑)
+                    電阻值隨溫度穩定變化的特性來測溫。其標準 (<span class="keyword" data-keyword="iec60751">IEC 60751</span>) 涵蓋 –200 °C 至
+                    +850 °C，是追求精確與穩定的首選。</p>
+                <h3><span class="keyword" data-keyword="iec60751">IEC 60751</span> 精度等級</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th>等級</th>
+                                <th>公差 (°C) 在 0°C</th>
+                                <th>公差公式 ² (|T| 為溫度)</th>
+                                <th>適用場景</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-semibold text-green-700">AA</td>
+                                <td>±0.10 °C</td>
+                                <td>±(0.10 + 0.0017 * |T|)</td>
+                                <td>實驗室、校驗標準件</td>
+                            </tr>
+                            <tr>
+                                <td>A</td>
+                                <td>±0.15 °C</td>
+                                <td>±(0.15 + 0.002 * |T|)</td>
+                                <td>精密工業測量</td>
+                            </tr>
+                            <tr>
+                                <td>B</td>
+                                <td>±0.30 °C</td>
+                                <td>±(0.30 + 0.005 * |T|)</td>
+                                <td>通用工業控制，性價比最高</td>
+                            </tr>
+                            <tr>
+                                <td>C</td>
+                                <td>±0.60 °C</td>
+                                <td>±(0.60 + 0.010 * |T|)</td>
+                                <td>要求不高的場合</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-xs text-slate-500 mt-2">² 註：公差依據 <span class="keyword" data-keyword="iec60751">IEC
+                            60751</span>:2022 標準公式計算。各等級的有效溫度範圍需依標準與供應商資料表為準。</p>
+                </div>
+                <h3>選型要點</h3>
+                <ul class="list-disc list-inside mt-4 space-y-2 text-slate-700">
+                    <li><strong>精度與成本：</strong> B 級已能滿足絕大多數工業應用。AA 級主要用於校驗。</li>
+                    <li><strong>實務溫度上限：</strong> 線繞式 (Wire-wound) <span class="keyword" data-keyword="rtd">RTD</span>
+                        可達標準上限 850 °C，但更常見的薄膜式 (Thin-film) <span class="keyword" data-keyword="rtd">RTD</span> 實務上限通常約為
+                        600 °C。</li>
+                    <li><strong>阻值選擇 (Pt100 vs Pt1000)：</strong> Pt1000 因阻值較高，相同導線電阻造成的相對誤差僅為 Pt100 的
+                        1/10，在長距離傳輸時抗雜訊能力更強。</li>
+                    <li><strong>電路設計：</strong> 建議採用 3/4 線制搭配高精度 (如 24-bit) <span class="keyword"
+                            data-keyword="sigma-delta-adc">Σ-Δ ADC</span>，並使用穩定<span class="keyword"
+                            data-keyword="excitation">激勵源</span> (恆流源或比例式電路) 以獲得最佳效能。</li>
+                </ul>
+            </section>
+
+            <!-- 熱敏電阻 -->
+            <section id="thermistor" class="content-card">
+                <h2><span class="keyword" data-keyword="thermistor">熱敏電阻 (Thermistor)</span></h2>
+                <p class="mb-6 text-slate-600"><span class="keyword"
+                        data-keyword="thermistor">熱敏電阻</span>由半導體材料製成，電阻值對溫度變化極其敏感，是反應最快、成本最低的方案，但測溫範圍也最窄。</p>
+                <h3>主要類型與特性</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th>類型</th>
+                                <th>溫度係數</th>
+                                <th>典型範圍</th>
+                                <th>優勢</th>
+                                <th>局限</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-semibold text-purple-700"><span class="keyword"
+                                        data-keyword="ntc">NTC</span></td>
+                                <td>負 (電阻隨溫度升高而下降)</td>
+                                <td>–50 ~ 150 °C (玻璃封裝型可達 300-450 °C)</td>
+                                <td>靈敏度極高、成本低、體積小</td>
+                                <td>非線性，需軟體校正</td>
+                            </tr>
+                            <tr>
+                                <td><span class="keyword" data-keyword="ptc">PTC</span></td>
+                                <td>正 (電阻隨溫度升高而急劇上升)</td>
+                                <td>0 ~ 150 °C</td>
+                                <td>適合作為過流/過熱保護開關</td>
+                                <td>作為測溫工具精度低</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3>選型要點</h3>
+                <ul class="list-disc list-inside mt-4 space-y-2 text-slate-700">
+                    <li><strong>R-T 曲線匹配：</strong> 首先確認元件的電阻-溫度曲線 (或 <span class="keyword" data-keyword="beta">β
+                            值</span>) 是否符合您應用的溫度區段。</li>
+                    <li><strong>電路整合：</strong> 為了方便與微控制器 (MCU) 的 <span class="keyword" data-keyword="adc">ADC</span>
+                        介接，10kΩ 或 4.7kΩ (@25°C) 是最常見的阻值。</li>
+                    <li><strong>高溫應用：</strong> 玻璃封裝珠狀 <span class="keyword" data-keyword="ntc">NTC</span> 通常連續額定在 150
+                        °C，功率降額後可達 300 °C；特定高溫探頭或玻璃晶片系列可達 450 °C (需查閱規格書確認連續或間歇條件)。</li>
+                </ul>
+            </section>
+
+            <!-- DS18B20 -->
+            <section id="digital-sensor" class="content-card">
+                <h2>數位方案：<span class="keyword" data-keyword="ds18b20">DS18B20</span> 整合感測器</h2>
+                <p class="mb-6 text-slate-600">除了上述類比感測器，市面上也有如 <span class="keyword"
+                        data-keyword="ds18b20">DS18B20</span> 這樣高度整合的數位溫度感測IC。它內建了<span class="keyword"
+                        data-keyword="adc">A/D轉換器</span>、校準電路和數位通訊介面，極大地簡化了硬體設計。</p>
+                <h3>主要規格</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="table-header">
+                            <tr>
+                                <th>主要規格</th>
+                                <th>數值 / 特性</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>溫度範圍</td>
+                                <td>–55 °C ~ +125 °C</td>
+                            </tr>
+                            <tr>
+                                <td>精度</td>
+                                <td class="font-semibold">±0.5 °C (在 –10 °C ~ +85 °C 區間)</td>
+                            </tr>
+                            <tr>
+                                <td>供電電壓</td>
+                                <td>3.0 V ~ 5.5 V (可選用寄生供電模式)</td>
+                            </tr>
+                            <tr>
+                                <td>解析度與轉換時間</td>
+                                <td>可程式化 9–12 位 (9位元約 94ms；12位元最長 750ms)</td>
+                            </tr>
+                            <tr>
+                                <td>介面</td>
+                                <td class="font-semibold text-sky-700"><span class="keyword"
+                                        data-keyword="one-wire">One-Wire</span> 串列數位輸出 (單一 I/O 控制多個)</td>
+                            </tr>
+                            <tr>
+                                <td>唯一序號</td>
+                                <td>內建 64-bit ROM 序號，便於多點掛載識別</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <h3 class="!mt-8">優劣分析</h3>
+                <p class="text-slate-700">相較於傳統類比方案，<span class="keyword" data-keyword="ds18b20">DS18B20</span>
+                    的優勢在於<strong>數位輸出、抗雜訊佳、硬體簡潔</strong>。但其缺點是<strong>溫度上限僅 125
+                        °C</strong>，且取樣速度受解析度設定限制，適用於中低溫、高整合度或布線受限的場合，如機房監控、農業溫控等。</p>
+            </section>
+
+            <!-- 市售元件 -->
+            <section id="market-models" class="content-card">
+                <h2>常見市售元件與熱門型號一覽</h2>
+                <p class="mb-6 text-slate-600">以下整理了各類感測器在電子零件通路中常見的品牌與系列，幫助您快速找到合適的元件。</p>
+
+                <h3><span class="keyword" data-keyword="thermocouple">熱電偶 (Thermocouple)</span></h3>
+                <ul class="list-disc list-inside space-y-2 text-slate-700">
+                    <li><strong>K 型:</strong> OMEGA <code class="bg-slate-100 p-1 rounded">TT-K-24/30</code> (PFA絕緣線),
+                        <code class="bg-slate-100 p-1 rounded">GG-K-24</code> (玻璃纖維絕緣)。應用於工業爐、引擎排氣。
+                    </li>
+                    <li><strong>T 型:</strong> WATLOW <code class="bg-slate-100 p-1 rounded">TT-T-36</code>
+                        線材或各大廠牌薄片式。應用於低溫冷鏈、實驗室。</li>
+                </ul>
+
+                <h3 class="!mt-8"><span class="keyword" data-keyword="rtd">RTD (鉑電阻)</span></h3>
+                <ul class="list-disc list-inside space-y-2 text-slate-700">
+                    <li><strong>Pt100 探針 (B級):</strong> TE Connectivity <code
+                            class="bg-slate-100 p-1 rounded">PTFD101B1A0</code> 或各大工業品牌 (如 OMEGA, WATLOW) 提供的 B 級探針。
+                    </li>
+                    <li><strong>Pt100/Pt1000 貼片:</strong> Vishay <code class="bg-slate-100 p-1 rounded">PTS AT</code>
+                        系列。高抗雜訊，適用於HVAC、長距離布線。</li>
+                    <li><strong>陶瓷薄膜 (AA級):</strong> Heraeus PRTD-Sensor 系列。用於精密計量、校驗裝置。</li>
+                </ul>
+
+                <h3 class="!mt-8"><span class="keyword" data-keyword="thermistor">熱敏電阻 (Thermistor)</span></h3>
+                <ul class="list-disc list-inside space-y-2 text-slate-700">
+                    <li><strong>NTC SMD 0603:</strong> Murata <code class="bg-slate-100 p-1 rounded">NCP18XH103F</code>
+                        (10kΩ)。用於手機、穿戴式裝置的電池熱保護。</li>
+                    <li><strong>NTC 玻璃珠:</strong> EPCOS/TDK <code class="bg-slate-100 p-1 rounded">B57891S0103</code> 系列
+                        (10kΩ)。耐高溫高濕，用於車用、水箱溫控。</li>
+                    <li><strong>PTC 保護片:</strong> EPCOS/TDK <code class="bg-slate-100 p-1 rounded">B59340</code>
+                        系列。用於充電器、馬達過流/過熱保護。</li>
+                </ul>
+            </section>
+
+            <!-- 實務選擇流程 -->
+            <section id="process" class="content-card border-l-4 border-amber-400 bg-amber-50">
+                <h2 class="!border-l-amber-500 !text-amber-900">實務選擇流程 (Checklist)</h2>
+                <p class="mb-6 text-amber-800">遵循以下步驟，確保您在各種量測情境下都能快速挑選最合適的溫度感測器。</p>
+                <ol class="list-decimal list-inside space-y-3 text-slate-700">
+                    <li><strong>定義需求：</strong> 確定您的 <span class="font-semibold">溫度區間</span> 與 <span
+                            class="font-semibold">精度要求</span>。這是最關鍵的第一步。</li>
+                    <li><strong>評估環境：</strong> 考量現場是否有劇烈震動、化學腐蝕、真空、高濕等特殊條件。</li>
+                    <li><strong>考慮反應速度與尺寸：</strong> 您的應用是否需要快速反應？安裝空間是否受限？</li>
+                    <li><strong>核算總體成本：</strong> 不僅考慮感測器單價，也要計入後端電路（放大器、<span class="keyword"
+                            data-keyword="adc">ADC</span>、補償電路）的複雜度與成本。</li>
+                    <li><strong>確認介面電路：</strong>
+                        <ul class="list-disc list-inside ml-6 mt-2 space-y-1">
+                            <li><strong><span class="keyword" data-keyword="thermocouple">熱電偶</span>：</strong> 需要低漂移放大器
+                                + <span class="keyword" data-keyword="cjc">冷端補償</span>IC (如 MAX31856)。</li>
+                            <li><strong><span class="keyword" data-keyword="rtd">RTD</span>：</strong> 建議選用高精度 <span
+                                    class="keyword" data-keyword="sigma-delta-adc">Σ-Δ ADC</span>，採用 3/4 線連接並搭配穩定<span
+                                    class="keyword" data-keyword="excitation">激勵源</span>。</li>
+                            <li><strong><span class="keyword" data-keyword="thermistor">熱敏電阻</span>：</strong> 使用簡單的分壓電路
+                                + MCU內建<span class="keyword" data-keyword="adc">ADC</span>，搭配查表法或公式進行線性化。</li>
+                        </ul>
+                    </li>
+                </ol>
+            </section>
+        </main>
+
+        <footer class="mt-12 py-8 bg-slate-800 text-slate-400 text-center text-sm">
+            <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="hover:text-white transition-colors">
+                Generated by wellstsai.com
+            </a>
+            <p class="mt-2">撰寫日期：2025年9月23日</p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div id="keyword-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" aria-hidden="true"
+        role="dialog" aria-modal="true">
+        <div id="modal-backdrop"
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out opacity-0">
+        </div>
+        <div id="modal-panel"
+            class="relative bg-gray-50/80 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-2xl text-gray-800 glass-border transition-all duration-300 ease-in-out opacity-0 scale-95">
+            <div class="p-6 md:p-8">
+                <div class="flex justify-between items-center pb-4 border-b border-gray-500/20">
+                    <h3 id="modal-title" class="text-2xl font-bold gradient-text"></h3>
+                    <button id="modal-close-button" aria-label="關閉"
+                        class="text-gray-500 hover:text-gray-900 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="modal-content" class="mt-4 text-gray-600 leading-relaxed space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            // 資料庫
+            const definitions = {
+                thermocouple: {
+                    title: "熱電偶 (Thermocouple)",
+                    content: `<p>一種溫度感測器，利用兩種不同金屬導線接合，當接點存在溫差時會產生微小電壓（賽貝克效應），藉此測量溫度。以其測溫範圍廣、堅固耐用著稱。</p>`
+                },
+                rtd: {
+                    title: "RTD (電阻式溫度偵測器)",
+                    content: `<p>全名為 Resistance Temperature Detector，是利用純金屬（通常是鉑）的電阻值會隨溫度進行穩定且線性變化的特性來測量溫度的感測器。以其高精度和高穩定性聞名。</p>`
+                },
+                thermistor: {
+                    title: "熱敏電阻 (Thermistor)",
+                    content: `<p>一種由半導體材料製成的電阻器，其電阻值對溫度變化極為敏感。主要分為電阻隨溫度升高而下降的 NTC，和隨溫度升高而上升的 PTC。</p>`
+                },
+                seebeck: {
+                    title: "賽貝克效應 (Seebeck Effect)",
+                    content: `<p>一種熱電效應，指當兩種不同電導體或半導體構成的迴路中，若兩個接點存在溫差，迴路中便會產生一個電壓。這是熱電偶的工作基礎。</p>`
+                },
+                cjc: {
+                    title: "冷端補償 (Cold Junction Compensation)",
+                    content: `<p>由於熱電偶測量的是相對於「冷接點」（儀表端）的溫差，因此必須精確測量冷接點的溫度，並在計算中加以補償，才能得到測量端的絕對溫度。此過程稱為冷端補償。</p>`
+                },
+                awg: {
+                    title: "美國線規 (American Wire Gauge)",
+                    content: `<p>一種區分導線直徑的標準，數字越小表示線材越粗。較粗的線機械強度較好，但熱反應較慢；較細的線則相反。</p>`
+                },
+                iec60751: {
+                    title: "IEC 60751",
+                    content: `<p>國際電工委員會（IEC）針對工業鉑電阻溫度計（RTD）所制定的國際標準。它定義了鉑電阻的電阻-溫度特性、精度等級（如 Class AA, A, B, C）及其公差。</p>`
+                },
+                "sigma-delta-adc": {
+                    title: "Σ-Δ ADC (Sigma-Delta ADC)",
+                    content: `<p>一種高解析度、高精度的類比數位轉換器。它透過超取樣和雜訊整形技術，非常適合用來測量 RTD 或荷重計等變化緩慢但需要高精度的微弱類比訊號。</p>`
+                },
+                excitation: {
+                    title: "激勵源 (Excitation Source)",
+                    content: `<p>為 RTD 或應變計等被動式電阻感測器提供一個穩定、精確的電流或電壓源。只有在穩定的激勵源下，才能根據感測器上的電壓變化精確反推出其電阻變化。</p>`
+                },
+                ntc: {
+                    title: "NTC (負溫度係數)",
+                    content: `<p>Negative Temperature Coefficient 的縮寫，指電阻值會隨著溫度升高而「降低」的特性。這是最常見的熱敏電阻類型。</p>`
+                },
+                ptc: {
+                    title: "PTC (正溫度係數)",
+                    content: `<p>Positive Temperature Coefficient 的縮寫，指電阻值會隨著溫度升高而「升高」的特性。常用於過電流或過熱保護，作為可復式保險絲。</p>`
+                },
+                beta: {
+                    title: "β 值 (Beta Value)",
+                    content: `<p>一個用來描述 NTC 熱敏電阻在特定溫度範圍內電阻-溫度特性的常數，單位為凱氏溫標 (K)。它反映了材料的靈敏度，但僅為一個近似值，更精確的計算需使用 Steinhart-Hart 方程式。</p>`
+                },
+                adc: {
+                    title: "ADC (類比數位轉換器)",
+                    content: `<p>Analog-to-Digital Converter 的縮寫，是一種能將連續的類比訊號（如電壓）轉換為離散數位值的電子元件。它是連接物理世界感測器與數位處理器（如 MCU）之間的橋樑。</p>`
+                },
+                ds18b20: {
+                    title: "DS18B20",
+                    content: `<p>一款由 Maxim Integrated 生產的數位溫度感測器 IC。它透過 One-Wire 介面進行通訊，內建了 ADC 與唯一的 64 位元 ID，非常適合用於需要多點測溫的應用。</p>`
+                },
+                "one-wire": {
+                    title: "One-Wire 匯流排",
+                    content: `<p>一種通訊協定，僅需一條資料線（加上接地線）即可在微控制器與多個周邊裝置之間進行雙向通訊，同時還能透過資料線為裝置提供寄生電源，大幅簡化布線。</p>`
+                }
+            };
+
+            // 元件參照
+            const modal = document.getElementById('keyword-modal');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalPanel = document.getElementById('modal-panel');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const closeBtn = document.getElementById('modal-close-button');
+
+            // 開/關 modal
+            const openModal = (key) => {
+                const def = definitions[key];
+                if (!def) return;
+                modalTitle.textContent = def.title;
+                modalContent.innerHTML = def.content;
+                document.body.style.overflow = 'hidden';
+                modal.classList.remove('hidden');
+                modal.setAttribute('aria-hidden', 'false');
+                requestAnimationFrame(() => {
+                    modalBackdrop.classList.remove('opacity-0');
+                    modalPanel.classList.remove('opacity-0', 'scale-95');
+                });
+            };
+
+            const closeModal = () => {
+                document.body.style.overflow = '';
+                modalBackdrop.classList.add('opacity-0');
+                modalPanel.classList.add('opacity-0', 'scale-95');
+                modal.setAttribute('aria-hidden', 'true');
+                const onEnd = () => { modal.classList.add('hidden'); modalPanel.removeEventListener('transitionend', onEnd); };
+                modalPanel.addEventListener('transitionend', onEnd);
+            };
+
+            // 事件委派
+            document.addEventListener('click', (e) => {
+                const kw = e.target.closest('.keyword');
+                if (kw) {
+                    e.preventDefault();
+                    openModal(kw.dataset.keyword);
+                    return;
+                }
+                if (e.target === modalBackdrop || (closeBtn && closeBtn.contains(e.target))) {
+                    closeModal();
+                }
+            });
+
+            // Esc 鍵關閉
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

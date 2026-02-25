@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/AoA%E6%BC%94%E7%AE%97%E6%B3%95-arcsin%E6%9F%A5%E8%A1%A8%E6%B3%95%E5%AF%A6%E4%BD%9C%E8%88%87%E5%84%AA%E5%8C%96.png">
+    <meta name="twitter:description" content="探討嵌入式系統中到達角度(AoA)演算法的高效實作。文章說明如何以查表法(LUT)與Q格式定點數取代`arcsin`函數，避免昂貴的浮點運算。內容涵蓋對稱性優化、量化誤差分析，以及線性插值等精度改善策略。">
+    <meta name="twitter:title" content="AoA演算法-arcsin查表法實作與優化">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/AoA%E6%BC%94%E7%AE%97%E6%B3%95-arcsin%E6%9F%A5%E8%A1%A8%E6%B3%95%E5%AF%A6%E4%BD%9C%E8%88%87%E5%84%AA%E5%8C%96.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/AoA%E6%BC%94%E7%AE%97%E6%B3%95-arcsin%E6%9F%A5%E8%A1%A8%E6%B3%95%E5%AF%A6%E4%BD%9C%E8%88%87%E5%84%AA%E5%8C%96.html">
+    <meta property="og:description" content="探討嵌入式系統中到達角度(AoA)演算法的高效實作。文章說明如何以查表法(LUT)與Q格式定點數取代`arcsin`函數，避免昂貴的浮點運算。內容涵蓋對稱性優化、量化誤差分析，以及線性插值等精度改善策略。">
+    <meta property="og:title" content="AoA演算法-arcsin查表法實作與優化">
+    <meta name="description" content="探討嵌入式系統中到達角度(AoA)演算法的高效實作。文章說明如何以查表法(LUT)與Q格式定點數取代`arcsin`函數，避免昂貴的浮點運算。內容涵蓋對稱性優化、量化誤差分析，以及線性插值等精度改善策略。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>嵌入式系統 AoA 計算：以查表法優化的 arcsin 實現</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Custom slider styles */
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            cursor: pointer;
+            background-color: transparent;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            height: 8px;
+            background: #e2e8f0;
+            /* slate-200 */
+            border-radius: 4px;
+        }
+
+        input[type=range]::-moz-range-track {
+            height: 8px;
+            background: #e2e8f0;
+            /* slate-200 */
+            border-radius: 4px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            margin-top: -6px;
+            /* center thumb on track */
+            height: 20px;
+            width: 20px;
+            background-color: #0ea5e9;
+            /* sky-500 */
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            transition: transform 0.1s ease-in-out;
+        }
+
+        input[type=range]:active::-webkit-slider-thumb {
+            transform: scale(1.1);
+        }
+
+        input[type=range]::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            background-color: #0ea5e9;
+            /* sky-500 */
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* Keyword and Modal Styles */
+        .gradient-text {
+            background-image: linear-gradient(to right, #0ea5e9, #0d9488);
+            /* sky-500 to teal-500 */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .keyword {
+            color: #0369a1;
+            /* sky-700 */
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            transition: transform .2s, color .2s, background-image .2s;
+            padding: 2px 6px;
+            border-radius: 6px;
+            background-color: rgba(14, 165, 233, 0.1);
+            /* sky-500 with alpha */
+        }
+
+        .keyword:hover {
+            transform: scale(1.05);
+            color: #fff;
+            background-image: linear-gradient(to right, #0ea5e9, #14b8a6);
+            /* sky-500 to teal-500 */
+        }
+
+        .glass-border {
+            border: 1px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image: linear-gradient(to right, #f9fafb, #f9fafb), linear-gradient(135deg, rgba(255, 255, 255, .4), rgba(255, 255, 255, .1));
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900">到達角度 (AoA) 演算法</h1>
+            <p class="mt-2 text-lg text-slate-600">為嵌入式系統視覺化高效的 `arcsin` 實作。</p>
+        </header>
+
+        <main class="max-w-4xl mx-auto space-y-8">
+
+            <!-- 1. 問題背景 -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">1. 問題背景</h2>
+                <p class="text-slate-600 leading-relaxed">在嵌入式裝置中，雖然可能配備單精度<span class="keyword"
+                        data-keyword="fpu">浮點運算單元 (FPU)</span>，但標準 C 語言函式庫的 `asin()`
+                    函數通常使用雙精度浮點數來實作。這會導致在硬體上進行成本高昂的軟體模擬計算，進而影響 <span class="keyword" data-keyword="uwb">UWB (超寬頻)</span>
+                    通訊等應用的即時性要求。<br><br>因此，我們採用 <strong class="text-sky-600"><span class="keyword"
+                            data-keyword="lut">查表法 (Lookup Table, LUT)</span></strong> 來取代動態的浮點運算，這是一種典型的<strong
+                        class="text-sky-600">「以記憶體換取速度」</strong>的策略，能顯著提升執行效能。</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">2. 輸入與輸出條件</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold text-slate-800">輸入範圍</h3>
+                        <ul class="list-disc list-inside text-slate-600 mt-2 space-y-1">
+                            <li>`arcsin` 的標準輸入：[-1.0, 1.0]</li>
+                            <li>為避免浮點運算，輸入值會先乘上一個固定的解析度 (<span class="keyword" data-keyword="q-format">Q9.7</span>
+                                格式的小數部分，即 2⁷ = 128)。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-slate-800">輸出範圍</h3>
+                        <ul class="list-disc list-inside text-slate-600 mt-2 space-y-1">
+                            <li>`arcsin` 的標準輸出：[-90°, 90°]</li>
+                            <li>使用 <span class="font-mono bg-slate-100 px-1 rounded">Q9.7</span> 格式，角度值存放於 `int16_t`，範圍為
+                                [-11520, 11520] (因為 90 × 128 = 11520)。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">3. LUT 的對稱性優化</h2>
+                <p class="text-slate-600 mb-4">`arcsin(x)` 函數在 0 點是奇函數，滿足 <span
+                        class="font-mono bg-slate-100 px-1 rounded">arcsin(-x) = -arcsin(x)</span> 的對稱特性。利用這一點，我們只需儲存正區間
+                    [0.0, 1.0] 的對應角度，就可以透過取相反數來推導負區間的結果。這項優化能將 LUT 的尺寸減少一半。</p>
+                <div class="text-center my-4">
+                    <svg class="w-full h-24 max-w-sm mx-auto" viewBox="-110 -60 220 120"
+                        preserveAspectRatio="xMidYMid meet">
+                        <line x1="-100" y1="0" x2="100" y2="0" stroke="#94a3b8" stroke-width="2" />
+                        <line x1="0" y1="-50" x2="0" y2="50" stroke="#94a3b8" stroke-width="2" />
+                        <path d="M 0,0 C 20,0 80,50 100,50" stroke="#0ea5e9" stroke-width="3" fill="none" />
+                        <path d="M 0,0 C -20,0 -80,-50 -100,-50" stroke="#0ea5e9" stroke-width="3" fill="none"
+                            stroke-dasharray="4" />
+                        <text x="10" y="30" fill="#0ea5e9" font-size="12" font-weight="bold">儲存於 LUT</text>
+                        <text x="-95" y="-25" fill="#0ea5e9" font-size="12">計算得出</text>
+                    </svg>
+                </div>
+                <p class="text-center text-slate-600">LUT 總尺寸 = 129 個 `int16_t` 項目 (索引 0 至 128) × 2 位元組 = <strong
+                        class="text-slate-800">258 位元組</strong>。</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">4. LUT 建立方法</h2>
+                <p class="text-slate-600 mb-4">建立 LUT 的步驟如下：</p>
+                <ol class="list-decimal list-inside space-y-2 text-slate-600 mb-4">
+                    <li><strong class="text-slate-700">決定輸入解析度：</strong><span class="keyword"
+                            data-keyword="q-format">Q9.7</span> 格式提供 128 個步階。每個索引對應的輸入值為 `index / 128.0`。</li>
+                    <li><strong class="text-slate-700">計算對應角度：</strong>遍歷所有索引，計算其對應的角度值，並轉換為 <span class="keyword"
+                            data-keyword="q-format">Q9.7</span> 格式儲存。</li>
+                </ol>
+                <pre class="bg-slate-100 text-slate-800 p-4 rounded-lg overflow-x-auto"><code class="language-c font-mono text-sm">for (int i = 0; i <= 128; i++) {
+    double input = (double)i / 128.0;         // 正規化輸入 [0.0, 1.0]
+    double angle = asin(input) * 180.0 / M_PI; // 弧度轉角度
+    arcSinToDegLut[i] = (int16_t)(angle * 128); // 轉為 Q9.7 格式並儲存
+}</code></pre>
+                <p class="text-slate-600 mt-4">使用時，若輸入值為正，則直接查表；若為負，則先取其絕對值查表，再將結果取相反數。</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">5. 範例</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 bg-slate-100 border-b-2 border-slate-200 font-semibold">索引 (Index)
+                                </th>
+                                <th class="py-2 px-4 bg-slate-100 border-b-2 border-slate-200 font-semibold">輸入值 (x)
+                                </th>
+                                <th class="py-2 px-4 bg-slate-100 border-b-2 border-slate-200 font-semibold">arcsin(x)
+                                    (°)</th>
+                                <th class="py-2 px-4 bg-slate-100 border-b-2 border-slate-200 font-semibold">存放值 (Q9.7)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-600">
+                            <tr class="font-mono">
+                                <td class="py-2 px-4 border-b border-slate-200">0</td>
+                                <td class="py-2 px-4 border-b border-slate-200">0.0</td>
+                                <td class="py-2 px-4 border-b border-slate-200">0.0</td>
+                                <td class="py-2 px-4 border-b border-slate-200">0</td>
+                            </tr>
+                            <tr class="font-mono">
+                                <td class="py-2 px-4 border-b border-slate-200">43</td>
+                                <td class="py-2 px-4 border-b border-slate-200">~0.34</td>
+                                <td class="py-2 px-4 border-b border-slate-200">~19.625</td>
+                                <td class="py-2 px-4 border-b border-slate-200">2512</td>
+                            </tr>
+                            <tr class="font-mono">
+                                <td class="py-2 px-4 border-b border-slate-200">64</td>
+                                <td class="py-2 px-4 border-b border-slate-200">0.5</td>
+                                <td class="py-2 px-4 border-b border-slate-200">30.0</td>
+                                <td class="py-2 px-4 border-b border-slate-200">3840</td>
+                            </tr>
+                            <tr class="font-mono">
+                                <td class="py-2 px-4 border-b border-slate-200">128</td>
+                                <td class="py-2 px-4 border-b border-slate-200">1.0</td>
+                                <td class="py-2 px-4 border-b border-slate-200">90.0</td>
+                                <td class="py-2 px-4 border-b border-slate-200">11520</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 6. 優缺點 -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">6. 優缺點</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-semibold text-green-600">優點</h3>
+                        <ul class="list-disc list-inside text-slate-600 mt-2 space-y-1">
+                            <li>避免昂貴的雙精度浮點計算。</li>
+                            <li>執行速度極快，適合即時系統。</li>
+                            <li>記憶體佔用極低 (258 位元組)。</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-red-500">缺點</h3>
+                        <ul class="list-disc list-inside text-slate-600 mt-2 space-y-1">
+                            <li>存在運算誤差 (使用<span class="keyword" data-keyword="rounding">就近取整法</span>時最大約 3.58°)。</li>
+                            <li>增加解析度或改用<span class="keyword" data-keyword="interpolation">插值法</span>可降低誤差，但會增加資源消耗。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. 誤差來源與解析度分析 -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">7. 誤差來源、策略與權衡</h2>
+                <p class="text-slate-600 mb-4">LUT 的精度與其實作方式密切相關，尤其取決於<strong
+                        class="text-sky-600">查表索引策略</strong>。誤差主要來自於<strong class="text-slate-700"><span class="keyword"
+                            data-keyword="quantization-error">量化誤差</span></strong>（將連續輸入對應到離散索引）和 `arcsin` 函數本身的<strong
+                        class="text-slate-700">非線性特性</strong>（在接近 ±1.0 時斜率急遽增加，放大誤差）。</p>
+
+                <h3 class="text-lg font-semibold mt-6 mb-2 text-slate-800">7.1 解析度、索引策略與理論誤差上限</h3>
+                <p class="text-slate-600 mb-4">不同的索引策略會產生截然不同的誤差上限。本文件的模擬器採用的是<strong class="text-slate-700"><span
+                            class="keyword" data-keyword="rounding">就近取整 (Round)</span></strong>
+                    策略，其理論誤差上限約為兩點之間最大角度差的一半。</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 bg-slate-100 border-b-2 border-slate-200 font-semibold">項目數</th>
+                                <th class="py-2 px-4 bg-slate-100 border-b-2 border-slate-200 font-semibold">記憶體</th>
+                                <th class="py-2 px-4 bg-slate-100 border-b-2 border-slate-200 font-semibold">索引策略</th>
+                                <th class="py-2 px-4 bg-slate-100 border-b-2 border-slate-200 font-semibold">理論最大誤差 (°)
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-600 align-top">
+                            <tr>
+                                <td rowspan="2" class="py-2 px-4 border-b border-slate-200 font-mono">129 (Q9.7)</td>
+                                <td rowspan="2" class="py-2 px-4 border-b border-slate-200 font-mono">258 B</td>
+                                <td class="py-2 px-4 border-b border-slate-200">就近取整 (Round)</td>
+                                <td class="py-2 px-4 border-b border-slate-200 font-mono">~3.58°</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b border-slate-200 bg-sky-50">線性插值</td>
+                                <td class="py-2 px-4 border-b border-slate-200 bg-sky-50 font-mono">~1.79°</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2" class="py-2 px-4 border-b border-slate-200 font-mono">257 (Q8.8)</td>
+                                <td rowspan="2" class="py-2 px-4 border-b border-slate-200 font-mono">514 B</td>
+                                <td class="py-2 px-4 border-b border-slate-200">就近取整 (Round)</td>
+                                <td class="py-2 px-4 border-b border-slate-200 font-mono">~2.53°</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b border-slate-200 bg-sky-50">線性插值</td>
+                                <td class="py-2 px-4 border-b border-slate-200 bg-sky-50 font-mono">~1.27°</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2" class="py-2 px-4 border-b border-slate-200 font-mono">513 (Q7.9)</td>
+                                <td rowspan="2" class="py-2 px-4 border-b border-slate-200 font-mono">1026 B</td>
+                                <td class="py-2 px-4 border-b border-slate-200">就近取整 (Round)</td>
+                                <td class="py-2 px-4 border-b border-slate-200 font-mono">~1.79°</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b-0 border-slate-200 bg-sky-50">線性插值</td>
+                                <td class="py-2 px-4 border-b-0 border-slate-200 bg-sky-50 font-mono">~0.90°</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="text-lg font-semibold mt-6 mb-2 text-slate-800">7.2 進階優化：<span class="keyword"
+                        data-keyword="interpolation">線性插值 (Linear Interpolation)</span></h3>
+                <p class="text-slate-600 mb-4">從上表可見，<strong class="text-sky-600">線性插值</strong>是 CP
+                    值極高的優化方案。它不是直接選取最接近的點，而是在兩個相鄰的 LUT 點之間，根據輸入值的位置進行加權平均。這能以極小的計算成本（幾次加減乘除）大幅降低誤差，非常適合嵌入式系統。</p>
+                <p class="text-slate-600">其他更複雜的優化方法還包括使用<strong
+                        class="text-slate-700">非等距節點</strong>（在曲線陡峭處增加取樣點密度）或在極端區間使用<strong
+                        class="text-slate-700">多項式近似</strong>等，以在有限的記憶體下達到更高的精度。</p>
+
+            </div>
+
+
+            <!-- LUT 產生程式 -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">LUT 產生程式 (C 語言)</h2>
+                <p class="text-slate-600 mb-4">這段 C 程式可以在個人電腦上執行，以生成 `arcSinToDegLut[]`
+                    陣列的完整內容。您可以將其輸出結果直接複製到嵌入式裝置的韌體中使用。</p>
+                <pre class="bg-slate-800 text-white p-4 rounded-lg overflow-x-auto"><code class="language-c font-mono text-sm">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+#include &lt;stdint.h&gt;
+
+#define Q_FORMAT   128   // Q9.7 -> 2^7 = 128
+#define TABLE_SIZE 128   // 輸入 [0.0 .. 1.0] 共 128 個步階
+
+int main(void) {
+    printf("static const int16_t arcSinToDegLut[%d] = {\n", TABLE_SIZE + 1);
+
+    for (int i = 0; i <= TABLE_SIZE; i++) {
+        double input = (double)i / TABLE_SIZE;
+        double angle = asin(input) * 180.0 / M_PI;
+        int16_t fixedVal = (int16_t)round(angle * Q_FORMAT);
+
+        if (i % 8 == 0) printf("    ");
+        printf("%6d,", fixedVal);
+        if (i % 8 == 7 || i == TABLE_SIZE) printf("\n");
+    }
+
+    printf("};\n");
+    return 0;
+}</code></pre>
+            </div>
+
+            <!-- Interactive Simulator -->
+            <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+                <h2 class="text-xl font-bold mb-4 text-slate-900">綜合實踐：互動式 LUT 模擬器</h2>
+                <p class="text-slate-600 mb-6">在了解上述原理後，您可以使用下方的滑桿來模擬 `arcsin` 函數的查表過程（採用<span class="keyword"
+                        data-keyword="rounding">就近取整法</span>），並與標準函式庫的精確結果進行比較。</p>
+
+                <div class="mb-6">
+                    <label for="pdoa-slider" class="block font-medium text-slate-700 mb-2">輸入比率：<span id="slider-value"
+                            class="font-bold text-sky-600 font-mono text-lg">0.500</span></label>
+                    <input id="pdoa-slider" type="range" min="-1" max="1" value="0.5" step="0.001" class="w-full">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                        <h3 class="font-semibold text-slate-800 mb-2">LUT 結果</h3>
+                        <p id="final-aoa" class="font-mono text-2xl font-bold text-sky-600">-</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                        <h3 class="font-semibold text-slate-800 mb-2">標準 `asin` 答案</h3>
+                        <p id="standard-aoa" class="font-mono text-2xl font-bold text-green-600">-</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                        <h3 class="font-semibold text-slate-800 mb-2">誤差比較</h3>
+                        <p id="error-diff" class="font-mono text-2xl font-bold text-orange-500">-</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <footer class="mt-12 py-8 bg-slate-100 border-t border-slate-200">
+        <div class="text-center text-slate-500 text-sm">
+            <p>
+                <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-sky-600 transition-colors">
+                    Generated by wellstsai.com
+                </a>
+            </p>
+            <p class="mt-2">撰寫日期：2025年9月25日</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="keyword-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" aria-hidden="true"
+        role="dialog" aria-modal="true">
+        <div id="modal-backdrop"
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out opacity-0">
+        </div>
+        <div id="modal-panel"
+            class="relative bg-gray-50/80 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-2xl text-slate-800 glass-border transition-all duration-300 ease-in-out opacity-0 scale-95">
+            <div class="p-6 md:p-8">
+                <div class="flex justify-between items-center pb-4 border-b border-gray-500/20">
+                    <h3 id="modal-title" class="text-2xl font-bold gradient-text"></h3>
+                    <button id="modal-close-button" aria-label="關閉"
+                        class="text-gray-500 hover:text-gray-900 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="modal-content" class="mt-4 text-slate-600 leading-relaxed space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Slider script ---
+        (() => {
+            const skphscaUwb_ArcSinToDegreeLut = new Array(129);
+            for (let i = 0; i <= 128; i++) {
+                const ratio = i / 128.0;
+                const angleRad = Math.asin(ratio);
+                const angleDeg = angleRad * (180 / Math.PI);
+                skphscaUwb_ArcSinToDegreeLut[i] = Math.round(angleDeg * 128);
+            }
+
+            const slider = document.getElementById('pdoa-slider');
+            if (!slider) return;
+
+            const sliderValueEl = document.getElementById('slider-value');
+            const finalAoaEl = document.getElementById('final-aoa');
+            const standardAoaEl = document.getElementById('standard-aoa');
+            const errorDiffEl = document.getElementById('error-diff');
+
+            function updateVisualization() {
+                const inputValue = parseFloat(slider.value);
+                sliderValueEl.textContent = inputValue.toFixed(3);
+
+                const isNegative = inputValue < 0;
+                const absValue = Math.abs(inputValue);
+                const lutIndex = Math.min(128, Math.round(absValue * 128));
+                const rawLutValue = skphscaUwb_ArcSinToDegreeLut[lutIndex];
+                const finalValue = isNegative ? -rawLutValue : rawLutValue;
+                const finalAoa = finalValue / 128.0;
+
+                const standardAngleRad = Math.asin(inputValue);
+                const standardAngleDeg = standardAngleRad * (180 / Math.PI);
+                const error = Math.abs(finalAoa - standardAngleDeg);
+
+                finalAoaEl.textContent = `${finalAoa.toFixed(3)}°`;
+                standardAoaEl.textContent = `${standardAngleDeg.toFixed(3)}°`;
+                errorDiffEl.textContent = `${error.toFixed(3)}°`;
+            }
+
+            slider.addEventListener('input', updateVisualization);
+            window.addEventListener('load', updateVisualization);
+        })();
+
+        // --- Keyword Modal script ---
+        (() => {
+            const definitions = {
+                lut: {
+                    title: "查表法 (Lookup Table, LUT)",
+                    content: `<p>一種以空間換取時間的演算法策略。它將可能需要複雜計算的結果預先計算好並儲存在一個陣列（表格）中。在程式執行時，直接根據輸入值查詢表格來獲取結果，從而避免了昂貴的即時運算，大幅提升了執行速度。</p>`
+                },
+                fpu: {
+                    title: "浮點運算單元 (FPU)",
+                    content: `<p>Floating-Point Unit 的縮寫，是中央處理器 (CPU) 中專門用來處理浮點數運算的協同處理器。擁有硬體 FPU 的晶片在執行小數運算時，遠比使用軟體模擬的方式來得快且高效。</p>`
+                },
+                uwb: {
+                    title: "UWB (超寬頻)",
+                    content: `<p>Ultra-Wideband 的縮寫，是一種無線通訊技術。它透過在極寬的頻譜範圍內傳送極低功率的脈衝訊號來進行通訊，具有高精度測距、高傳輸速率、低功耗和抗干擾能力強等優點，非常適合用於室內定位和高速資料傳輸。</p>`
+                },
+                'q-format': {
+                    title: "Q-format (定點數表示法)",
+                    content: `<p>一種表示和處理有小數部分數字的方式。它將一個整數型別（如 int16_t）的位元劃分為整數部分和小數部分。例如，<b>Q9.7</b> 格式代表一個 16 位元的有號數，其中 1 位為符號位，9 位為整數部分，7 位為小數部分。這種方法讓不具備 FPU 的處理器也能高效地進行小數運算。</p>`
+                },
+                'quantization-error': {
+                    title: "量化誤差",
+                    content: `<p>指在將一個連續的、無限多的數值範圍（如類比訊號）轉換為一個離散的、有限的數值集合（如數位訊號）時所產生的誤差。在 LUT 的情境中，由於我們只能儲存有限個取樣點，因此任何落在取樣點之間的輸入值都必須被對應到最接近的點，這個過程必然會引入誤差。</p>`
+                },
+                interpolation: {
+                    title: "線性插值 (Linear Interpolation)",
+                    content: `<p>一種估算兩個已知點之間某個未知點數值的基本方法。它假設在這兩個已知點之間存在一條直線，並根據未知點在這條直線上的相對位置來計算其數值。在 LUT 優化中，它可以在不大幅增加表格大小的情況下，有效降低量化誤差，提升精度。</p>`
+                },
+                rounding: {
+                    title: "就近取整 (Rounding)",
+                    content: `<p>一種將數字近似到其最接近的某個值的過程，通常是最接近的整數。在 LUT 查表中，這是一種簡單的索引策略：將連續的輸入值（如 0.53）乘以解析度（如 128）後，對結果（67.84）進行四捨五入，得到最接近的整數索引（68）。</p>`
+                }
+            };
+
+            const modal = document.getElementById('keyword-modal');
+            if (!modal) return;
+
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalPanel = document.getElementById('modal-panel');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const closeBtn = document.getElementById('modal-close-button');
+
+            const openModal = (key) => {
+                const def = definitions[key];
+                if (!def) return;
+                modalTitle.textContent = def.title;
+                modalContent.innerHTML = def.content;
+                document.body.style.overflow = 'hidden';
+                modal.classList.remove('hidden');
+                modal.setAttribute('aria-hidden', 'false');
+                requestAnimationFrame(() => {
+                    modalBackdrop.classList.remove('opacity-0');
+                    modalPanel.classList.remove('opacity-0', 'scale-95');
+                });
+            };
+
+            const closeModal = () => {
+                document.body.style.overflow = '';
+                modalBackdrop.classList.add('opacity-0');
+                modalPanel.classList.add('opacity-0', 'scale-95');
+                modal.setAttribute('aria-hidden', 'true');
+                const onEnd = () => { modal.classList.add('hidden'); modalPanel.removeEventListener('transitionend', onEnd); };
+                modalPanel.addEventListener('transitionend', onEnd);
+            };
+
+            document.addEventListener('click', (e) => {
+                const kw = e.target.closest('.keyword');
+                if (kw && kw.dataset.keyword) {
+                    e.preventDefault();
+                    openModal(kw.dataset.keyword);
+                    return;
+                }
+
+                if (e.target === modalBackdrop || e.target.closest('#modal-close-button')) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+                    closeModal();
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>

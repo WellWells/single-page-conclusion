@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E9%9B%BB%E5%A4%A9%E7%B7%9A%E8%88%87%E7%A3%81%E5%A4%A9%E7%B7%9A-%E7%90%86%E8%AB%96-%E9%80%B2%E5%B1%95%E8%88%87%E5%B1%95%E6%9C%9B.png">
+    <meta name="twitter:description" content="本文探討電天線與磁天線的基礎原理，從電場與磁場耦合機制談起，並介紹超材料、石墨烯等先進材料，以及AI驅動設計、DSP補償等現代方法論。">
+    <meta name="twitter:title" content="電天線與磁天線-理論-進展與展望">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E9%9B%BB%E5%A4%A9%E7%B7%9A%E8%88%87%E7%A3%81%E5%A4%A9%E7%B7%9A-%E7%90%86%E8%AB%96-%E9%80%B2%E5%B1%95%E8%88%87%E5%B1%95%E6%9C%9B.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E9%9B%BB%E5%A4%A9%E7%B7%9A%E8%88%87%E7%A3%81%E5%A4%A9%E7%B7%9A-%E7%90%86%E8%AB%96-%E9%80%B2%E5%B1%95%E8%88%87%E5%B1%95%E6%9C%9B.html">
+    <meta property="og:description" content="本文探討電天線與磁天線的基礎原理，從電場與磁場耦合機制談起，並介紹超材料、石墨烯等先進材料，以及AI驅動設計、DSP補償等現代方法論。">
+    <meta property="og:title" content="電天線與磁天線-理論-進展與展望">
+    <meta name="description" content="本文探討電天線與磁天線的基礎原理，從電場與磁場耦合機制談起，並介紹超材料、石墨烯等先進材料，以及AI驅動設計、DSP補償等現代方法論。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電天線與磁天線的基礎理論、前沿進展與未來展望</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+        xintegrity="sha384-n8MVd4RsNIU0KOxRfOUPdwBYEHND+hGN8OkY5O9l0rFRAYlLRqb5EogEUioPeyrt" crossorigin="anonymous">
+
+    <!-- KaTeX JS -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+        xintegrity="sha384-XjKyOOlGwcjNTAIOvGkYEuKKAfLzNsDFeP2IVfS82dnV5qKxMgB4A7A8E3BimwyB"
+        crossorigin="anonymous"></script>
+
+    <!-- KaTeX Auto-render JS -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        xintegrity="sha384-+VBxd3r6XgURPlLJSytgoCNCIvLCbkbZgTwlJVUHkX6vNTRAtIAZtB1mOU49HC7P"
+        crossorigin="anonymous"></script>
+
+    <style>
+        /* 自訂字體 */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #0F172A;
+            /* bg-slate-900 */
+            color: #E2E8F0;
+            /* text-slate-200 */
+        }
+
+        /* 漸層文字 (上亮下深) */
+        .text-gradient {
+            background-image: linear-gradient(to bottom, #38BDF8, #A78BFA);
+            /* from-sky-400 to-purple-400 */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* 玻璃擬態卡片 */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            /* bg-slate-800 with opacity */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.5);
+            /* border-slate-700 */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* 關鍵字 Tooltip 樣式 */
+        #tooltip {
+            position: absolute;
+            display: none;
+            padding: 0.75rem 1rem;
+            /* p-3 p-4 */
+            max-width: 90vw;
+            /* 窄螢幕優化 */
+            width: 350px;
+            /*
+            font-size: 0.875rem; /* text-sm */
+            color: #E2E8F0;
+            /* text-slate-200 */
+            background: rgba(15, 23, 42, 0.9);
+            /* bg-slate-900 with opacity */
+            border: 1px solid #334155;
+            /* border-slate-700 */
+            border-radius: 0.5rem;
+            /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 50;
+            pointer-events: none;
+            /* 避免干擾滑鼠事件 */
+            transition: opacity 0.2s ease;
+        }
+
+        #tooltip-title {
+            font-weight: 700;
+            /* font-bold */
+            font-size: 1rem;
+            /* text-base */
+            color: #F8FAFC;
+            /* text-slate-50 */
+            border-bottom: 1px solid #334155;
+            /* border-slate-700 */
+            margin-bottom: 0.5rem;
+            /* mb-2 */
+            padding-bottom: 0.5rem;
+            /* pb-2 */
+        }
+
+        #tooltip-body {
+            font-size: 0.875rem;
+            /* text-sm */
+            color: #CBD5E1;
+            /* text-slate-300 */
+        }
+
+        #tooltip-details {
+            margin-top: 0.75rem;
+            /* mt-3 */
+            font-size: 0.75rem;
+            /* text-xs */
+            font-style: italic;
+            color: #94A3B8;
+            /* text-slate-400 */
+        }
+
+        /* 關鍵字底線 */
+        .keyword {
+            border-bottom: 2px dotted #60A5FA;
+            /* border-blue-400 */
+            cursor: help;
+            position: relative;
+        }
+
+        /* 表格樣式 */
+        th {
+            background-color: #1E293B;
+            /* bg-slate-800 */
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+        }
+
+        tbody tr:hover {
+            background-color: #1E293B;
+            /* bg-slate-800 */
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-200 selection:bg-purple-500 selection:text-white">
+
+    <!-- Tooltip 容器 -->
+    <div id="tooltip"></div>
+
+    <!-- 主內容容器 -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 pb-32">
+
+        <!-- Hero 區塊 -->
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight">
+                <span class="text-gradient">電天線</span> 📡 <span class="text-gradient">與</span> <span
+                    class="text-gradient">磁天線</span>
+                <span class="block text-3xl md:text-5xl mt-2 text-gradient">基礎理論、前沿進展與未來展望</span>
+            </h1>
+            <h2 class="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto">
+                一份綜合性技術報告，深入剖析從基礎原理到前沿應用的完整面貌。
+            </h2>
+        </header>
+
+        <!-- 文章摘要卡片 -->
+        <section class="mb-16">
+            <div class="glass-card rounded-xl p-8 max-w-4xl mx-auto shadow-2xl">
+                <h3 class="text-2xl font-bold mb-4 text-center">📜 <span class="text-gradient">報告摘要</span></h3>
+                <p class="text-lg text-slate-300 leading-relaxed">
+                    本報告從電磁互動作用的第一性原理出發，系統性地闡述 <span class="keyword" data-keyword="電天線">電天線</span> 與 <span class="keyword" data-keyword="磁天線">磁天線</span> 的核心定義、效能差異與分析方法。隨後，報告深入探討了
+                    <span class="keyword" data-keyword="超材料">超材料</span>、<span class="keyword"
+                        data-keyword="石墨烯">石墨烯</span>、<span class="keyword" data-keyword="液態金屬">液態金屬</span>
+                    等先進材料與製造範式如何突破傳統天線的效能邊界。接著，分析了以
+                    <span class="keyword" data-keyword="AI驅動設計">AI驅動設計</span>、<span class="keyword"
+                        data-keyword="協同設計">系統級協同設計</span> 及 <span class="keyword" data-keyword="DSP">DSP</span>
+                    數位補償為代表的現代設計方法論。最後，本報告展望了
+                    <span class="keyword" data-keyword="UWB">UWB</span>、<span class="keyword"
+                        data-keyword="近場物理學">近場物理學</span> 與 <span class="keyword" data-keyword="SAR">SAR</span>
+                    等新興領域的挑戰與機遇，並提出了未來天線設計的<strong>混合化、智慧化與可持續性</strong>發展框架。
+                </p>
+            </div>
+        </section>
+
+        <!-- 主體內容分段 -->
+        <main class="space-y-16">
+
+            <!-- 第一部分：基礎原理 -->
+            <section>
+                <h2 class="text-3xl font-bold mb-6">🏛️ <span class="text-gradient">第一部分：基礎原理 - 深入淺出</span></h2>
+
+                <!-- 超級白話文引言 -->
+                <div class="glass-card rounded-lg p-6 mb-8 space-y-3 text-lg text-slate-300 leading-relaxed">
+                    <h3 class="text-xl font-semibold text-slate-100 mb-2">🤔 為什麼要關心「電天線」與「磁天線」？</h3>
+                    <p>
+                        <strong>這跟我們有什麼關係？</strong>
+                        關係可大了！在手機或路由器旁，通常充滿了各種電路板產生的「電場雜訊」。如果用「電天線」去接收，就像在吵鬧的市場裡聽耳機；但如果改用「磁天線」（它不在乎電場雜訊），世界瞬間就安靜了，訊號接收品質立刻飆升！
+                    </p>
+                    <p>
+                        <strong>IEEE 有定義嗎？</strong>
+                        這是個好問題！IEEE (電機電子工程師學會) 主要是制定天線「效能」和「測試」的標準。而「電天線 vs
+                        磁天線」的分類，更像是物理學家和工程師用來描述天線「工作原理」的<strong>基礎物理分類</strong>，是設計天線時的第一性原理。
+                    </p>
+                    <p>
+                        本章節就是要協助打下這個堅實的基礎，讓大家秒懂這兩種天線的根本區別。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">⚡️ 核心互動機制：電場 vs 磁場</h3>
+                        <p>天線的根本分類源於其與電磁波近場的主要互動機制。</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li>
+                                <strong><span class="keyword" data-keyword="電天線">電天線</span> (如 <span class="keyword"
+                                        data-keyword="偶極天線">偶極天線</span>):</strong>
+                                透過時變<strong>電壓</strong>驅動電荷分離，形成電偶極矩，主要與電磁波的<strong>電場 (<span class="keyword"
+                                        data-keyword="E-field">E-field</span>)</strong>
+                                分量耦合。其近場呈現<strong>高阻抗</strong>與容性電抗。
+                            </li>
+                            <li>
+                                <strong><span class="keyword" data-keyword="磁天線">磁天線</span> (如 <span class="keyword"
+                                        data-keyword="環形天線">環形天線</span>):</strong>
+                                透過時變<strong>電流</strong>在閉合迴路中流動，形成磁偶極矩，主要與電磁波的<strong>磁場 (<span class="keyword"
+                                        data-keyword="H-field">H-field</span>)</strong>
+                                分量耦合。其近場呈現<strong>低阻抗</strong>與感性電抗。
+                            </li>
+                        </ul>
+                        <p class="text-sm italic text-slate-400">
+                            <strong>[術語釐清]：</strong> 一個電尺寸很小的<span class="keyword"
+                                data-keyword="環形天線">環形天線</span>，其行為在遠場就如同一個理想的<strong>磁偶極子 (Magnetic
+                                Dipole)</strong>，這就是為什麼會在第二部分看到「磁偶極天線」這個詞，它們在很多情境下指的是同一類型的天線。
+                        </p>
+                        <p>兩者之間的關係可透過電磁學中的 <span class="keyword" data-keyword="對偶性原理">對偶性原理</span> 深刻理解。</p>
+                    </div>
+
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">🌊 結構、電流與輻射</h3>
+                        <p>天線的物理結構決定了其電流分布與遠場輻射特性。</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li>
+                                <strong>半波長偶極天線:</strong> 電流呈駐波正弦分布（中心最大，兩端為零）。輻射場型在E平面呈「8」字型，H平面呈圓形，俗稱「甜甜圈」狀。
+                            </li>
+                            <li>
+                                <strong>小磁環形天線:</strong> 電流近似均勻分布。輻射場型同樣呈「甜甜圈」狀，但其電場與磁場的角色及極化方向與電偶極天線相互對調。
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 glass-card rounded-lg p-6 overflow-x-auto">
+                    <h3 class="text-xl font-semibold text-slate-100 mb-4">📊 關鍵效能指標比較 (表1)</h3>
+                    <table
+                        class="w-full min-w-max text-sm text-left text-slate-300 border-collapse border border-slate-700">
+                        <thead class="text-xs text-slate-200 uppercase">
+                            <tr>
+                                <th class="border border-slate-700">特性指標</th>
+                                <th class="border border-slate-700">電天線 (以短偶極為例)</th>
+                                <th class="border border-slate-700">磁天線 (以小環路為例)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700">
+                            <tr>
+                                <td class="border border-slate-700">主要場耦合</td>
+                                <td class="border border-slate-700">電場 (E-field)</td>
+                                <td class="border border-slate-700">磁場 (H-field)</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">近場阻抗</td>
+                                <td class="border border-slate-700">高阻抗 (High Impedance)</td>
+                                <td class="border border-slate-700">低阻抗 (Low Impedance)</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700"><span class="keyword"
+                                        data-keyword="輻射電阻">輻射電阻</span> (電小尺寸)</td>
+                                <td class="border border-slate-700">低，與 $(L/\lambda)^2$ 成正比</td>
+                                <td class="border border-slate-700">極低，與 $(A/\lambda^2)^2$ 成正比</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">典型 <span class="keyword" data-keyword="Q值">Q值</span>
+                                    (電小尺寸)</td>
+                                <td class="border border-slate-700">高 (窄頻寬)</td>
+                                <td class="border border-slate-700">非常高 (極窄頻寬)</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">主要抗雜訊類型</td>
+                                <td class="border border-slate-700">抗磁場雜訊</td>
+                                <td class="border border-slate-700"><strong>抗電場雜訊</strong> (視場景而定，在 E 場雜訊占優的室內環境中 SNR
+                                    更佳)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 💡 [SECTION] 實戰範例 -->
+                <div class="mt-8 glass-card rounded-lg p-6 overflow-x-auto">
+                    <h3 class="text-xl font-semibold text-slate-100 mb-4">💡 實戰範例：生活中的電天線與磁天線</h3>
+                    <p class="text-slate-300 mb-4 text-lg leading-relaxed">
+                        的觀察很敏銳！在高速通訊領域 (如 WiFi, 5G)，<strong>電天線</strong>確實是主流。
+                        然而，<strong>磁天線</strong>在「近場耦合」與「低頻抗噪」領域是不可或缺的王者，以下是生活中最常見的範例：
+                    </p>
+
+                    <table
+                        class="w-full min-w-max text-sm text-left text-slate-300 border-collapse border border-slate-700">
+                        <thead class="text-xs text-slate-200 uppercase">
+                            <tr>
+                                <th class="border border-slate-700">原理分類</th>
+                                <th class="border border-slate-700">範例天線</th>
+                                <th class="border border-slate-700">結構形式</th>
+                                <th class="border border-slate-700">典型應用</th>
+                                <th class="border border-slate-700">關鍵特性 / 備註</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700">
+                            <!-- 磁天線範例 -->
+                            <tr class="bg-slate-800/50">
+                                <td class="border border-slate-700 font-bold" rowspan="2">🧲 磁天線 (磁場耦合)</td>
+                                <td class="border border-slate-700">NFC 天線</td>
+                                <td class="border border-slate-700">扁平螺旋線圈 (Coil)</td>
+                                <td class="border border-slate-700">信用卡感應、悠遊卡、Apple Pay</td>
+                                <td class="border border-slate-700"><strong>核心原理：</strong>近場「電感耦合」，交換磁場能量。</td>
+                            </tr>
+                            <tr class="bg-slate-800/50">
+                                <td class="border border-slate-700">AM 廣播天線</td>
+                                <td class="border border-slate-700">纏繞在鐵氧體磁棒上的線圈</td>
+                                <td class="border border-slate-700">傳統收音機 (低頻/中頻)</td>
+                                <td class="border border-slate-700"><strong>核心優勢：</strong>抗電場雜訊，訊雜比(SNR)極高。</td>
+                            </tr>
+
+                            <!-- 電天線範例 -->
+                            <tr>
+                                <td class="border border-slate-700 font-bold" rowspan="7">⚡️ 電天線 (電場耦合)</td>
+                                <td class="border border-slate-700">手機天線</td>
+                                <td class="border border-slate-700">PIFA (平面倒F)、貼片、槽孔</td>
+                                <td class="border border-slate-700">智慧型手機 (4G/5G/WiFi)</td>
+                                <td class="border border-slate-700">易受「手部效應」干擾 (電場被吸收)，影響SAR。</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">WiFi 天線</td>
+                                <td class="border border-slate-700">外部鞭狀 (偶極)、PCB印刷 (倒F)</td>
+                                <td class="border border-slate-700">路由器、筆記型電腦</td>
+                                <td class="border border-slate-700">主流應用，易於PCB集成，多頻段設計。</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">八木天線 (Yagi)</td>
+                                <td class="border border-slate-700">驅動單元(偶極)+寄生元件</td>
+                                <td class="border border-slate-700">傳統電視接收、業餘無線電</td>
+                                <td class="border border-slate-700">高增益、強方向性。</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">碟型天線 (Dish)</td>
+                                <td class="border border-slate-700">拋物面 + 饋源 (Feedhorn)</td>
+                                <td class="border border-slate-700">衛星電視、地面微波站</td>
+                                <td class="border border-slate-700">高指向性，拋物面將電場聚焦到饋源。</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">Starlink 天線</td>
+                                <td class="border border-slate-700">大規模「相控陣列」平板</td>
+                                <td class="border border-slate-700">家用寬頻衛星網路</td>
+                                <td class="border border-slate-700">由大量電天線單元組成，用相位控制波束。</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">UWB 天線</td>
+                                <td class="border border-slate-700">Vivaldi, 貼片, 螺旋等寬頻結構</td>
+                                <td class="border border-slate-700">室內定位、感測</td>
+                                <td class="border border-slate-700"><strong>核心指標：</strong>低「群延遲變化」，確保脈衝不失真。</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">RFID 天線</td>
+                                <td class="border border-slate-700">UHF: 電偶極 / HF: 磁線圈</td>
+                                <td class="border border-slate-700">高速公路 ETC (UHF)、倉儲 (UHF/HF)</td>
+                                <td class="border border-slate-700">UHF (遠距) 用電場 / HF (近距) 用磁場。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 第二部分：先進材料 -->
+            <section>
+                <h2 class="text-3xl font-bold mb-6">🔬 <span class="text-gradient">第二部分：先進材料與製造範式</span></h2>
+
+                <!-- 本章節引言 -->
+                <div class="glass-card rounded-lg p-6 mb-8 space-y-3 text-lg text-slate-300 leading-relaxed">
+                    <p>
+                        我們已經知道了電天線與磁天線的基本原理。那...談這些新材料幹嘛？🤔
+                    </p>
+                    <p>
+                        關鍵在於：<strong>這些先進材料正徹底改變這兩種天線的設計規則與效能天花板！</strong>
+                        例如，<span class="keyword" data-keyword="超材料">超材料</span>可以客製化天線周圍的電磁環境，把一個效能普通的「電天線」變成功率猛獸；而<span class="keyword" data-keyword="石墨烯">石墨烯</span>則讓天線在太赫茲頻段成為可能。本章節將探討這些材料如何分別強化「電」與「磁」的特性。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="glass-card rounded-lg p-6 space-y-4 lg:col-span-2">
+                        <h3 class="text-xl font-semibold text-slate-100">🤖 <span class="keyword"
+                                data-keyword="超材料">超材料</span>工程：小型化與效能增強</h3>
+                        <p>
+                            <span class="keyword" data-keyword="超材料">超材料</span> (Metamaterials)
+                            是由亞波長結構單元構成的人工材料，能展現如負電容率 ($\epsilon < 0$) 或負磁導率 ($\mu < 0$) 的奇特特性。其二維形式 <span class="keyword" data-keyword="超表面">超表面</span> (Metasurface) 更易於集成。
+                        </p>
+                        <p>
+                            透過將超材料「配置」到天線周圍，可工程化局部電磁環境，改善阻抗匹配並增強輻射。這種增強具有<strong>選擇性</strong>：
+                        </p>
+                        <div class="overflow-x-auto mt-4">
+                            <table
+                                class="w-full min-w-max text-sm text-left text-slate-300 border-collapse border border-slate-700">
+                                <thead class="text-xs text-slate-200 uppercase">
+                                    <tr>
+                                        <th class="border border-slate-700">天線類型</th>
+                                        <th class="border border-slate-700">用於增強的超材料特性</th>
+                                        <th class="border border-slate-700">物理機制</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700">
+                                    <tr>
+                                        <td class="border border-slate-700">電偶極天線 (高阻抗源)</td>
+                                        <td class="border border-slate-700">零電容率 (<span class="keyword"
+                                                data-keyword="ENZ">ENZ</span>) / 甚大磁導率 (MVL)</td>
+                                        <td class="border border-slate-700">提升介質波阻抗 $\eta = \sqrt{\mu/\epsilon}$，改善匹配
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="border border-slate-700">磁偶極天線 (低阻抗源)</td>
+                                        <td class="border border-slate-700">零磁導率 (<span class="keyword"
+                                                data-keyword="MNZ">MNZ</span>) / 甚大電容率 (EVL)</td>
+                                        <td class="border border-slate-700">降低介質波阻抗 $\eta = \sqrt{\mu/\epsilon}$，改善匹配
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">✨ 二維材料：<span class="keyword"
+                                data-keyword="石墨烯">石墨烯</span></h3>
+                        <p>
+                            <span class="keyword" data-keyword="石墨烯">石墨烯</span> (Graphene)
+                            的導電性可透過外部柵極電壓動態調諧（改變其化學勢），使其成為可重構天線的理想平台。
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li><strong>太赫茲(THz)應用:</strong> 能支援低損耗的 <span class="keyword" data-keyword="SPP">SPP</span>
+                                波，使天線尺寸縮小1-2個數量級。</li>
+                            <li><strong>可重構性:</strong> 可實現頻率調諧、波束掃描與賦形。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">💧 新型態因子</h3>
+                        <p>
+                            <strong><span class="keyword" data-keyword="液態金屬">液態金屬</span> (如 <span class="keyword"
+                                    data-keyword="EGaIn">EGaIn</span>):</strong>
+                            具有極致的機械柔韌性與可拉伸性，適用於穿戴式裝置和軟體機器人。其重構是<strong>機械式</strong>的（改變流體形狀）。
+                        </p>
+                        <p>
+                            <strong><span class="keyword" data-keyword="增材製造">增材製造</span> (3D列印):</strong>
+                            提供前所未有的幾何自由度，可製造複雜三維結構、實現輕量化並快速原型製作。
+                        </p>
+                    </div>
+                    <div class="glass-card rounded-lg p-6 overflow-x-auto lg:col-span-2">
+                        <h3 class="text-xl font-semibold text-slate-100 mb-4">先進天線材料比較 (表3)</h3>
+                        <table
+                            class="w-full min-w-max text-sm text-left text-slate-300 border-collapse border border-slate-700">
+                            <thead class="text-xs text-slate-200 uppercase">
+                                <tr>
+                                    <th class="border border-slate-700">特性</th>
+                                    <th class="border border-slate-700"><span class="keyword"
+                                            data-keyword="石墨烯">石墨烯</span></th>
+                                    <th class="border border-slate-700"><span class="keyword"
+                                            data-keyword="液態金屬">液態金屬</span></th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700">
+                                <tr>
+                                    <td class="border border-slate-700">主要優勢</td>
+                                    <td class="border border-slate-700">電控可調諧性、支援THz <span class="keyword"
+                                            data-keyword="SPP">SPP</span> 波</td>
+                                    <td class="border border-slate-700">極致的機械柔韌性與可拉伸性</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700">重構機制</td>
+                                    <td class="border border-slate-700">電子調諧 (改變化學勢)</td>
+                                    <td class="border border-slate-700">機械重構 (物理改變形狀)</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700">目標頻段</td>
+                                    <td class="border border-slate-700">太赫茲 (THz)、紅外</td>
+                                    <td class="border border-slate-700">射頻 (RF)、微波</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-700">關鍵應用</td>
+                                    <td class="border border-slate-700">可重構智慧表面、THz通訊</td>
+                                    <td class="border border-slate-700">穿戴式裝置、軟體機器人</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第三部分：現代設計方法論 -->
+            <section>
+                <h2 class="text-3xl font-bold mb-6">🧠 <span class="text-gradient">第三部分：現代設計方法論與系統級集成</span></h2>
+
+                <!-- 本章節引言 -->
+                <div class="glass-card rounded-lg p-6 mb-8 space-y-3 text-lg text-slate-300 leading-relaxed">
+                    <p>
+                        大家可能會想：AI、電路...這跟「電天線 vs 磁天線」有什麼關係？🧐
+                    </p>
+                    <p>
+                        關係可大了！在現代，天線不是孤立的。<strong>本章節將告訴大家，「選擇」電天線還是磁天線，不再只是個純粹的物理問題，更是一個看場景、看需求的「多維度戰略布局」。</strong>
+                        例如，AI 可以幫我們設計出反直覺的「混合型」天線；而強大的 <span class="keyword" data-keyword="DSP">DSP</span>
+                        演算法，可能讓我們能容忍一個物理效能稍差但體積更小的「電天線」，因為它能在數位世界把訊號「救」回來！
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">💡 <span class="keyword"
+                                data-keyword="AI驅動設計">AI驅動設計</span></h3>
+                        <p>
+                            AI 正在改變傳統依賴經驗和耗時模擬的設計流程。
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li><strong><span class="keyword" data-keyword="代理模型">代理模型</span> (Surrogate
+                                    Modeling):</strong>
+                                訓練ML模型（如神經網路）來學習參數與效能的映射，以毫秒級速度取代數小時的物理模擬，極大加速優化過程。
+                            </li>
+                            <li><strong><span class="keyword" data-keyword="逆向設計">逆向設計</span> (Inverse Design):</strong>
+                                使用生成式AI（如GANs），直接「給定效能需求，生成物理結構」，將設計從「分析優化」轉變為「合成創造」。
+                            </li>
+                        </ul>
+                        <p class="text-sm italic text-slate-400 mt-2">
+                            <strong>(註：目前AI生成結果仍需經全波模擬驗證，以避免過度擬合(overfit))</strong>
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">🔗 <span class="keyword"
+                                data-keyword="協同設計">系統級協同設計</span></h3>
+                        <p>
+                            天線不再是獨立元件。在 5G 智慧型手機等緊湊設備中，天線必須與 <span class="keyword" data-keyword="RFFE">RFFE</span>
+                            (射頻前端) 電路進行<strong>協同設計</strong>。
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li><strong>空間約束:</strong> 天線近場會與 RFFE 電路相互作用，必須在系統級進行電磁模擬。</li>
+                            <li><strong>阻抗匹配:</strong> 匹配網路需考慮從 PA 到天線的整個訊號鏈路，以避免訊號反射 (高SWR)。</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">🎛️ 數位域的補償</h3>
+                        <p>
+                            與其追求完美的模擬硬體，不如接受硬體缺陷，並在數位域透過 <span class="keyword" data-keyword="DSP">DSP</span> (數位訊號處理)
+                            進行精確補償。
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li><strong>數位均衡:</strong> 透過 FIR 濾波器補償天線和模擬鏈路不平坦的幅頻與相頻響應 (此能力也與 <span class="keyword"
+                                    data-keyword="UWB">UWB</span> 系統追求的「<span class="keyword"
+                                    data-keyword="群延遲">群延遲</span>均勻性」目標相呼應)。</li>
+                            <li><strong><span class="keyword" data-keyword="LDSP">LDSP</span> (可學習的DSP):</strong>
+                                將整個DSP鏈視為神經網路，全域優化以補償複雜損傷。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 第四部分：擴展效能邊界 -->
+            <section>
+                <h2 class="text-3xl font-bold mb-6">🚀 <span class="text-gradient">第四部分：擴展效能邊界與新興領域</span></h2>
+
+                <!-- 本章節引言 -->
+                <div class="glass-card rounded-lg p-6 mb-8 space-y-3 text-lg text-slate-300 leading-relaxed">
+                    <p>
+                        傳統指標 (增益、頻寬) 已不足夠。<strong>本章節將探討一些正在成為關鍵的新維度，這些維度將直接決定未來該選用電天線還是磁天線。</strong>
+                    </p>
+                    <p>
+                        例如，在 <span class="keyword" data-keyword="UWB">UWB</span> 系統中，天線的時間保真度 (脈衝不失真) 遠比增益重要；在 6G
+                        時代，天線的「近場」特性將成為安全的關鍵；而在手機上，「SAR」更是決定天線能否被使用的生死線。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">⏱️ <span class="keyword"
+                                data-keyword="UWB">UWB</span> 系統的時間域特性</h3>
+                        <p>
+                            <span class="keyword" data-keyword="UWB">UWB</span> (超寬頻) 系統發射納秒級脈衝，其天線效能評估必須從頻域轉向時域。
+                        </p>
+                        <p>
+                            為確保脈衝不失真 (避免符號間干擾 ISI)，天線系統的相位響應必須是線性的，即其<strong><span class="keyword"
+                                    data-keyword="群延遲">群延遲</span> (Group Delay)</strong>
+                            在整個工作頻帶內必須為一個<strong>常數</strong>。
+                        </p>
+                    </div>
+
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">❤️‍🩹 人體-天線互動作用 (<span class="keyword"
+                                data-keyword="SAR">SAR</span>)</h3>
+                        <p>
+                            <span class="keyword" data-keyword="SAR">SAR</span> (特定吸收率)
+                            衡量人體組織吸收電磁能量的速率，是可穿戴/手持裝置的關鍵安全指標。這與所謂的「手部效應」 (Hand Effect) 密切相關。
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li><strong>電場耦合 (電天線):</strong> 近電場是SAR的主要貢獻者。人手會強烈吸收電場能量，導致訊號衰減（效率降低、失諧）和高SAR值。</li>
+                            <li><strong>磁場耦合 (磁天線):</strong>
+                                近磁場與人體耦合效率<strong>通常</strong>低於電場。<strong>[修正]：</strong>這不代表 SAR 天然較低，但在特定手持/可穿戴設計下，採取「弱
+                                E 場耦合」或「磁場均勻化」的策略，有助於在同等輻射功率下降低峰值 SAR。</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 glass-card rounded-lg p-6 overflow-x-auto">
+                    <h3 class="text-xl font-semibold text-slate-100 mb-4">🔒 <span class="keyword"
+                            data-keyword="近場物理學">近場物理學</span> 與安全 (表4)</h3>
+                    <p class="mb-4 text-slate-300">
+                        隨著超大規模天線陣列 (<span class="keyword" data-keyword="ELAA">ELAA</span>) 的發展，通訊距離可能落入近場區域，這為物理層安全
+                        (<span class="keyword" data-keyword="PLS">PLS</span>) 帶來了革命性機遇。
+                    </p>
+                    <table
+                        class="w-full min-w-max text-sm text-left text-slate-300 border-collapse border border-slate-700">
+                        <thead class="text-xs text-slate-200 uppercase">
+                            <tr>
+                                <th class="border border-slate-700">特性</th>
+                                <th class="border border-slate-700">遠場通訊 (Far-Field)</th>
+                                <th class="border border-slate-700">近場通訊 (Near-Field)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700">
+                            <tr>
+                                <td class="border border-slate-700">波前模型</td>
+                                <td class="border border-slate-700">平面波 (Planar Wave)</td>
+                                <td class="border border-slate-700">球面波 (Spherical Wave)</td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">主要波束特性</td>
+                                <td class="border border-slate-700">方向性 (Directionality)</td>
+                                <td class="border border-slate-700"><strong><span class="keyword"
+                                            data-keyword="波束聚焦">波束聚焦</span> (Beam-Focusing)</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">安全基礎</td>
+                                <td class="border border-slate-700">角度分離 (Angular Separation)</td>
+                                <td class="border border-slate-700"><strong>距離差異 (Distance Disparity)</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="border border-slate-700">安全漏洞</td>
+                                <td class="border border-slate-700">無法區分「共線竊聽者」</td>
+                                <td class="border border-slate-700">可透過「波束聚焦」解決共線竊聽問題</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 第五部分：綜合分析與未來 -->
+            <section>
+                <h2 class="text-3xl font-bold mb-6">🧭 <span class="text-gradient">第五部分：綜合分析與未來展望</span></h2>
+
+                <!-- 本章節引言 -->
+                <div class="glass-card rounded-lg p-6 mb-8 space-y-3 text-lg text-slate-300 leading-relaxed">
+                    <p>
+                        來到最後的總結！🚀 我們將把前面所有的拼圖——基礎原理、先進材料、系統思維、特殊應用——全部組合起來。
+                    </p>
+                    <p>
+                        <strong>我們會發現，現代天線設計不再是「電天線 vs 磁天線」的二選一單選題，而是一個看場景、看需求的「多維度戰略布局」。</strong>
+                        本章節將提供一個決策框架，並展望天線的未來：它們將如何變得更聰明、更環保。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 items-start">
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">🎯 面向特定應用的選擇框架</h3>
+                        <p>
+                            現代天線選擇已是多維度優化問題。傳統的「電 vs 磁」分類已不足夠，必須綜合考慮：
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li><strong>物理域 (Physical):</strong> 幾何型態、材料選擇 (如<span class="keyword"
+                                    data-keyword="石墨烯">石墨烯</span>/ <span class="keyword"
+                                    data-keyword="液態金屬">液態金屬</span>)、製造製程 (如3D列印)。</li>
+                            <li><strong>電磁域 (EM):</strong> 頻率、頻寬、增益、極化、近/遠場特性、<span class="keyword"
+                                    data-keyword="SAR">SAR</span> 合規性。</li>
+                            <li><strong>系統域 (System):</strong> 與 <span class="keyword" data-keyword="RFFE">RFFE</span>
+                                的<span class="keyword" data-keyword="協同設計">協同設計</span>、功耗預算、熱管理。</li>
+                            <li><strong>數位域 (Digital):</strong> <span class="keyword" data-keyword="DSP">DSP</span>
+                                補償潛力。</li>
+                            <li><strong>應用域 (Application):</strong> 關鍵KPI (例如 <span class="keyword"
+                                    data-keyword="UWB">UWB</span> 的<span class="keyword"
+                                    data-keyword="群延遲">群延遲</span>、<span class="keyword" data-keyword="PLS">PLS</span>
+                                的保密容量)。</li>
+                        </ul>
+                    </div>
+
+                    <div class="glass-card rounded-lg p-6 space-y-4">
+                        <h3 class="text-xl font-semibold text-slate-100">🌱 天線設計的未來</h3>
+                        <p>
+                            天線工程將朝著更加集成、智慧和環保的方向發展：
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li><strong>混合化:</strong> 如 <span class="keyword" data-keyword="ME Dipole">ME Dipole</span>
+                                天線，巧妙結合電偶極與磁偶極，實現超寬頻與穩定方向圖。</li>
+                            <li><strong>智慧化:</strong>
+                                <div>融合可調材料、可重構RFFE與 <span class="keyword"
+                                        data-keyword="LDSP">LDSP</span>，實現真正的認知與自適應天線系統。</div>
+                            </li>
+                            <li><strong>可持續性:</strong> 引入 <span class="keyword" data-keyword="LCA">LCA</span>
+                                (生命週期評估)，關注可回收材料與「綠色」電子設計。</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 結論 -->
+            <section class="mt-16">
+                <div class="glass-card rounded-xl p-8 max-w-4xl mx-auto shadow-2xl">
+                    <h3 class="text-2xl font-bold mb-4 text-center">🏁 <span class="text-gradient">總結</span></h3>
+                    <p class="text-lg text-slate-300 leading-relaxed text-center">
+                        電天線與磁天線的劃分是理解天線物理學的基石，但在先進材料、智慧演算法和系統級思維的推動下，天線設計正從一門基於幾何的藝術，演變為一門跨學科的系統科學。未來的天線將不再是靜態元件，而是<strong>動態、智慧、高效且環保</strong>的複雜系統，成為連接物理世界與數位世界的關鍵紐帶。
+                    </p>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer
+        class="fixed bottom-0 left-0 right-0 bg-slate-900 bg-opacity-80 backdrop-blur-sm border-t border-slate-700 p-4 text-center z-40">
+        <p class="text-sm text-slate-400">
+            <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="hover:text-sky-400 transition-colors">
+                Generated by wellstsai.com
+            </a>
+            <span class="mx-2">|</span>
+            撰寫日期：2025-10-31
+        </P>
+    </footer>
+
+    <script>
+        // KaTeX 自動渲染配置
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false
+            });
+        });
+
+        // 專有名詞 Tooltip 資料
+        const keywordData = {
+            "E-field": {
+                title: "電場 (E-field)",
+                body: "由電荷產生或時變磁場所感應的力場。電天線主要透過與電場耦合來輻射或接收能量。",
+                details: "在近場區，電天線周圍的能量主要儲存在電場中。"
+            },
+            "H-field": {
+                title: "磁場 (H-field)",
+                body: "由移動電荷（電流）產生或時變電場所感應的力場。磁天線主要透過與磁場耦合來輻射或接收能量。",
+                details: "在近場區，磁天線周圍的能量主要儲存在磁場中。"
+            },
+            "電天線": {
+                title: "電天線 (Electric Antenna)",
+                body: "主要與電磁波的電場 (E-field) 分量進行耦合的天線。其本質是開放式導體結構。",
+                details: "典型代表：偶極天線、單極天線。近場呈高阻抗、容性。"
+            },
+            "磁天線": {
+                title: "磁天線 (Magnetic Antenna)",
+                body: "主要與電磁波的磁場 (H-field) 分量進行耦合的天線。其本質是閉合迴路導體結構。",
+                details: "典型代表：環形天線。近場呈低阻抗、感性。對電場雜訊不敏感。"
+            },
+            "偶極天線": {
+                title: "偶極天線 (Dipole Antenna)",
+                body: "最經典的電天線形式，由兩段導體構成，從中心饋入。電荷在兩端積聚形成電偶極矩。",
+                details: "半波長偶極天線的電流呈正弦分布，輻射圖呈「甜甜圈」狀。"
+            },
+            "環形天線": {
+                title: "環形天線 (Loop Antenna)",
+                body: "最經典的磁天線形式，由閉合的導體環路構成。環狀電流產生磁偶極矩。",
+                details: "電小環形天線的電流近似均勻，輻射圖也呈「甜甜圈」狀。"
+            },
+            "馬克士威方程組": {
+                title: "馬克士威方程組 (Maxwell's Equations)",
+                body: "一組描述電場、磁場與電荷、電流之間關係的偏微分方程組，是經典電磁學的基礎。",
+                details: "方程組揭示了時變電場產生磁場，時變磁場產生電場，這是電磁波傳播的根本原因。"
+            },
+            "對偶性原理": {
+                title: "對偶性原理 (Duality Principle)",
+                body: "電磁學中的一個深刻原理。若將馬克士威方程組中的 $E$ 與 $H$ 互換，同時將 $\epsilon$ 與 $\mu$ 互換，方程形式保持不變。",
+                details: "這意味著電天線的解可透過對偶變換得到磁天線的解。"
+            },
+            "輻射電阻": {
+                title: "輻射電阻 ($R_{rad}$)",
+                body: "衡量天線將輸入功率轉化為輻射電磁波能力的等效電阻。",
+                details: "電小天線的 $R_{rad}$ 通常極低。電偶極 $R_{rad} \propto (L/\lambda)^2$，而小環路 $R_{rad} \propto (A/\lambda^2)^2$，四次方縮放使其在同等電尺寸下更難高效率輻射，因此對歐姆損耗 $R_{loss}$ 非常敏感。"
+            },
+            "Q值": {
+                title: "品質因數 (Q factor)",
+                body: "衡量天線儲存能量與輻射/耗散能量之比。高Q值意味著天線儲能遠大於輻射能量。",
+                details: "電小天線因近場儲存大量無功電能，Q值非常高，根據「丘限制」，高Q值意味著極窄的頻寬。"
+            },
+            "丘限制": {
+                title: "丘限制 (Chu Limit)",
+                body: "一個基礎物理限制，定義了給定電尺寸下，天線可實現的最小Q值（即最大頻寬）。",
+                details: "這表明天線的小型化 (size) 和頻寬 (bandwidth) 之間存在不可避免的物理權衡。"
+            },
+            "超材料": {
+                title: "超材料 (Metamaterials)",
+                body: "由亞波長週期性結構單元構成的人工複合材料，能展現自然界不存在的宏觀電磁特性。",
+                details: "例如負電容率 ($\epsilon < 0$)、負磁導率 ($\mu < 0$) 或近零折射率 (NZR)。"
+            },
+            "超表面": {
+                title: "超表面 (Metasurface)",
+                body: "超材料的二維 (2D) 等效形式。它是在一個平面上排列的亞波長散射單元，用於調控電磁波的相位、幅度和極化。",
+                details: "因其平面結構，超表面比3D超材料更易於製造和集成。"
+            },
+            "ENZ": {
+                title: "零電容率 (Epsilon-Near-Zero, ENZ)",
+                body: "一種超材料特性，其有效電容率 $\epsilon_{eff}$ 在工作頻率附近趨近於零。",
+                details: "ENZ材料能提升介質的等效波阻抗 $\eta = \sqrt{\mu/\epsilon}$，適用於增強高阻抗的電偶極天線。"
+            },
+            "MNZ": {
+                title: "零磁導率 (Mu-Near-Zero, MNZ)",
+                body: "一種超材料特性，其有效磁導率 $\mu_{eff}$ 在工作頻率附近趨近於零。",
+                details: "MNZ材料能降低介質的等效波阻抗 $\eta = \sqrt{\mu/\epsilon}$，適用於增強低阻抗的磁偶極天線。"
+            },
+            "石墨烯": {
+                title: "石墨烯 (Graphene)",
+                body: "一種單原子層厚的二維碳材料，具有優異的導電性、機械柔韌性，以及可調諧的電導率。",
+                details: "透過施加柵極電壓改變其化學勢（費米能級），可動態控制其導電性，是可重構天線的理想材料。"
+            },
+            "SPP": {
+                title: "表面等離極化激元 (Surface Plasmon Polariton)",
+                body: "一種被束縛在導體-介電質介面上傳播的電磁波，其波長遠小於自由空間波長。",
+                details: "石墨烯能在太赫茲 (THz) 頻段支援低損耗的SPP波，使得THz天線尺寸能縮小1-2個數量級。"
+            },
+            "液態金屬": {
+                title: "液態金屬 (Liquid Metal)",
+                body: "在室溫下保持液態的金屬合金，具有高導電性和極致的機械柔韌性。",
+                details: "常用如共晶鎵銦 (EGaIn) 和鎵銦錫合金 (Galinstan)。"
+            },
+            "EGaIn": {
+                title: "共晶鎵銦 (EGaIn)",
+                body: "一種無毒的室溫液態金屬合金，是柔性、可拉伸電子裝置和天線的常用材料。",
+                details: "其流體特性使其可被封裝在彈性基材的微通道中，實現機械重構。"
+            },
+            "增材製造": {
+                title: "增材製造 (Additive Manufacturing)",
+                body: "俗稱3D列印。與傳統減材製造（如CNC銑削）相反，它透過逐層疊加材料來構建三維物體。",
+                details: "為天線設計提供了極大的幾何自由度，能製造傳統製程無法實現的複雜共形結構。"
+            },
+            "AI驅動設計": {
+                title: "AI驅動的天線設計",
+                body: "利用人工智慧（特別是機器學習）技術來輔助或全自動化天線設計流程。",
+                details: "主要包括代理模型（加速優化）和逆向設計（直接生成結構）。"
+            },
+            "代理模型": {
+                title: "代理模型 (Surrogate Modeling)",
+                body: "一種機器學習技術。訓練一個ML模型來學習「天線幾何參數」與「電磁效能」之間的複雜映射關係。",
+                details: "此模型能以毫秒級速度預測效能，取代耗時的電磁模擬，從而極大加速優化演算法的搜索過程。"
+            },
+            "逆向設計": {
+                title: "逆向設計 (Inverse Design)",
+                body: "一種設計範式轉移。目標是解決「逆向問題」：給定期望的效能指標，直接生成滿足要求的物理結構。",
+                details: "常使用生成對抗網路 (GANs) 等生成式AI模型來實現。"
+            },
+            "RFFE": {
+                title: "射頻前端 (RF Front-End)",
+                body: "位於天線和數位基帶之間的所有模擬電路，是無線通訊系統的核心元件。",
+                details: "通常包括功率放大器(PA)、低雜訊放大器(LNA)、濾波器(Filter)、開關(Switch)和匹配網路。"
+            },
+            "協同設計": {
+                title: "協同設計 (Co-design)",
+                body: "一種系統級設計方法，要求將天線與射頻前端 (RFFE) 電路視為一個高度耦合的整體，進行聯合模擬和優化。",
+                details: "在空間受限的現代設備中（如手機），天線與電路的近場互動作用不可忽略。"
+            },
+            "DSP": {
+                title: "數位訊號處理 (Digital Signal Processing)",
+                body: "在數位域中對訊號進行處理（如濾波、均衡、調製解調等）的技術。",
+                details: "可用於補償天線、RFFE等模擬硬體的物理缺陷（如非線性響應）。"
+            },
+            "LDSP": {
+                title: "可學習的DSP (Learnable DSP)",
+                body: "一種新興趨勢，將傳統的DSP處理鏈視為一個端到端的神經網路框架。",
+                details: "利用深度學習的反向傳播演算法，全域性地聯合優化所有DSP模組的參數，以「學習」到補償複雜損傷的最佳策略。"
+            },
+            "UWB": {
+                title: "超寬頻 (Ultra-Wideband)",
+                body: "一種通訊技術，它不使用傳統的載波，而是透過發射持續時間極短（納秒級）的脈衝來傳輸資料。",
+                details: "這些脈衝在頻域上佔據數GHz的極寬頻寬。UWB天線設計的核心是保證脈衝的時間域保真度。"
+            },
+            "群延遲": {
+                title: "群延遲 (Group Delay)",
+                body: "衡量訊號中不同頻率分量通過系統所需時間的物理量。定義為相位響應對角頻率的負導數：$\tau_g(\omega) = -d\phi(\omega)/d\omega$。",
+                details: "為保證UWB脈衝不失真，群延遲應為常數。群延遲隨頻率的變化（Group Delay Variation）是UWB天線的關鍵指標。"
+            },
+            "近場物理學": {
+                title: "近場物理學 (Near-Field Physics)",
+                body: "研究電磁波在靠近源（天線）的「近場」區域內的行為。在此區域，電磁波不是平面波，而是球面波。",
+                details: "傳統通訊在遠場進行，但6G和ELAA的發展使得利用近場特性（如波束聚焦）進行通訊和增強安全 (PLS) 成為可能。"
+            },
+            "ELAA": {
+                title: "超大規模天線陣列 (Extremely Large Antenna Arrays)",
+                body: "由成百上千個天線單元組成的大規模陣列，是6G等未來通訊系統的關鍵技術。",
+                details: "當陣列尺寸極大時，通訊距離很可能落在陣列的「近場」輻射區內。"
+            },
+            "波束聚焦": {
+                title: "波束聚焦 (Beam-Focusing)",
+                body: "近場通訊中大規模天線陣列的一種能力。由於考慮了球面波前，陣列不僅能控制波束的角度，還能控制其距離。",
+                details: "這使得能量能匯聚到空間中的一個三維有限區域（焦點），而非遠場的無限延伸射線。"
+            },
+            "PLS": {
+                title: "物理層安全 (Physical Layer Security)",
+                body: "利用無線信道的物理特性（如雜訊、衰落、干擾）來保護資訊傳輸機密性的安全技術。",
+                details: "近場的「波束聚焦」能力提供了基於「距離差異」的PLS，可防禦遠場所無法防禦的「共線竊聽者」。"
+            },
+            "SAR": {
+                title: "特定吸收率 (SAR) 與手部效應 (Hand Effect)",
+                body: "SAR (Specific Absorption Rate) 衡量人體組織吸收電磁能量（轉化為熱量）的速率。這是手機等設備的關鍵安全指標。",
+                details: "電天線（如PIFA）的近場是強電場，人手（高介電質）會強烈吸收電能，導致 (1) 訊號變差（效率下降、失諧）(2) 高SAR值。反之，磁天線的近場是磁場，人手對磁場耦合較弱。<strong>[修正]：</strong>這不代表 SAR 必然較低，但在特定手持裝置中，採用弱電場耦合的磁天線設計，是降低 SAR 和手部效應的有效策略之一。"
+            },
+            "ME Dipole": {
+                title: "磁電偶極天線 (Magneto-Electric Dipole)",
+                body: "一種先進的混合式天線，巧妙地將一個電偶極子和一個磁偶極子組合在一個緊湊的結構中。",
+                details: "透過同時激發這兩個互補的輻射單元，可實現超寬頻、穩定的前後向比和對稱的輻射方向圖。"
+            },
+            "LCA": {
+                title: "生命週期評估 (Life Cycle Assessment)",
+                body: "一種評估產品或技術在其整個生命週期（從原材料開採、製造、使用到廢棄處理）中對環境影響的標準方法。",
+                details: "正被引入天線設計領域，以推動可持續發展和「綠色」材料的使用。"
+            }
+        };
+
+        // Tooltip 顯示與定位邏G
+        const tooltip = document.getElementById('tooltip');
+        const keywords = document.querySelectorAll('.keyword');
+
+        function showTooltip(e, keyword) {
+            const data = keywordData[keyword];
+            if (!data) return;
+
+            // 構建 Tooltip 內容
+            let content = `<div id="tooltip-title">${data.title}</div>`;
+            content += `<div id="tooltip-body">${data.body}</div>`;
+            if (data.details) {
+                content += `<div id="tooltip-details">${data.details}</div>`;
+            }
+
+            tooltip.innerHTML = content;
+
+            // **關鍵：動態渲染 Tooltip 中的 KaTeX**
+            try {
+                renderMathInElement(tooltip, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    throwOnError: false
+                });
+            } catch (error) {
+                console.warn("KaTeX render error in tooltip:", error);
+            }
+
+            tooltip.style.display = 'block';
+            moveTooltip(e); // 立即定位
+        }
+
+        function hideTooltip() {
+            tooltip.style.display = 'none';
+        }
+
+        function moveTooltip(e) {
+            if (tooltip.style.display !== 'block') return;
+
+            const tooltipRect = tooltip.getBoundingClientRect();
+            const tooltipWidth = tooltipRect.width;
+            const tooltipHeight = tooltipRect.height;
+
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const scrollY = window.scrollY;
+
+            let left = e.pageX + 15;
+            let top = e.pageY + 15;
+
+            // 窄螢幕寬度限制 (已在 CSS 中用 max-width: 90vw 和 width: 350px 處理)
+
+            // 偵測右邊界
+            if (left + tooltipWidth > viewportWidth - 15) {
+                left = e.pageX - 15 - tooltipWidth;
+            }
+
+            // 偵測左邊界 (如果翻轉後還是超出)
+            if (left < 15) {
+                left = 15;
+            }
+
+            // 偵測下邊界
+            if (top + tooltipHeight > viewportHeight + scrollY - 15) {
+                top = e.pageY - 15 - tooltipHeight;
+            }
+
+            // 偵測上邊界 (如果翻轉後還是超出)
+            if (top < scrollY + 15) {
+                top = scrollY + 15;
+            }
+
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+        }
+
+        keywords.forEach(keyword => {
+            const keywordName = keyword.getAttribute('data-keyword') || keyword.textContent;
+
+            keyword.addEventListener('mouseover', (e) => {
+                showTooltip(e, keywordName);
+            });
+
+            keyword.addEventListener('mousemove', moveTooltip);
+
+            keyword.addEventListener('mouseout', hideTooltip);
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/M1-%E9%96%80%E7%A6%81%E5%8D%A1%E5%AE%89%E5%85%A8%E6%80%A7-%E6%8A%80%E8%A1%93%E6%BC%8F%E6%B4%9E%E8%88%87%E9%A2%A8%E9%9A%AA%E8%A9%95%E4%BC%B0.png">
+    <meta name="twitter:description" content="為什麼你的門禁卡不安全？本文揭密 M1 晶片（Mifare Classic）運作原理與嚴重漏洞，帶你了解為何傳統感應卡在駭客眼中如同「裸奔」，以及如何防範卡片被輕易盜拷的風險。">
+    <meta name="twitter:title" content="為什麼你的門禁卡不安全？揭密 M1 晶片漏洞與複製風險">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/M1-%E9%96%80%E7%A6%81%E5%8D%A1%E5%AE%89%E5%85%A8%E6%80%A7-%E6%8A%80%E8%A1%93%E6%BC%8F%E6%B4%9E%E8%88%87%E9%A2%A8%E9%9A%AA%E8%A9%95%E4%BC%B0.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/M1-%E9%96%80%E7%A6%81%E5%8D%A1%E5%AE%89%E5%85%A8%E6%80%A7-%E6%8A%80%E8%A1%93%E6%BC%8F%E6%B4%9E%E8%88%87%E9%A2%A8%E9%9A%AA%E8%A9%95%E4%BC%B0.html">
+    <meta property="og:description" content="為什麼你的門禁卡不安全？本文揭密 M1 晶片（Mifare Classic）運作原理與嚴重漏洞，帶你了解為何傳統感應卡在駭客眼中如同「裸奔」，以及如何防範卡片被輕易盜拷的風險。">
+    <meta property="og:title" content="為什麼你的門禁卡不安全？揭密 M1 晶片漏洞與複製風險">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="為什麼你的門禁卡不安全？本文揭密 M1 晶片（Mifare Classic）運作原理與嚴重漏洞，帶你了解為何傳統感應卡在駭客眼中如同「裸奔」，以及如何防範卡片被輕易盜拷的風險。">
+    <title>為什麼你的門禁卡不安全？揭密 M1 晶片漏洞與複製風險</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151e2e',
+                            950: '#0b101b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #e879f9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tech-border {
+            position: relative;
+        }
+
+        .tech-border::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body
+    class="antialiased min-h-screen flex flex-col bg-gradient-to-b from-slate-900 via-slate-850 to-black selection:bg-cyan-500/30">
+
+    <!-- Header Section -->
+    <header class="w-full py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none">
+        </div>
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div
+                class="inline-block mb-4 px-3 py-1 rounded-full bg-slate-800/50 border border-slate-700 text-xs text-cyan-400 font-mono tracking-wider">
+                SECURITY RESEARCH REPORT
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight leading-tight">
+                <span class="gradient-text">揭密門禁系統安全性</span><br>
+                <span class="text-2xl md:text-3xl font-light text-slate-400 mt-2 block">帶你了解每天都在用的感應卡，背後隱藏了什麼資安危機</span>
+            </h1>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg font-light">
+                探討積體電路卡（IC Card）的底層邏輯、常見的 M1 晶片漏洞，以及為何現行的門禁系統在資安層面上如同「裸奔」。
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-12">
+
+        <!-- Executive Summary Card -->
+        <section
+            class="glass-card rounded-2xl p-8 shadow-2xl border-t border-slate-700/50 relative overflow-hidden group hover:border-cyan-500/30 transition-all duration-500">
+            <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-blue-600"></div>
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+                <span>📑</span> 核心摘要
+            </h2>
+            <p class="text-slate-300 leading-relaxed text-justify">
+                目前市面上超過 <strong>99%</strong> 的社區與辦公大樓門禁系統，仍採用技術架構源自 1994 年的 <strong>NXP Mifare Classic 1K（簡稱
+                    M1）</strong> 晶片或其相容產品。由於物業管理的資安意識薄弱（僅驗證未加密的 UID）以及晶片本身加密演算法（Crypto1）的嚴重缺陷，導致門禁卡極易透過手機 App
+                或低成本硬體進行複製。本文將詳解其運作原理、密碼學漏洞及潛在風險。
+            </p>
+        </section>
+
+        <!-- Content Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            <!-- Section 1: Architecture -->
+            <article class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300">
+                <h3 class="text-xl font-bold text-cyan-300 mb-3 flex items-center gap-2">
+                    <span>💾</span> IC 卡基礎架構
+                </h3>
+                <div class="space-y-4 text-slate-300">
+                    <p>
+                        所謂的門禁卡，本質上是內置了晶片與線圈的<strong>積體電路（Integrated Circuit,
+                            IC）</strong>卡。當卡片靠近讀卡機時，磁場感應產生電流激活晶片，進行資料交換。
+                    </p>
+                    <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 font-mono text-sm">
+                        <p class="text-gray-400">// M1 卡儲存結構 (1KB)</p>
+                        <p class="text-emerald-400">Total: 16 Sectors (扇區)</p>
+                        <p class="pl-4">├── <span class="text-purple-400">Sector 0</span> (製造商區塊)</p>
+                        <p class="pl-8">└── <span class="text-orange-400">Block 0</span>: UID (唯讀/卡號)</p>
+                        <p class="pl-4">├── <span class="text-purple-400">Sector 1~15</span> (資料儲存)</p>
+                        <p class="pl-8">└── Block 0~3: Data & Keys</p>
+                    </div>
+                    <p>
+                        第 0 扇區的第 0 區塊記錄了<strong>唯一識別碼（Unique Identifier,
+                            UID）</strong>，這相當於卡片的「使用者名稱」，且在標準設計中是不加密且可公開讀取的。
+                    </p>
+                </div>
+            </article>
+
+            <!-- Section 1.5: Authentication Mechanics (New) -->
+            <article class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300">
+                <h3 class="text-xl font-bold text-blue-300 mb-3 flex items-center gap-2">
+                    <span>🔐</span> 三重認證與同位元漏洞
+                </h3>
+                <div class="space-y-4 text-slate-300">
+                    <p>
+                        M1 卡使用 <strong>Three-Pass Authentication</strong> 協議建立加密連線。讀卡機與卡片互相交換亂數（Nonces）以驗證雙方持有相同的金鑰。
+                    </p>
+                    <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700 text-xs font-mono space-y-2">
+                        <div class="flex gap-2">
+                            <span class="text-slate-500">1.</span>
+                            <span class="text-emerald-400">Reader</span> &rarr; <span
+                                class="text-purple-400">Card</span>: <span class="text-slate-400">Auth Request (Key
+                                A/B)</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-slate-500">2.</span>
+                            <span class="text-purple-400">Card</span> &rarr; <span
+                                class="text-emerald-400">Reader</span>: <span class="text-orange-400">Nonce $n_T$
+                                (Plaintext)</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-slate-500">3.</span>
+                            <span class="text-emerald-400">Reader</span> &rarr; <span
+                                class="text-purple-400">Card</span>: <span class="text-cyan-400">Enc($n_T, n_R$)</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <span class="text-slate-500">4.</span>
+                            <span class="text-purple-400">Card</span> &rarr; <span
+                                class="text-emerald-400">Reader</span>: <span class="text-cyan-400">Enc($n_R$)</span>
+                        </div>
+                    </div>
+                    <div class="bg-rose-900/20 p-3 rounded border border-rose-500/30 text-sm">
+                        <strong class="text-rose-400 block mb-1">致命缺陷：Parity Bits</strong>
+                        <p>
+                            加密通訊中的<strong>同位元（Parity Bits）</strong>是基於「明文」計算而非密文，且加密方式存在規律。這讓攻擊者可以透過觀察錯誤回應（Error
+                            Code）來暴力破解金鑰（即 Side-channel attack）。
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Section 2: The "Straw Man" Vulnerability -->
+            <article class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300">
+                <h3 class="text-xl font-bold text-rose-300 mb-3 flex items-center gap-2">
+                    <span>🔓</span> 業餘的資安實作
+                </h3>
+                <div class="space-y-4 text-slate-300">
+                    <p>
+                        多數物管系統存在嚴重的「設定疏忽」。經過實測，約有 <strong>2/3</strong> 的門禁系統僅讀取卡片的 <strong>UID</strong>
+                        進行驗證，而完全忽略加密扇區的資料。
+                    </p>
+                    <ul class="list-disc list-inside space-y-2 marker:text-rose-500">
+                        <li>
+                            <strong>UID 複製：</strong>攻擊者僅需讀取公開的 UID，並寫入至特殊的「魔術卡」（UID Changeable Card）中，即可完美偽裝成原卡。
+                        </li>
+                        <li>
+                            <strong>手機模擬：</strong>具備 NFC 功能的 Android 手機通常能直接模擬 UID，甚至無需實體卡片。
+                        </li>
+                        <li>
+                            <strong>零防護：</strong>這種驗證方式等同於「只輸入帳號，不檢查密碼」即可登入系統。
+                        </li>
+                    </ul>
+                </div>
+            </article>
+
+            <!-- Section 3: Default Keys -->
+            <article class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300 md:col-span-2">
+                <h3 class="text-xl font-bold text-amber-300 mb-3 flex items-center gap-2">
+                    <span>🔑</span> 預設金鑰與加密虛設
+                </h3>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="flex-1 space-y-4 text-slate-300">
+                        <p>
+                            M1 卡的每個扇區由 Key A 與 Key B 保護。然而，絕大多數發卡方未修改出廠預設密碼。最常見的預設金鑰為 16 進位的
+                            <code>FF FF FF FF FF FF</code>。
+                        </p>
+                        <p>
+                            即使部分扇區被加密（如寫入樓層權限），只要攻擊者能利用預設密碼進入任一扇區，結合 M1 晶片的<strong>亂數生成器（RNG）漏洞</strong>，即可發動攻擊。
+                        </p>
+                    </div>
+                    <div
+                        class="flex-1 bg-slate-900/50 p-4 rounded-lg border border-slate-700 flex flex-col justify-center items-center">
+                        <div class="w-full text-center mb-2 text-xs text-gray-500 uppercase tracking-widest">Common Weak
+                            Keys</div>
+                        <div class="grid grid-cols-1 gap-2 w-full max-w-xs font-mono text-center">
+                            <div class="bg-red-500/10 text-red-400 py-2 rounded border border-red-500/20">FF FF FF FF FF
+                                FF</div>
+                            <div class="bg-red-500/10 text-red-400 py-2 rounded border border-red-500/20">A0 A1 A2 A3 A4
+                                A5</div>
+                            <div class="bg-red-500/10 text-red-400 py-2 rounded border border-red-500/20">D3 F7 D3 F7 D3
+                                F7</div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Section 4: Advanced Attack Vectors -->
+            <article class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300 md:col-span-2">
+                <h3 class="text-xl font-bold text-violet-300 mb-3 flex items-center gap-2">
+                    <span>🧬</span> 巢狀攻擊與演算法崩壞
+                </h3>
+                <div class="space-y-4 text-slate-300">
+                    <p>
+                        所謂的「半加密卡」並非安全保障。恩智浦（NXP）在設計 M1 卡時留下了嚴重的邏輯漏洞，主要涉及其偽亂數生成機制 —— <strong>線性回饋移位暫存器（Linear Feedback
+                            Shift Register, LFSR）</strong>。
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <h4 class="text-white font-bold mb-2 text-sm">偽亂數漏洞</h4>
+                            <p class="text-sm text-slate-400">
+                                晶片產生的亂數並非真正的隨機，而是具有固定規律的數列。攻擊者只要通過一次驗證（利用預設密碼），即可推算出 LFSR 的當前狀態與後續變化。
+                            </p>
+                        </div>
+                        <div class="bg-slate-800 p-4 rounded-lg">
+                            <h4 class="text-white font-bold mb-2 text-sm">巢狀驗證攻擊 (Nested Attack)</h4>
+                            <p class="text-sm text-slate-400">
+                                利用已知扇區推算出的金鑰流（Keystream），對其他加密扇區進行「誘騙」，反推其金鑰。這導致一張卡只要有一個扇區使用預設密碼，整張卡的所有資料就會像骨牌般全面被攻破。
+                                <br><br>
+                                <span class="text-xs font-mono bg-black/30 px-2 py-1 rounded text-rose-300">Tools: MFOC
+                                    (Nested), MFCUK (Dark Side)</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-4 space-y-4">
+                        <div class="bg-slate-800/50 p-4 rounded-lg border-l-4 border-violet-500">
+                            <h4 class="text-violet-300 font-bold text-sm mb-2">1. Dark Side Attack (黑暗面攻擊)</h4>
+                            <p class="text-xs text-slate-400 mb-2">
+                                <strong>情境：</strong>全加密卡，無任何已知金鑰。<br>
+                                利用 M1 晶片在認證失敗時回傳的 <strong>NACK Error Code (4-bit)</strong>
+                                資訊洩漏。攻擊者發送經過計算的挑戰回應，若同位元正確但數值錯誤，卡片會回傳 NACK。該 NACK 也是加密的，攻擊者可藉此反推 4 bits 的 Keystream。
+                            </p>
+                            <code
+                                class="text-xs bg-black/30 px-2 py-1 rounded text-violet-200 block w-full mt-1">Target: Recover 12 bits of keystream &rarr; Brute force rest</code>
+                        </div>
+
+                        <div class="bg-slate-800/50 p-4 rounded-lg border-l-4 border-rose-500">
+                            <h4 class="text-rose-300 font-bold text-sm mb-2">2. Hardnested & Static Nonce Attack</h4>
+                            <p class="text-xs text-slate-400 mb-2">
+                                <strong>情境：</strong>已修補 NACK bug 的新版卡片 (EV1 / Hardened)。<br>
+                                研究發現許多「修補版」晶片（如 FM11RF08S）為了防止重播攻擊，將亂數（Nonce）改為<strong>靜態加密亂數 (Static Encrypted
+                                    Nonce)</strong>，且存在後門金鑰（Backdoor Key）。
+                            </p>
+                            <ul class="list-disc list-inside text-xs text-slate-400 mt-1">
+                                <li><strong>Static Nested:</strong> 利用固定的 Nonce 特性，透過收集大量資料進行差異分析。</li>
+                                <li><strong>Hardnested:</strong> 針對改良版 PRNG 的 Ciphertext-only attack，需收集約 2000 筆 Nonce。
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        </article>
+
+        <!-- Section 5: LFSR Deep Dive (Expanded with Implementation Details) -->
+        <article
+            class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300 md:col-span-2 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-violet-500/10 rounded-full blur-3xl -z-10"></div>
+            <h3 class="text-xl font-bold text-fuchsia-300 mb-4 flex items-center gap-2">
+                <span>⚙️</span> 技術深究：LFSR 線性回饋移位暫存器
+            </h3>
+
+            <div class="space-y-6 text-slate-300">
+                <!-- Intro -->
+                <p>
+                    M1 卡的核心加密演算法 Crypto1 依賴於<strong>線性回饋移位暫存器（LFSR）</strong>。LFSR
+                    廣泛應用於產生偽亂數（PRNG）、加密初始向量（IV）及無線通訊中的擾碼（Scrambling），其核心優勢在於硬體成本極低，能透過簡單的互斥或（XOR）邏輯產生長週期的序列。
+                </p>
+
+                <!-- Visualization of logic -->
+                <div class="bg-slate-900/60 p-5 rounded-lg border border-slate-700">
+                    <h4 class="text-sm font-mono text-fuchsia-400 mb-3 border-b border-slate-700 pb-2">LFSR 運作邏輯示意
+                    </h4>
+
+                    <div class="flex flex-col gap-4">
+                        <div class="flex items-center justify-between text-xs font-mono text-slate-500">
+                            <span>Current State (Bits)</span>
+                            <span>Direction: Shift Right &rarr;</span>
+                        </div>
+
+                        <!-- Bit representation -->
+                        <div class="flex gap-1 justify-center font-mono text-lg overflow-x-auto py-2">
+                            <div
+                                class="w-8 h-10 flex-shrink-0 flex items-center justify-center bg-slate-800 border border-slate-600 rounded text-cyan-400">
+                                1</div>
+                            <div
+                                class="w-8 h-10 flex-shrink-0 flex items-center justify-center bg-slate-800 border border-slate-600 rounded text-slate-400">
+                                0</div>
+                            <div
+                                class="w-8 h-10 flex-shrink-0 flex items-center justify-center bg-slate-800 border border-slate-600 rounded text-slate-400">
+                                0</div>
+                            <div
+                                class="w-8 h-10 flex-shrink-0 flex items-center justify-center bg-slate-800 border border-slate-600 rounded text-cyan-400">
+                                1</div>
+                            <div class="flex items-center text-slate-600 px-2 text-sm whitespace-nowrap">&rarr;
+                                Output</div>
+                        </div>
+
+                        <!-- Logic explanation -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mt-2">
+                            <div class="bg-slate-800/50 p-3 rounded border-l-2 border-cyan-500">
+                                <strong class="text-cyan-400 block mb-1">移位 (Shift)</strong>
+                                <p>每次運算時，所有位元向右移動一格。最右邊的位元被輸出，最左邊則需要填入新的位元。</p>
+                            </div>
+                            <div class="bg-slate-800/50 p-3 rounded border-l-2 border-fuchsia-500">
+                                <strong class="text-fuchsia-400 block mb-1">回饋 (Feedback)</strong>
+                                <p>新位元由特定的「抽頭（Taps）」位元進行 <strong>XOR（互斥或）</strong>運算產生。例如：<code
+                                        class="bg-black/30 px-1 rounded">NewBit = Bit[0] ^ Bit[3]</code>。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Implementation Nuances (Added based on transcript) -->
+                <div class="bg-slate-900/60 p-5 rounded-lg border border-slate-700">
+                    <h4 class="text-sm font-mono text-cyan-400 mb-3 border-b border-slate-700 pb-2">實作細節與陷阱</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <strong class="text-white block mb-1">多項式表示法</strong>
+                            <p class="text-slate-400 mb-2">
+                                LFSR 常以多項式定義抽頭位置，例如 \(X^{15} + X^{10} + X^6 + 1\)。指數代表參與 XOR 運算的位元位置，常數 1 代表最低位。
+                            </p>
+                        </div>
+                        <div>
+                            <strong class="text-yellow-400 block mb-1">⚠️ 方向模糊性 (Ambiguity)</strong>
+                            <p class="text-slate-400">
+                                僅憑多項式不足以還原電路。移位方向可能為 <strong>MSB &rarr; LSB</strong> 或 <strong>LSB &rarr;
+                                    MSB</strong>。若缺乏電路圖或測試向量（Test Vectors），逆向工程時極易判斷錯誤。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vulnerability Analysis -->
+                <div class="space-y-3">
+                    <h4 class="font-bold text-white">為什麼 LFSR 不安全？</h4>
+                    <p>
+                        LFSR 產生的序列雖然通過了統計學上的隨機性測試（看起來像擲硬幣一樣隨機），且週期極長（最大可達 \(2^n -
+                        1\)），但在密碼學上是<strong>「線性」</strong>的。
+                    </p>
+                    <ul
+                        class="list-disc list-inside space-y-2 marker:text-fuchsia-500 bg-fuchsia-900/10 p-4 rounded-lg border border-fuchsia-500/20">
+                        <li>
+                            <strong class="text-fuchsia-300">決定性 (Deterministic)：</strong> 給定相同的初始狀態與抽頭規則，產生的序列永遠相同。
+                        </li>
+                        <li>
+                            <strong class="text-fuchsia-300">可逆向工程：</strong>
+                            攻擊者只需攔截一小段輸出的「亂數」或密文，就能建立一組線性方程式。利用基礎代數（如高斯消去法），即可在極短時間內反解出 LFSR 的初始狀態（即 M1 卡的金鑰）。
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </article>
+
+        <!-- New Section: Practical Attack on Patched MIFARE -->
+        <article
+            class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300 md:col-span-2 border-l-4 border-rose-500 relative overflow-hidden">
+            <div
+                class="absolute -right-10 -bottom-10 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+            <h3 class="text-xl font-bold text-rose-300 mb-4 flex items-center gap-2">
+                <span>⚔️</span> 實戰攻擊：針對已修補版本（如 EasyCard 2.0）
+            </h3>
+            <div class="space-y-5 text-slate-300">
+                <p>
+                    許多系統（如臺灣的 <strong>EasyCard 2.0</strong>）試圖透過修補 RNG（亂數生成器）與隱藏同位元錯誤來防禦攻擊，但研究證明 Crypto-1
+                    密碼本身的脆弱性仍可被<strong>代數差分密碼分析（Algebraic Differential
+                        Cryptanalysis）</strong>攻破。此方法不需昂貴設備，僅需普通讀卡機與電腦。
+                </p>
+
+                <div class="bg-slate-900/50 p-6 rounded-lg border border-slate-700 mt-4">
+                    <h4
+                        class="text-sm font-bold text-white mb-6 uppercase tracking-wider border-b border-slate-700 pb-2">
+                        攻擊實作流程 (The Attack Workflow)</h4>
+
+                    <div class="relative border-l-2 border-slate-700 ml-3 space-y-10 pb-2">
+                        <!-- Step 1 -->
+                        <div class="relative pl-8">
+                            <span
+                                class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-cyan-500 ring-4 ring-slate-900"></span>
+                            <h5 class="font-bold text-cyan-400 mb-1">第一階段：軌跡收集與碰撞尋找</h5>
+                            <p class="text-sm text-slate-400 mb-2">
+                                發起大量<strong>失敗的認證請求</strong>。即便認證失敗，標籤仍會回傳 4-bit 的加密錯誤碼，這洩漏了關鍵的金鑰流資訊。
+                            </p>
+                            <div
+                                class="bg-black/20 p-2 rounded border border-cyan-900/30 text-xs font-mono text-cyan-200">
+                                Target: Find collision where state difference $\Delta y = 0x80000000$ (at bit 16)
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="relative pl-8">
+                            <span
+                                class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-purple-500 ring-4 ring-slate-900"></span>
+                            <h5 class="font-bold text-purple-400 mb-1">第二階段：差分預言機 (Differential Oracle)</h5>
+                            <p class="text-sm text-slate-400 mb-2">
+                                一旦發現碰撞，攻擊者操縱 Reader Nonce ($n_R$) 並猜測差分位元
+                                ($\delta_k$)。如果標籤回傳<strong>相同的加密錯誤碼</strong>，則驗證了我們對內部狀態的猜測，並建立一條代數方程式。
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="relative pl-8">
+                            <span
+                                class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-rose-500 ring-4 ring-slate-900"></span>
+                            <h5 class="font-bold text-rose-400 mb-1">第三階段：SAT 求解與過濾</h5>
+                            <p class="text-sm text-slate-400 mb-2">
+                                利用特殊的過濾方程式（Filter Equations）去除誤判（False Positives）。將約 600-1000 條經過濾的差分關係輸入至
+                                <strong>SAT Solver（如 CryptoMiniSat）</strong>。
+                            </p>
+                            <div class="mt-2 flex items-center gap-2 text-xs font-mono text-rose-300">
+                                <span class="bg-rose-500/20 px-2 py-1 rounded">Online: 10-20 hrs</span>
+                                <span>+</span>
+                                <span class="bg-rose-500/20 px-2 py-1 rounded">Computation: 2-15 mins</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Section: Magic Cards -->
+        <article class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300 md:col-span-2">
+            <h3 class="text-xl font-bold text-yellow-300 mb-4 flex items-center gap-2">
+                <span>🃏</span> 魔術卡 (Magic Cards) 演進與分類
+            </h3>
+            <div class="space-y-4 text-slate-300">
+                <p>
+                    一旦金鑰被破解，攻擊者通常會將資料寫入特殊的「魔術卡」。這些卡片允許修改原本唯讀的 <strong>Block 0 (UID)</strong>，從而完美複製原卡。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div class="bg-slate-900/50 p-4 rounded border border-yellow-500/20">
+                        <strong class="text-yellow-400 block mb-1">Gen 1a (UID Card)</strong>
+                        <p class="text-slate-400 text-xs">
+                            最古老的複製卡。需透過特殊後門指令 (0x43 0x40) 解鎖才能寫入 Block 0。容易被現代讀卡機偵測並阻擋（因為正規卡不支援此指令）。
+                        </p>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded border border-yellow-500/20">
+                        <strong class="text-yellow-400 block mb-1">Gen 2 (CUID)</strong>
+                        <p class="text-slate-400 text-xs">
+                            可直接使用標準寫入指令修改 Block 0。對讀卡機來說行為更像真卡，能繞過部分防火牆（Firewall Reader）。
+                        </p>
+                    </div>
+                    <div class="bg-slate-900/50 p-4 rounded border border-yellow-500/40 shadow shadow-yellow-500/10">
+                        <strong class="text-yellow-200 block mb-1">Gen 4 (Ultimate)</strong>
+                        <p class="text-slate-400 text-xs">
+                            終極版。支援設定 <strong>Shadow Mode</strong>（影子模式），寫入後自動恢復原狀；支援模擬 Ultralight/EV1 等進階協定。幾乎無法被偵測。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Section: Practical Tools -->
+        <article class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300 md:col-span-2">
+            <h3 class="text-xl font-bold text-teal-300 mb-4 flex items-center gap-2">
+                <span>🛠️</span> 實戰工具與流程 (Practical Tools)
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-slate-300">
+
+                <!-- Flipper Zero -->
+                <div class="space-y-3">
+                    <h4 class="font-bold text-teal-400 border-b border-slate-700 pb-2">Flipper Zero (海豚)</h4>
+                    <p class="text-sm">
+                        便攜式多功能工具，內建 NFC 攻擊套件。
+                    </p>
+                    <ul class="list-disc list-inside text-xs text-slate-400 space-y-1">
+                        <li><strong>Detect Reader:</strong> 靠近讀卡機收集 Nonces（用於 Hardnested 攻擊）。</li>
+                        <li><strong>MFKey32:</strong> 將收集到的 Nonces 上傳至 App 計算金鑰。</li>
+                        <li><strong>Store & Emulate:</strong> 破解後直接儲存於設備，隨時模擬卡片訊號。</li>
+                    </ul>
+                </div>
+
+                <!-- Proxmark3 -->
+                <div class="space-y-3">
+                    <h4 class="font-bold text-teal-400 border-b border-slate-700 pb-2">Proxmark3 (PM3)</h4>
+                    <p class="text-sm">
+                        RFID 研究界的瑞士刀，功能最強大。
+                    </p>
+                    <div class="bg-black/30 p-2 rounded font-mono text-xs text-green-400">
+                        > hf mf autopwn
+                    </div>
+                    <p class="text-xs text-slate-400">
+                        一鍵自動化攻擊指令。自動偵測卡片類型，依序嘗試 Dictionary、Nested、Dark Side、Hardnested 等所有已知漏洞，直到獲取所有扇區金鑰。
+                    </p>
+                </div>
+            </div>
+        </article>
+
+        <!-- Section 6: Rolling Code -->
+        <article class="glass-card rounded-xl p-6 hover:bg-slate-800/80 transition-all duration-300 md:col-span-2">
+            <h3 class="text-xl font-bold text-emerald-300 mb-3 flex items-center gap-2">
+                <span>🔄</span> 滾動碼機制與原卡失效
+            </h3>
+            <div class="text-slate-300 space-y-4">
+                <p>
+                    部分高階物業系統（如豪宅或企業總部）啟用了<strong>滾動碼（Rolling Code）</strong>技術。系統與卡片每進行一次通訊，就會同步修改卡片內部的加密資料塊。
+                    <br><br>
+                    <span class="text-xs text-slate-500 italic">註：此機制常見於高安全性門禁，並非標準悠遊卡（EasyCard）的運作模式。</span>
+                </p>
+                <div class="flex items-center gap-4 bg-slate-900/50 p-4 rounded-lg border border-emerald-900/30">
+                    <div class="text-3xl">⚠️</div>
+                    <p class="font-bold text-emerald-400">複製卡的風險</p>
+                    <p class="text-sm text-slate-400 mt-1">
+                        若使用複製卡刷卡，資料更新後會導致原始卡片（原卡）的資料在系統端判定為「過期」或「非法」，進而導致原卡失效，必須回物業重新寫入資料。</p>
+                </div>
+            </div>
+        </article>
+
+        </article>
+        </div>
+
+        <!-- Section 7: EasyCard Case Study (New Section) -->
+        <section class="mt-12 glass-card rounded-2xl p-8 border-l-4 border-cyan-500 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-3xl -z-10"></div>
+            <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                <span>💳</span> 實例研究：EasyCard (悠遊卡) 架構與漏洞
+            </h3>
+
+            <div class="space-y-8 text-slate-300">
+                <!-- Data Structure -->
+                <div>
+                    <h4 class="text-lg font-bold text-cyan-300 mb-3">1. 資料儲存結構 (Data Layout)</h4>
+                    <p class="mb-4">
+                        悠遊卡採用經典的 M1 架構，將特定功能的資料寫入固定扇區。這種「硬編碼」的特性使其一旦金鑰外洩，所有卡片的結構皆暴露無遺。
+                    </p>
+                    <div class="bg-cyan-900/20 p-5 rounded-lg border border-cyan-500/30 font-mono text-sm">
+                        <ul class="space-y-3">
+                            <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span class="bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded">Sector 2</span>
+                                <strong class="text-white">Value Block (餘額區)</strong>
+                                <span class="text-slate-400 text-xs">為了防止寫入錯誤，餘額數值會以「正向、反向、正向」三次重複儲存。</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span class="bg-purple-500/20 text-purple-300 px-2 py-1 rounded">Sector 3~5</span>
+                                <strong class="text-white">Transaction Logs (交易紀錄)</strong>
+                                <span class="text-slate-400 text-xs">紀錄交易 ID、金額、餘額、捷運站代碼 (Station ID) 與讀卡機 ID。</span>
+                            </li>
+                            <li class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                <span class="bg-orange-500/20 text-orange-300 px-2 py-1 rounded">Sector 15</span>
+                                <strong class="text-white">Daily Limit (每日限額)</strong>
+                                <span class="text-slate-400 text-xs">紀錄當日累積消費金額，用於離線驗證時的風險控管。</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Offline Validation Risk -->
+                <div>
+                    <h4 class="text-lg font-bold text-orange-300 mb-3">2. 離線驗證的代價 (Offline Validation Risks)</h4>
+                    <p class="mb-4">
+                        在大眾運輸（如公車）情境中，為了達成 < 0.4 秒的快速驗票，讀卡機無法等待後端資料庫連線，必須採用<strong>
+                            離線驗證</strong>。這意味著讀卡機必須完全信任<strong>卡片內的資料</strong>。
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                        <div class="bg-slate-900/50 p-5 rounded-lg border border-slate-700">
+                            <strong class="text-green-400 text-lg block mb-2">Online System (連線)</strong>
+                            <p class="text-slate-400 mb-2">如：捷運閘門 (部分)、超商加值機</p>
+                            <ul class="list-disc list-inside text-slate-500 space-y-1">
+                                <li>讀卡機僅讀取 UID</li>
+                                <li>餘額與權限由後端資料庫驗證</li>
+                                <li>安全性取決於後端，卡片不可竄改</li>
+                            </ul>
+                        </div>
+                        <div class="bg-slate-900/50 p-5 rounded-lg border border-rose-900/30">
+                            <strong class="text-rose-400 text-lg block mb-2">Offline System (離線)</strong>
+                            <p class="text-slate-400 mb-2">如：公車驗票機、離線門禁</p>
+                            <ul class="list-disc list-inside text-slate-500 space-y-1">
+                                <li>餘額與權限寫在卡片扇區內</li>
+                                <li><strong>風險：</strong>一旦 M1 金鑰被破解，攻擊者可自由修改餘額或重置每日限額，讀卡機無從察覺。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tech Spec Comparison Table -->
+        <section class="mt-12">
+            <h3 class="text-xl font-bold text-white mb-6 pl-2 border-l-4 border-cyan-500">
+                技術規格對比：M1 卡 vs CPU 卡
+            </h3>
+            <div class="overflow-x-auto rounded-xl border border-slate-700 shadow-2xl">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-800 text-slate-100 uppercase font-mono text-xs">
+                        <tr>
+                            <th scope="col" class="px-6 py-4">特性</th>
+                            <th scope="col" class="px-6 py-4 text-rose-400">M1 卡 (Mifare Classic)</th>
+                            <th scope="col" class="px-6 py-4 text-emerald-400">CPU 卡</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700 bg-slate-800/40 backdrop-blur-sm">
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 font-bold">核心技術</td>
+                            <td class="px-6 py-4">邏輯加密儲存卡</td>
+                            <td class="px-6 py-4">內置微處理器 (COS 系統)</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 font-bold">加密演算法</td>
+                            <td class="px-6 py-4">Crypto1 (已遭破解)</td>
+                            <td class="px-6 py-4">DES / 3DES / AES (銀行級)</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 font-bold">複製難度</td>
+                            <td class="px-6 py-4 text-rose-400">極低 (手機/簡易設備可破)</td>
+                            <td class="px-6 py-4 text-emerald-400">極高 (理論上不可複製)</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 font-bold">應用情境</td>
+                            <td class="px-6 py-4">老舊門禁、校園一卡通</td>
+                            <td class="px-6 py-4">金融卡、身分證、SIM 卡</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <section
+            class="glass-card rounded-2xl p-8 text-center border border-cyan-500/20 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+            <h2 class="text-2xl font-bold text-white mb-4">結論</h2>
+            <p class="text-slate-300 max-w-3xl mx-auto">
+                門禁卡的普及建立在便利性而非絕對的安全性之上。M1 卡的廣泛漏洞已是公開的秘密，從物管的設定疏失到晶片底層的演算法缺陷，共同構成了一個脆弱的生態系。對於追求高安全性的場域，升級為 <strong>CPU
+                    卡</strong> 才是根本的解決之道。
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 border-t border-slate-800 bg-slate-950 mt-auto">
+        <div
+            class="max-w-5xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-4">
+            <div class="font-mono">
+                GENERATED BY <a href="https://wellstsai.com" target="_blank"
+                    class="text-cyan-600 hover:text-cyan-400 transition-colors font-bold decoration-dotted underline underline-offset-4">WELLSTSAI.COM</a>
+            </div>
+            <div class="flex items-center gap-6">
+                <span>撰寫日期：2026-02-15</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- KaTeX auto-render -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+</body>
+
+</html>

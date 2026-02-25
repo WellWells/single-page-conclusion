@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E5%A3%93%E7%B8%AE%E6%84%9F%E7%9F%A5-%E7%90%86%E8%AB%96%E5%9F%BA%E7%A4%8E%E8%88%87%E9%9B%B7%E9%81%94%E5%8F%83%E6%95%B8%E4%BC%B0%E8%A8%88.png">
+    <meta name="twitter:description" content="壓縮感知(CS)是一項基於訊號稀疏性的革命性技術。本文說明其l1最小化重建原理，並探討如何應用於雷達參數估計，如建立原子資料庫進行DOA估計。">
+    <meta name="twitter:title" content="壓縮感知：理論基礎與雷達參數估計">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E5%A3%93%E7%B8%AE%E6%84%9F%E7%9F%A5-%E7%90%86%E8%AB%96%E5%9F%BA%E7%A4%8E%E8%88%87%E9%9B%B7%E9%81%94%E5%8F%83%E6%95%B8%E4%BC%B0%E8%A8%88.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E5%A3%93%E7%B8%AE%E6%84%9F%E7%9F%A5-%E7%90%86%E8%AB%96%E5%9F%BA%E7%A4%8E%E8%88%87%E9%9B%B7%E9%81%94%E5%8F%83%E6%95%B8%E4%BC%B0%E8%A8%88.html">
+    <meta property="og:description" content="壓縮感知(CS)是一項基於訊號稀疏性的革命性技術。本文說明其l1最小化重建原理，並探討如何應用於雷達參數估計，如建立原子資料庫進行DOA估計。">
+    <meta property="og:title" content="壓縮感知：理論基礎與雷達參數估計">
+    <meta name="description" content="壓縮感知(CS)是一項基於訊號稀疏性的革命性技術。本文說明其l1最小化重建原理，並探討如何應用於雷達參數估計，如建立原子資料庫進行DOA估計。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 壓縮感知 (Compressed Sensing) 核心技術</title>
+    <!-- Google Fonts: Inter (Latin) + Noto Sans TC (Traditional Chinese) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- KaTeX (Mathematical Formulas) CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+        xintegrity="sha384-KiEVErqDqdS+qjQ/gQGABTscdCUeTqOaBECGXTFcfCjNqO/gBwZi/i3/S8I/Jt1a" crossorigin="anonymous">
+
+    <!-- KaTeX JS -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+        xintegrity="sha384-hIoBPJpTcdGGhYgW+VbB/a/NH9w+xRnANLzCGmJtXBQSQvA1pQyMGo0I/2M8jAn/,"
+        crossorigin="anonymous"></script>
+
+    <!-- KaTeX Auto-render extension -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+        xintegrity="sha384-fN/Mr1WvXqGmbG/HGRGDMc9Kj3fFhKaR/V2wKjM/WpPxGpaM/vCEnpXNR6Y+S5wV"
+        crossorigin="anonymous"></script>
+
+    <style>
+        /* 自訂樣式 */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background-color: #0f172a;
+            /* slate-900 */
+            color: #e2e8f0;
+            /* slate-300 */
+        }
+
+        /* 漸層文字 (上亮下深) */
+        .gradient-text {
+            background-image: linear-gradient(to bottom, #38bdf8, #c084fc);
+            /* from-sky-400 to-purple-400 */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* 漸層文字 (強調) */
+        .gradient-text-emphasis {
+            background-image: linear-gradient(to bottom, #fde047, #f97316);
+            /* from-yellow-300 to-orange-600 */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* 卡片樣式 (半透明深色 + 亮邊框) */
+        .card {
+            background-color: rgba(30, 41, 59, 0.7);
+            /* bg-slate-800/70 */
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            /* border border-sky-400/30 */
+            border-radius: 0.75rem;
+            /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* shadow-lg */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        /* 關鍵字樣式 */
+        .keyword {
+            border-bottom: 2px dotted #67e8f9;
+            /* cyan-300 */
+            cursor: help;
+            position: relative;
+        }
+
+        /* Tooltip 樣式 */
+        #tooltip {
+            position: fixed;
+            display: none;
+            padding: 0.75rem;
+            /* p-3 */
+            max-width: 90vw;
+            /* 窄螢幕優化 */
+            width: 320px;
+            background-color: rgba(15, 23, 42, 0.8);
+            /* bg-slate-900/80 */
+            border: 1px solid rgba(103, 232, 249, 0.5);
+            /* border border-cyan-300/50 */
+            border-radius: 0.5rem;
+            /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            /* shadow-md */
+            color: #e2e8f0;
+            /* text-slate-200 */
+            font-size: 0.875rem;
+            /* text-sm */
+            z-index: 9999;
+            pointer-events: none;
+            /* 避免干擾滑鼠事件 */
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        #tooltip h4 {
+            font-size: 1rem;
+            /* text-base */
+            font-weight: 700;
+            color: #67e8f9;
+            /* text-cyan-300 */
+            margin-bottom: 0.5rem;
+            /* mb-2 */
+            border-bottom: 1px solid #67e8f9_40;
+            padding-bottom: 0.25rem;
+        }
+
+        #tooltip p {
+            margin-bottom: 0.5rem;
+            /* mb-2 */
+        }
+
+        #tooltip .details {
+            font-size: 0.75rem;
+            /* text-xs */
+            color: #94a3b8;
+            /* text-slate-400 */
+            font-style: italic;
+        }
+
+        /* KaTeX 顯示公式修復 (在深色背景下) */
+        .katex {
+            color: #e2e8f0;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-300 font-sans leading-relaxed min-h-screen pb-20">
+
+    <!-- Header / Hero 區塊 -->
+    <header class="container mx-auto px-6 py-16 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-4">
+            🚀 <span class="gradient-text">壓縮感知 (Compressed Sensing)</span>
+        </h1>
+        <h2 class="text-xl md:text-2xl text-slate-400">
+            從基礎理論到雷達應用
+        </h2>
+    </header>
+
+    <main class="container mx-auto px-6">
+
+        <!-- 文章摘要卡片 -->
+        <section class="max-w-3xl mx-auto mb-16">
+            <div class="card p-6 md:p-8">
+                <h2 class="text-2xl font-bold mb-4 text-center">
+                    📝 <span class="gradient-text">核心摘要</span>
+                </h2>
+                <p class="text-lg text-slate-200 text-center">
+                    <strong>壓縮感知 (Compressed Sensing, CS)</strong> 是一項革命性的訊號處理技術。它指出，如果一個訊號 $s$ (例如影像或聲音) 在某個<span
+                        class="keyword" data-keyword="orthobasis">轉換域</span> (如傅立葉或小波)
+                    中是<strong>稀疏的</strong>，那麼我們就可以從遠少於傳統奈奎斯特-夏農 (Nyquist-Shannon) 定理所要求的 $m$ 個樣本中，透過 $n$ 個（$n \ll
+                    m$）非自適應的線性測量值 $y$ 來<strong>完美重建</strong> $s$。重建的關鍵是一種非線性的<span class="keyword"
+                        data-keyword="convex_opt">優化</span>過程，稱為 <span class="keyword"
+                        data-keyword="basis_pursuit">$l_1$ 最小化</span>。
+                </p>
+            </div>
+        </section>
+
+        <!-- 主體內容分段 (核心三步驟) -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                🏗️ <span class="gradient-text">理論的三大支柱</span>
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Section 1: 稀疏性 -->
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">1. 稀疏性 (Sparsity)</h3>
+                    <p class="mb-4">
+                        稀疏性是壓縮感知的基石。大多數真實世界的訊號（如自然影像）在其原始形式（像素）中並不稀疏，但經過特定轉換（如 <span class="keyword"
+                            data-keyword="dct">DCT</span> 或<span class="keyword"
+                            data-keyword="wavelet">小波轉換</span>）後，其絕大多數的係數都會趨近於零。
+                    </p>
+                    <p class="mb-4">
+                        我們稱一個訊號是 $k$-稀疏的 ( $k \ll m$ )。這代表了我們的<strong>訊號模型</strong>：
+                    </p>
+                    <p class="text-center text-lg mt-4">
+                        $s = \Psi \theta$
+                    </p>
+                    <p class="text-center text-sm text-slate-400">
+                        ($s$: <strong>未知</strong>的原始訊號, $\Psi$: <strong>已知</strong>的稀疏基底, $\theta$:
+                        <strong>未知</strong>的稀疏係數)
+                    </p>
+                </div>
+
+                <!-- Section 2: 測量 -->
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">2. 非自適應測量</h3>
+                    <p class="mb-4">
+                        傳統取樣是「逐點」獲取資訊。壓縮感知則採用「全域」或「隨機」的測量方式。我們使用一個 $n \times m$ 的<strong>測量矩陣</strong> $\Phi$，並獲取 $n$
+                        個測量值 $y$。
+                    </p>
+                    <p class="mb-4">
+                        測量矩陣 $\Phi$ 必須與稀疏基底 $\Psi$ 滿足<span class="keyword" data-keyword="incoherence">不相干性
+                            (Incoherence)</span>。隨機矩陣是滿足此條件的最佳選擇。
+                    </p>
+                    <p class="text-center text-lg mt-4">
+                        $y = \Phi s$
+                    </p>
+                    <p class="text-center text-sm text-slate-400">
+                        ($y$: <strong>已知</strong>的測量結果, $\Phi$: <strong>已知</strong>的測量矩陣, $s$: <strong>未知</strong>的原始訊號)
+                    </p>
+                </div>
+
+                <!-- Section 3: 重建 -->
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">3. 非線性重建</h3>
+                    <p class="mb-4">
+                        <strong>這就是我們的核心目標：</strong>如何從 $n$ 個<strong>已知</strong>的測量值 $y$ 反推出 $m$
+                        維的<strong>未知</strong>原始訊號 $s$？
+                    </p>
+                    <p class="mb-4">
+                        我們有了 $y = \Phi s = \Phi \Psi \theta$，這是一個<span class="keyword"
+                            data-keyword="underdetermined">欠定系統</span>
+                        (方程式比未知數少)，存在無限多組解。壓縮感知的策略是：在所有滿足條件的解中，找出<strong>最稀疏</strong>的那一個 (即 $\theta$ 中非零項最少)。
+                    </p>
+                    <p class="text-center text-lg mt-4 card bg-slate-900 p-2">
+                        $\min ||\theta||_1 \quad \text{s.t.} \quad y = (\Phi \Psi) \theta$
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新增: 什麼是範數 (Norm)？ -->
+        <section class="max-w-3xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                📏 <span class="gradient-text">觀念釐清：什麼是範數 (Norm)？</span>
+            </h2>
+            <div class="card p-6 md:p-8">
+                <p class="mb-4">
+                    您可能會對 $l_0$, $l_1$, $l_2$ 這些名詞感到困惑。<strong>「範數」(Norm)</strong>
+                    不是矩陣，它是一種數學定義，用來衡量一個<strong>向量</strong>的「長度」或「大小」。
+                </p>
+                <p class="mb-4">
+                    在壓縮感知中，我們用它來衡量 $\theta$ 向量的「稀疏程度」：
+                </p>
+                <ul class="list-disc list-inside space-y-4 text-slate-200">
+                    <li>
+                        <strong class="text-lg text-cyan-300">$l_2$ 範數 (歐氏距離):</strong> $l_2 = \sqrt{\sum
+                        |\theta_i|^2}$。這是我們最熟悉的「直線距離」。它會懲罰「最大的值」，但對稀疏性不敏感。
+                    </li>
+                    <li>
+                        <strong class="text-lg text-cyan-300">$l_1$ 範數 (曼哈頓距離):</strong> $l_1 = \sum
+                        |\theta_i|$。這是「各分量絕對值的總和」。它被證明是 $l_0$ 範數的最佳凸近似，因此是 CS 重建的核心。
+                    </li>
+                    <li>
+                        <strong class="text-lg text-cyan-300">$l_0$ 範數 (稀疏性):</strong> $l_0 =
+                        \text{非零元素的個數}$。這就是「稀疏性」的真正定義。它在數學上不是一個真正的範數，而且最小化 $l_0$ 是一個 <strong>NP-hard</strong> 問題
+                        (計算上不可行)，這就是為什麼我們轉而使用 $l_1$。
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 新增: 四大驚奇 -->
+        <section class="max-w-4xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                💡 <span class="gradient-text">理論的四大驚奇</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">驚奇一：非自適應</h3>
+                    <p>我們<strong>不需要先知道</strong>訊號的稀疏結構在哪裡（例如，影像的邊緣在哪）。一個固定的、隨機的測量矩陣 $\Phi$ 對<strong>所有</strong>稀疏訊號都有效。
+                        $n$ 個非自適應測量值所包含的資訊，幾乎等同於「事先知道最重要的 $N$ 個係數位置」所能提供的資訊。</p>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">驚奇二：自適應幫助不大</h3>
+                    <p>傳統上認為「邊取樣邊調整」的自適應 (Adaptive) 策略會得到更多資訊。但 Donoho 證明，在 $l_p$ ($0 < p \le 1$)
+                            範數下，自適應取樣能獲得的資訊增益<strong>非常有限</strong>。這使得簡單、可並行處理的非自適應測量在實務上極具吸引力。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新增: CS 矩陣特性 -->
+        <section class="max-w-4xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                🏛️ <span class="gradient-text">關鍵矩陣特性 (CS1-CS3)</span>
+            </h2>
+            <div class="card p-6 md:p-8">
+                <p class="text-lg text-slate-200 mb-6 text-center">
+                    一個 $n \times m$ 的測量矩陣 $\Phi$ 必須滿足特定的數學條件才能保證 $l_1$ 最小化重建的成功。Donoho 提出了三項關鍵特性 (統稱為 CS
+                    條件)，而「隨機」產生的矩陣能以極高機率滿足它們：
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-4 bg-slate-900 rounded-lg">
+                        <h4 class="text-xl font-bold text-sky-400 mb-2"><span class="keyword"
+                                data-keyword="CS1">CS1</span></h4>
+                        <p class="text-sm">任意「少數」的行向量（columns）都必須是<strong>近似線性獨立</strong>的。這保證了任何稀疏訊號都不會剛好落在 $\Phi$ 的零空間
+                            (nullspace) 中。</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-900 rounded-lg">
+                        <h4 class="text-xl font-bold text-sky-400 mb-2"><span class="keyword"
+                                data-keyword="CS2">CS2</span></h4>
+                        <p class="text-sm">由少數行向量張成的子空間，其 $l_1$ 範數和 $l_2$ 範數的關係必須像隨機雜訊一樣
+                            (<strong>球面切片特性</strong>)。這確保了稀疏向量的能量不會被「隱藏」。</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-900 rounded-lg">
+                        <h4 class="text-xl font-bold text-sky-400 mb-2"><span class="keyword"
+                                data-keyword="CS3">CS3</span></h4>
+                        <p class="text-sm">一個更深的技術條件 (<strong>商範數不等式</strong>)，確保了 $l_1$
+                            最小化演算法在面對非稀疏訊號時的穩定性與<strong>穩健性</strong>。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 比較表格 -->
+        <section class="max-w-4xl mx-auto mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                📊 <span class="gradient-text">傳統取樣 vs 壓縮感知</span>
+            </h2>
+            <div class="overflow-x-auto card">
+                <table class="w-full text-left">
+                    <thead class="border-b border-sky-400/30">
+                        <tr>
+                            <th class="p-4 md:p-6 text-lg">特性</th>
+                            <th class="p-4 md:p-6 text-lg">傳統取樣 (Shannon-Nyquist)</th>
+                            <th class="p-4 md:p-6 text-lg">壓縮感知 (Compressed Sensing)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 md:p-6 font-semibold">取樣率 $n$</td>
+                            <td>必須 $\ge 2 \times$ 最高頻率 (與 $m$ 成正比)</td>
+                            <td>僅需 $n \ge C \cdot k \cdot \log(m/k)$ (與稀疏性 $k$ 相關)</td>
+                        </tr>
+                        <tr class="border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 md:p-6 font-semibold">訊號假設</td>
+                            <td>頻寬有限 (Band-limited)</td>
+                            <td><strong>可壓縮性 / 稀疏性 (Sparse)</strong></td>
+                        </tr>
+                        <tr class="border-b border-slate-700/50 hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 md:p-6 font-semibold">重建方式</td>
+                            <td>線性 (Sinc 插值)</td>
+                            <td><strong>非線性</strong> (<span class="keyword" data-keyword="basis_pursuit">$l_1$
+                                    最小化</span>)</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 md:p-6 font-semibold">主要瓶頸</td>
+                            <td><strong>採集</strong> (ADC 速度、儲存)</td>
+                            <td><strong>計算</strong> (重建演算法)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 新增: 具體應用範例 -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                🌍 <span class="gradient-text">三大具體應用範例</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+
+                <div class="card p-6 h-full flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">光譜學 (Bump Algebra)</h3>
+                    <p class="mb-4">模擬質譜或核磁共振 (NMR) 的光譜訊號，其特徵為「稀疏的波峰」。</p>
+                    <p class="mb-4">這類訊號在 $l_1$ 範數下是可壓縮的。Donoho 證明，重建 $m$ 維訊號僅需：</p>
+                    <p class="text-center text-xl my-4 card bg-slate-900 p-2">
+                        $n \approx m^{1/3}$
+                    </p>
+                    <p class="mt-auto text-sm text-slate-400"><strong>效益：</strong>僅需 $m$ 的三次方根等級的測量值，大幅加速光譜採集。
+                        <span class="keyword" data-keyword="Bump Algebra"></span>
+                    </p>
+                </div>
+
+                <div class="card p-6 h-full flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">一般影像 (Bounded Variation)</h3>
+                    <p class="mb-4">自然影像（如照片）的特徵是具有清晰的邊緣。這類影像符合<span class="keyword"
+                            data-keyword="Bounded Variation">有界變異 (BV)</span> 模型。</p>
+                    <p class="mb-4">這類影像在<span class="keyword" data-keyword="wavelet">小波 (Wavelet)</span> 轉換域中是稀疏的。重建
+                        $m$ 像素的影像僅需：</p>
+                    <p class="text-center text-xl my-4 card bg-slate-900 p-2">
+                        $n \approx m^{1/2}$
+                    </p>
+                    <p class="mt-auto text-sm text-slate-400"><strong>效益：</strong>僅需 $m$ 的平方根等級的測量值。催生了<span
+                            class="keyword" data-keyword="single_pixel_cam">單像素相機</span>及加速<span class="keyword"
+                            data-keyword="mri">磁振造影 (MRI)</span>。</p>
+                </div>
+
+                <div class="card p-6 h-full flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">卡通影像 (Curvelets)</h3>
+                    <p class="mb-4">特定影像（如醫學掃描、字體）具有平滑的內部和 $C^2$ 平滑的邊緣曲線。</p>
+                    <p class="mb-4">這類影像在<span class="keyword" data-keyword="Curvelets">曲線小波 (Curvelets)</span>
+                        轉換域中是「極度」稀疏的。重建 $m$ 像素的影像僅需：</p>
+                    <p class="text-center text-xl my-4 card bg-slate-900 p-2">
+                        $n \approx m^{1/4}$
+                    </p>
+                    <p class="mt-auto text-sm text-slate-400"><strong>效益：</strong>僅需 $m$ 的四次方根等級的測量值，展現了 CS 理論的驚人潛力。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+        =================================
+        == [已更新] 雷達應用區塊 ==
+        =================================
+        -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                📡 <span class="gradient-text">應用整合：雷達參數估測</span>
+            </h2>
+
+            <!-- 介紹卡片: The "Why" -->
+            <div class="max-w-3xl mx-auto mb-8">
+                <div class="card p-6 md:p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">1. 雷達的「取樣瓶頸」</h3>
+                    <p class="text-lg text-slate-200 text-center">
+                        傳統雷達追求高解析度 (如 0.15m)，就必須使用高頻寬訊號 (如 1GHz)。依據 Nyquist 定理，這需要極高的 ADC 取樣率，帶來龐大的資料儲存與運算壓力。
+                    </p>
+                    <p class="mt-4 text-lg text-slate-200 text-center">
+                        但 CS 的前提是訊號稀疏。幸運的是，<span class="keyword"
+                            data-keyword="radar_sparse">雷達回波訊號通常是高度稀疏的</span>：例如對空雷達的目標，在廣闊的時域中只是少數幾個點。
+                    </p>
+                </div>
+            </div>
+
+            <!-- 核心邏輯卡片: The "How" -->
+            <div class="max-w-3xl mx-auto mb-8">
+                <div class="card p-6 md:p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">2. 核心邏輯：從「重建」到「估測」</h3>
+                    <p class="text-lg text-slate-200 mb-4">
+                        雷達應用中，我們通常<strong>不需要重建完整的原始訊號 $s$</strong>。我們只需要訊號中的<strong>關鍵參數</strong>（例如：速度、方向）。
+                    </p>
+                    <p class="text-lg text-slate-200">
+                        此應用框架的精髓在於，它將 CS 問題從「訊號重建」轉化為「參數估測」：
+                    </p>
+                    <ol class="list-decimal list-inside text-slate-200 space-y-2 mt-4">
+                        <li>
+                            <strong>目標改變：</strong>我們不是要解出 $s$，而是要解出 $s$ 的特徵（如頻率 $f$ 或角度 $\theta_{angle}$）。
+                        </li>
+                        <li>
+                            <strong>方法：</strong>建立一個 <span class="keyword"
+                                data-keyword="atomic_database"><strong>稀疏原子資料庫</strong></span>
+                            ($\Psi$)。這是一個過完備的字典，其中每個「原子」都代表一個<strong>特定參數</strong>。
+                        </li>
+                        <li>
+                            <strong>重新定義稀疏：</strong>雷達訊號 $s$ 被假設為這個龐大資料庫中，<strong>極少數幾個原子的線性組合</strong>（即只有少數幾個目標）。
+                        </li>
+                        <li>
+                            <strong>最終結果：</strong> $l_1$ 最小化演算法的解 $\theta$ 中，非零項的「索引位置」，就直接告訴我們目標的參數（頻率、角度等）。
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 關鍵技術: 原子資料庫 -->
+            <div class="max-w-3xl mx-auto mb-8">
+                <div class="card p-6 md:p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">3. 關鍵技術：稀疏原子資料庫</h3>
+                    <p class="text-lg text-slate-200 mb-4">
+                        這個資料庫的建立是參數估計的關鍵，其流程是：
+                    </p>
+                    <ol class="list-decimal list-inside text-slate-200 space-y-2 mt-4">
+                        <li>
+                            <strong>參數空間離散化：</strong>首先，定義我們想尋找的參數範圍。例如，頻率 $f$ 從 1Hz 到 1000Hz，或角度 $\theta_{angle}$ 從
+                            -90° 到 +90°。
+                        </li>
+                        <li>
+                            <strong>網格化 (Gridding)：</strong>將這個範圍切割成 $J$ 個精細的格點。例如， $f = \{1.0, 1.1, 1.2, ...\}$ 或
+                            $\theta_{angle} = \{-90, -89.9, ...\}$。
+                        </li>
+                        <li>
+                            <strong>生成原子 (Atom)：</strong>對於<strong>每一個</strong>格點 $j$，我們根據訊號模型（如正弦波、陣列響應向量）生成一個 $N$
+                            維的「原子」向量 $\psi_j$。
+                        </li>
+                        <li>
+                            <strong>建立資料庫 (字典)：</strong>將所有 $J$ 個原子 $\psi_j$ 組合成一個 $N \times J$ 的巨大矩陣 $\Psi = [\psi_1,
+                            ..., \psi_J]$。
+                        </li>
+                        <li>
+                            <strong>新的稀疏性：</strong>因為目標（例如 3 架飛機）遠少於我們切割的網格數 $J$（例如 10000 個可能角度），所以解向量 $\theta$ 在這個
+                            $\Psi$ 上是<strong>極度稀疏</strong>的。
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- 訊號處理流程: 公式 -->
+            <div class="max-w-3xl mx-auto mb-8">
+                <div class="card p-6 md:p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">4. 參數估計的訊號流程</h3>
+                    <p class="text-lg text-slate-200 mb-4">
+                        雷達參數估測延續了 CS 的基礎框架，從求解 $s$ 轉為求解稀疏參數 $\theta$：
+                    </p>
+                    <ul class="list-none space-y-4 text-slate-200">
+                        <li>
+                            <strong>1. 訊號模型:</strong>
+                            <p class="text-lg text-center card bg-slate-900 p-3 my-2">$s = \Psi \theta$</p>
+                            <p class="text-sm">($s$: $N$ 維原始訊號, $\Psi$: $N \times J$ 稀疏原子資料庫, $\theta$: $J$ 維 $K$-稀疏參數,
+                                $K \ll J$)</p>
+                        </li>
+                        <li>
+                            <strong>2. 壓縮觀測:</strong>
+                            <p class="text-lg text-center card bg-slate-900 p-3 my-2">$y = \Phi s = (\Phi \Psi) \theta$
+                            </p>
+                            <p class="text-sm">($y$: $M$ 維觀測向量, $\Phi$: $M \times N$ 觀測矩陣, $M \ll N$)</p>
+                        </li>
+                        <li>
+                            <strong>3. 參數估測 (重建):</strong>
+                            <p class="text-lg text-center card bg-slate-900 p-3 my-2">$\hat{\theta} = \arg \min
+                                ||\theta||_1 \quad \text{s.t.} \quad y = (\Phi \Psi) \theta$</p>
+                            <p class="text-sm">(解出 $\hat{\theta}$，其非零項的位置即為所求參數)</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="max-w-3xl mx-auto mb-8">
+                <div class="card p-6 md:p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">5. 如何求解 $l_1$ 最小化問題？</h3>
+                    <p class="text-lg text-slate-200 mb-4">
+                        求解 $\hat{\theta} = \arg \min ||\theta||_1$ 不是一個簡單的代數問題，而是一個<strong><span class="keyword"
+                                data-keyword="convex_opt">凸優化</span></strong>問題。有兩類主要形式與解法：
+                    </p>
+                    <ul class="list-disc list-inside space-y-4 text-slate-200">
+                        <li>
+                            <strong>Basis Pursuit (BP)：</strong> (無雜訊)
+                            <p class="text-lg text-center card bg-slate-900 p-3 my-2">$\min ||\theta||_1 \quad
+                                \text{s.t.} \quad y = A \theta$</small></p>
+                            <p>這可以被精確地轉型為一個<strong>線性規劃 (Linear Program, LP)</strong> 問題，並使用標準的 LP 求解器（如內點法）來找到全域最優解。
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Basis Pursuit De-Noising (BPDN) / LASSO：</strong> (有雜訊)
+                            <p class="text-lg text-center card bg-slate-900 p-3 my-2">$\min ||\theta||_1 \quad
+                                \text{s.t.} \quad ||y - A\theta||_2 \le \epsilon$</small></p>
+                            <p>這是一個二次約束的線性規劃 (QCLP)，也是凸優化問題。在實務上，更常使用迭代演算法來求解，例如：<strong>正交匹配追蹤
+                                    (OMP)</strong>、<strong>迭代軟閾值演算法 (ISTA)</strong> 或 <strong>LARS</strong>。
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 子應用 grid: The "What" (編號更新為 6, 7) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-8">
+                <div class="card p-6 h-full flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">6. 應用：功率頻譜估計</h3>
+                    <p class="mb-4">
+                        <strong>目標：</strong>估測目標的<strong>速度</strong> (來自<span class="keyword"
+                            data-keyword="power_spectrum">都卜勒頻譜</span>)。
+                    </p>
+                    <p class="mb-4">
+                        <strong>資料庫:</strong> 建立一個「過完備」的原子資料庫 $\Psi$，其中每個原子 $\psi_j$ 都是一個特定頻率 $f_j$ 和相位 $p_j$ 的正弦波：
+                    </p>
+                    <p class="text-center text-lg card bg-slate-900 p-3 my-2">
+                        $\Psi = \{ \psi_j \ | \ \psi_j(t) = \sin(2\pi f_j t + p_j) \}$
+                    </p>
+                    <p class="mb-4">
+                        <strong>CS 邏輯：</strong>將觀測值 $y$ 投影到這個資料庫上，並求解 $\hat{\theta} = \arg \min ||\theta||_1$ s.t. $y =
+                        (\Phi \Psi) \theta$。
+                    </p>
+                    <p class="mt-auto">
+                        <strong>結果：</strong>解向量 $\hat{\theta}$ 中的非零項 $\hat{\theta}_k \neq 0$，其<strong>索引 $k$</strong>
+                        就直接對應到資料庫中的 $(f_k, p_k)$，即為目標的頻率與相位。
+                    </p>
+                </div>
+
+                <div class="card p-6 h-full flex flex-col">
+                    <h3 class="text-2xl font-bold mb-4 text-center gradient-text-emphasis">7. 應用：到達方向 (DOA) 估計</h3>
+                    <p class="mb-4">
+                        <strong>目標：</strong>估測 <span class="keyword" data-keyword="lfm_signal">LFM</span>
+                        訊號來自的<strong>物理角度 $\theta_{angle}$</strong>。
+                    </p>
+                    <p class="mb-4">
+                        <strong>資料庫:</strong> 建立一個「過完備」的角度資料庫 $\Psi$ (也稱響應矩陣 $G$)，$G = [g(\theta_1), ...,
+                        g(\theta_J)]$，其中每個原子 $g(\theta_j)$ 是 $L$ 個陣元在 $\theta_j$ 角度下的「響應向量」(Steering Vector)：
+                    </p>
+                    <div class="text-center text-lg card bg-slate-900 p-3 my-2">
+                        $$g(\theta_j) = [1, e^{-j\phi_j}, \dots, e^{-j(L-1)\phi_j}]^T$$
+                        <span class="text-sm">其中 $\phi_j = 2\pi d\sin(\theta_j)/\lambda$ ($d$: 間距, $\lambda$: 波長)</span>
+                    </div>
+                    <p class="mb-4">
+                        <strong>CS 邏輯：</strong>將陣列接收到的快照向量 $y$ 視為 $y = G \alpha + v$，其中 $\alpha$ 是稀疏的角度振幅向量。
+                    </p>
+                    <p class="mt-auto">
+                        <strong>結果：</strong>求解 $\hat{\alpha} = \arg \min ||\alpha||_1$ s.t. $||y - G\alpha||_2 \le
+                        \epsilon$。解向量 $\hat{\alpha}$ 中的非零項 $\hat{\alpha}_k \neq 0$，其<strong>索引 $k$</strong> 就直接對應到目標的角度
+                        $\theta_k$。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 結論 -->
+        <section class="max-w-3xl mx-auto mb-16 text-center">
+            <h2 class="text-3xl font-bold mb-8 text-center">
+                🏁 <span class="gradient-text">結論</span>
+            </h2>
+            <p class="text-xl text-slate-200">
+                David Donoho 的 "Compressed Sensing"
+                不僅是一次數學上的重大突破，更是工程思維的典範轉移。它深刻地挑戰了我們對「資料採集」的傳統認知，證明了在資訊稀疏的前提下，我們能以<strong>「智慧」(演算法)</strong>
+                取代<strong>「蠻力」(高取樣率)</strong>，從而開啟了高效資料科學的新紀元。
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer
+        class="fixed bottom-0 left-0 w-full bg-slate-900/80 backdrop-blur-sm border-t border-sky-400/20 py-3 text-center z-50">
+        <p class="text-sm text-slate-400">
+            <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="hover:text-sky-400 transition-colors">
+                Generated by wellstsai.com
+            </a>
+            <span class="mx-2">|</span>
+            撰寫日期：2025年11月4日
+        </p>
+    </footer>
+
+    <!-- Tooltip 元素 (由 JS 控制) -->
+    <div id="tooltip"></div>
+
+    <script>
+        // 頁面載入後，初始化 KaTeX 自動渲染
+        document.addEventListener("DOMContentLoaded", function () {
+            // 確保 renderMathInElement 在此時是可用的
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    // 選項
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false },
+                        { left: '\\(', right: '\\)', display: false },
+                        { left: '\\[', right: '\\]', display: true }
+                    ],
+                    // 處理 \$\$\$
+                    throwOnError: false
+                });
+            } else {
+                console.warn("KaTeX auto-render script not loaded yet.");
+            }
+        });
+
+        // --- 專有名詞 Tooltip 實作 ---
+
+        // 1. Tooltip 資料庫
+        const keywordData = {
+            "l_p_norm": {
+                title: "$l_p$ 範數 (Lp-norm)",
+                summary: "一種衡量向量「大小」的方式。當 $0 < p \le 1$ 時，它能更有效地測量稀疏性。",
+                details: "公式為 $||x||_p = (\\sum_i |x_i|^p)^{1/p}$。$l_0$ 範數 (p=0) 是非零項個數。$l_1$ 範數 (p=1) 是絕對值總和。$l_2$ 範數 (p=2) 是歐幾里得距離。"
+            },
+            "orthobasis": {
+                title: "轉換域 / 正交基",
+                summary: "一組基底向量，訊號可以在這組基底上被唯一表示。",
+                details: "例如傅立葉基底 (用於頻率) 或小波基底 (用於時間與頻率)。"
+            },
+            "dct": {
+                title: "DCT (離散餘弦變換)",
+                summary: "一種訊號轉換技術，常用於影像壓縮 (如 JPEG)。",
+                details: "它能將影像的能量集中在少數幾個低頻係數上，從而實現稀疏性。"
+            },
+            "wavelet": {
+                title: "小波轉換 (Wavelet Transform)",
+                summary: "一種訊號分析工具，能同時分析訊號的時間與頻率特性。",
+                details: "特別擅長表示具有邊緣、尖點等瞬時變化的訊號，是影像壓縮的利器。"
+            },
+            "underdetermined": {
+                title: "欠定系統 (Underdetermined System)",
+                summary: "一個線性方程組，其方程式的數量 ($n$) 少於未知數的數量 ($m$)。",
+                details: "這樣的系統通常有無限多組解，或無解。"
+            },
+            "incoherence": {
+                title: "不相干性 (Incoherence)",
+                summary: "壓縮感知中的一個核心要求，指測量基底 $\\Phi$ 與稀疏基底 $\\Psi$ 之間的關聯性很低。",
+                details: "當兩者不相干時，「隨機」的測量矩陣 $\\Phi$ 才能有效地「捕捉」到稀疏訊號 $\\theta$ 的資訊。"
+            },
+            "basis_pursuit": {
+                title: "Basis Pursuit (BP)",
+                summary: "一種 $l_1$ 最小化演算法，用於從欠定系統中尋找最稀疏的解。",
+                details: "這是壓縮感知中最核心的重建演算法之一，由 Donoho 和 Chen 提出。它本質上是一個線性規劃問題。"
+            },
+            "convex_opt": {
+                title: "凸優化 (Convex Optimization)",
+                summary: "一種優化問題，其目標函數是凸函數，且可行域是凸集合。",
+                details: "凸優化問題的重要特性是：任何局部最優解都是全域最優解，且存在高效的求解演算法 (如內點法)。"
+            },
+            "rip": {
+                title: "受限等距特性 (Restricted Isometry Property)",
+                summary: "測量矩陣 $\\Phi$ 必須滿足的數學特性，保證它在稀疏向量上的行為近似於一個等距變換 (即保持距離)。",
+                details: "滿足 RIP 是 $l_1$ 最小化能成功重建稀疏訊號的充分條件之一。"
+            },
+            "n_width": {
+                title: "Gel'fand n-widths",
+                summary: "一個來自泛函分析的數學概念，用於衡量一個集合能被 n 維子空間近似的程度。",
+                details: "Donoho 在論文中用此工具來推導壓縮感知所需的理論下界。"
+            },
+            "single_pixel_cam": {
+                title: "單像素相機 (Single-Pixel Camera)",
+                summary: "一種基於壓縮感知理論的相機設計，它使用單一個感光元件 (Pixel) 來成像。",
+                details: "它透過快速切換不同的「測量模板」(對應 $\\Phi$) 來獲取 $n$ 次測量值，然後透過 $l_1$ 重建演算法還原出 $m$ 像素的影像。"
+            },
+            "mri": {
+                title: "MRI (磁振造影)",
+                summary: "一種醫學影像技術。壓縮感知被用來大幅減少 MRI 掃描所需的 $k$-space 資料採集時間。",
+                details: "透過只採集部分的 $k$-space 資料 (隨機取樣)，再利用影像在小波域的稀疏性，透過 $l_1$ 演算法重建高品質的醫學影像。"
+            },
+            "CS1": {
+                title: "CS1 (最小奇異值)",
+                summary: "保證測量矩陣 $\\Phi$ 中，任意「少數」的行向量 (columns) 都是近似線性獨立的。",
+                details: "這確保了任何 $k$-稀疏 訊號都不會剛好落在 $\\Phi$ 的零空間 (nullspace) 中，這是能成功重建的基本前提。"
+            },
+            "CS2": {
+                title: "CS2 (球面切片特性)",
+                summary: "確保由少數行向量張成的子空間，其 $l_1$ 範數和 $l_2$ 範數的關係必須像隨機雜訊一樣。",
+                details: "這個幾何特性確保了稀疏向量的能量不會在測量過程中被不當的「隱藏」或「抵銷」。"
+            },
+            "CS3": {
+                title: "CS3 (商範數不等式)",
+                summary: "一個更深的技術條件，確保了 $l_1$ 最小化演算法在面對非稀疏訊號時的穩定性與<strong>穩健性</strong>。",
+                details: "它保證了重建演算法的<strong>穩健性</strong> (Robustness)，是 $l_1$ 最小化優於其他方法的核心數學保證之一。"
+            },
+            "Bump Algebra": {
+                title: "Bump Algebra (光譜模型)",
+                summary: "一種用來模擬光譜訊號（如質譜、NMR）的數學模型。",
+                details: "訊號由一組不同位置、振幅和寬度的「波峰」(bumps) 疊加而成。這類訊號在 $l_1$ 範數下是可壓縮的。"
+            },
+            "Bounded Variation": {
+                title: "Bounded Variation (BV, 有界變異)",
+                summary: "一種衡量影像「總粗糙度」的數學概念，常用於影像處理。",
+                details: "BV 影像允許有清晰的邊緣（不連續），但要求總邊緣長度是有限的。自然影像（如照片）通常符合此模型。"
+            },
+            "Curvelets": {
+                title: "Curvelets (曲線小波)",
+                summary: "一種為二維或更高維訊號設計的多尺度轉換域，特別擅長表示曲線。",
+                details: "相比傳統小波 (Wavelet) 只能抓到點狀的奇異點，Curvelets 能以極高的稀疏性表示影像中的「平滑曲線邊緣」，非常適合卡通或幾何影像。"
+            },
+            "radar_sparse": {
+                title: "雷達回波稀疏性",
+                summary: "雷達訊號的本質特性。目標（如飛機、車輛）在觀測場景中只佔據極小一部分。",
+                details: "例如，對空雷達的目標是少數幾個「點目標」，在時域上是稀疏的。這為 CS 提供了理論基礎。"
+            },
+            "power_spectrum": {
+                title: "功率頻譜/都卜勒頻譜",
+                summary: "一種訊號處理技術，用於分析訊號在不同頻率上的功率分布。",
+                details: "在雷達中，訊號的都卜勒頻移 (Doppler shift) 與目標速度相關，因此頻譜估計可用來測速。"
+            },
+            "doa": {
+                title: "DOA (到達方向) 估計",
+                summary: "Direction of Arrival (DOA) 估計，用於判斷訊號來自哪個物理方向。",
+                details: "這是陣列訊號處理的核心問題，常用於雷達、聲納和無線通訊，以定位目標或發射源。"
+            },
+            "lfm_signal": {
+                title: "LFM (線性調頻) 訊號",
+                summary: "Linear Frequency Modulation (LFM)，也稱 Chirp 訊號。其頻率隨時間線性變化。",
+                details: "LFM 訊號在雷達和聲納中被廣泛使用，因為它具有良好的距離解析度和抗干擾特性。"
+            },
+            "atomic_database": {
+                title: "稀疏原子資料庫 (Atomic Database)",
+                summary: "一種過完備 (Overcomplete) 的字典，包含了所有可能構成訊號的「基本波形」(原子)。",
+                details: "在 CS 雷達應用中，我們建立一個包含所有可能頻率/角度的原子庫，然後 $l_1$ 最小化會自動從中挑選出最稀疏的組合來匹配測量值。"
+            }
+        };
+
+        // 2. 獲取 Tooltip DOM 元素
+        const tooltip = document.getElementById('tooltip');
+        const keywords = document.querySelectorAll('.keyword');
+
+        // 3. 綁定事件
+        keywords.forEach(el => {
+            el.addEventListener('mouseover', showTooltip);
+            el.addEventListener('mousemove', moveTooltip);
+            el.addEventListener('mouseout', hideTooltip);
+        });
+
+        function showTooltip(e) {
+            const keyword = e.target.dataset.keyword;
+            // 檢查關鍵字是否存在，如果不存在(例如在應用範例卡片上的空 span)，則不顯示
+            if (!keyword) {
+                hideTooltip();
+                return;
+            }
+
+            const data = keywordData[keyword];
+
+            if (data) {
+                // 構建 Tooltip 內容
+                let content = `<h4>${data.title}</h4>`;
+                content += `<p>${data.summary}</p>`;
+                if (data.details) {
+                    content += `<p class="details">${data.details}</p>`;
+                }
+                tooltip.innerHTML = content;
+                tooltip.style.display = 'block';
+
+                // *** 關鍵步驟 ***
+                // 動態載入內容後，必須手動觸發 KaTeX 渲染
+                try {
+                    if (typeof renderMathInElement === 'function') {
+                        renderMathInElement(tooltip, {
+                            delimiters: [
+                                { left: '$$', right: '$$', display: true },
+                                { left: '$', right: '$', display: false },
+                                { left: '\\(', right: '\\)', display: false },
+                                { left: '\\[', right: '\\]', display: true }
+                            ],
+                            throwOnError: false
+                        });
+                    }
+                } catch (error) {
+                    console.warn("KaTeX render error in tooltip:", error);
+                }
+
+                // S首S次顯示時，立即定位一次，以獲取正確寬高
+                moveTooltip(e);
+            } else {
+                hideTooltip(); // 如果 data-keyword 沒有對應內容，也隱藏
+            }
+        }
+
+        function moveTooltip(e) {
+            if (tooltip.style.display !== 'block') return;
+
+            const padding = 15; // 邊界留白
+            const tooltipRect = tooltip.getBoundingClientRect();
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+
+            let x = e.clientX + padding;
+            let y = e.clientY + padding;
+
+            // 偵測右邊界
+            if (x + tooltipRect.width + padding > winWidth) {
+                x = e.clientX - tooltipRect.width - padding; // 移到游標左側
+            }
+            // 偵測下邊界
+            if (y + tooltipRect.height + padding > winHeight) {
+                y = e.clientY - tooltipRect.height - padding; // 移到游標上側
+            }
+
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+        }
+
+        function hideTooltip() {
+            tooltip.style.display = 'none';
+            tooltip.innerHTML = ''; // 清空內容
+        }
+
+    </script>
+</body>
+
+</html>

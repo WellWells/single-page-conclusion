@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E5%8D%B3%E6%99%82%E9%9B%B7%E9%81%94%E6%89%8B%E5%8B%A2%E8%BE%A8%E8%AD%98%E6%96%BC%E9%82%8A%E7%B7%A3%E5%B9%B3%E5%8F%B0%E4%B9%8B%E5%AF%A6%E7%8F%BE.png">
+    <meta name="twitter:description" content="關於 60 GHz FMCW 雷達手勢辨識的邊緣運算實現。採用多特徵編碼器與淺層 CNN 框架，在 Jetson Nano 達到高準確率。此方法計算量僅 0.26 GFLOPS、模型 4.18 MB，總延遲 33ms。">
+    <meta name="twitter:title" content="即時雷達手勢辨識於邊緣平台之實現">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E5%8D%B3%E6%99%82%E9%9B%B7%E9%81%94%E6%89%8B%E5%8B%A2%E8%BE%A8%E8%AD%98%E6%96%BC%E9%82%8A%E7%B7%A3%E5%B9%B3%E5%8F%B0%E4%B9%8B%E5%AF%A6%E7%8F%BE.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E5%8D%B3%E6%99%82%E9%9B%B7%E9%81%94%E6%89%8B%E5%8B%A2%E8%BE%A8%E8%AD%98%E6%96%BC%E9%82%8A%E7%B7%A3%E5%B9%B3%E5%8F%B0%E4%B9%8B%E5%AF%A6%E7%8F%BE.html">
+    <meta property="og:description" content="關於 60 GHz FMCW 雷達手勢辨識的邊緣運算實現。採用多特徵編碼器與淺層 CNN 框架，在 Jetson Nano 達到高準確率。此方法計算量僅 0.26 GFLOPS、模型 4.18 MB，總延遲 33ms。">
+    <meta property="og:title" content="即時雷達手勢辨識於邊緣平台之實現">
+    <meta name="description" content="關於 60 GHz FMCW 雷達手勢辨識的邊緣運算實現。採用多特徵編碼器與淺層 CNN 框架，在 Jetson Nano 達到高準確率。此方法計算量僅 0.26 GFLOPS、模型 4.18 MB，總延遲 33ms。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技術報告：即時雷達手勢辨識於邊緣平台之實現</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- KaTeX CSS/JS CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+        xintegrity="sha384-sN1MATC9LqBYsvhtAPofv+OBS2ISXlZsj0eBfG/2e1lDk1kQJzI/uFgsGKtR1/r7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+        xintegrity="sha384-hIoebJ1L/lV5iRSRTAdFcNf2bA2T/iTftfa8A+fOsS1AFf2p2ZS/kvDLRZwAvL6c"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+        xintegrity="sha384-CjB9eS+yLOmG/zDgSGO+9SSTsO/enNMYP8rNYsRdcQcTOOPk7/4H/rGfsQhFqOqj"
+        crossorigin="anonymous"></script>
+
+    <style>
+        /* 基本樣式與字體設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 保持 HTML 滾動平滑 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 摺疊區塊 <details> 樣式 */
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details summary {
+            list-style: none;
+        }
+
+        details summary:focus {
+            outline: none;
+        }
+
+        details[open] summary~* {
+            animation: sweep 0.5s ease-in-out;
+        }
+
+        @keyframes sweep {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-b from-slate-900 to-black text-slate-300">
+
+    <!-- 頁首標題 -->
+    <header class="py-12 px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-3">
+            即時雷達手勢辨識於邊緣平台之實現
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400">
+            基於 60 GHz FMCW 雷達與淺層 CNN 之高效能運算框架
+        </p>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="max-w-5xl mx-auto p-4 md:p-8 space-y-10">
+
+        <!-- 0. 核心洞見摘要卡片 -->
+        <section class="bg-gray-800/70 backdrop-blur-sm border border-gray-600 rounded-lg shadow-xl p-6 md:p-8 mb-12">
+            <h2 class="text-2xl font-bold text-white mb-4">核心洞見</h2>
+            <ul class="list-disc list-inside space-y-2 text-slate-200">
+                <li>提出一<strong>多特徵編碼器 (Multi-Feature Encoder)</strong>，將距離、都卜勒、方位角與俯仰角資訊壓縮至一緊湊的「特徵立方體」(Feature Cube)。
+                </li>
+                <li>採用<strong>淺層 CNN</strong> 取代傳統 CNN+RNN/LSTM 組合，實現高準確度 (95.79%)，同時大幅降低計算量 (<strong>0.26
+                        GFLOPS</strong>) 與模型大小 (<strong>4.18 MB</strong>)。</li>
+                <li>設計一基於 STA/LTA 的<strong>hand activity detection (HAD)</strong> 演算法，專門偵測手勢的「結束點」(tail)，有效降低系統延遲。</li>
+                <li>於 <strong>NVIDIA Jetson Nano</strong> 邊緣平台實現硬體迴路 (HIL) 測試，總辨識時間僅約 <strong>33
+                        ms</strong>，證實了即時運作的可行性。</li>
+            </ul>
+        </section>
+
+        <!-- 目錄 -->
+        <nav class="bg-gray-800/50 border border-gray-700 rounded-lg p-6 backdrop-blur-sm">
+            <h3 class="text-lg font-semibold text-white mb-3">內容目錄</h3>
+            <ol class="list-decimal list-inside grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm text-slate-300">
+                <li><a href="#section-1" class="hover:text-white hover:underline">🧭 研究動機與問題定義</a></li>
+                <li><a href="#section-2" class="hover:text-white hover:underline">🧩 背景與相關工作</a></li>
+                <li><a href="#section-3" class="hover:text-white hover:underline">🛠 方法總覽（流程）</a></li>
+                <li><a href="#section-4" class="hover:text-white hover:underline">🧮 方法細節</a></li>
+                <li><a href="#section-5" class="hover:text-white hover:underline">🧪 實驗設計</a></li>
+                <li><a href="#section-6" class="hover:text-white hover:underline">📊 結果與詮釋</a></li>
+                <li><a href="#section-7" class="hover:text-white hover:underline">⚖️ 與既有方法比較</a></li>
+                <li><a href="#section-8" class="hover:text-white hover:underline">🌟 創新與貢獻</a></li>
+                <li><a href="#section-9" class="hover:text-white hover:underline">🧷 限制與風險</a></li>
+                <li><a href="#section-10" class="hover:text-white hover:underline">🔁 可重現與實作建議</a></li>
+                <li><a href="#section-11" class="hover:text-white hover:underline">🔮 未來工作</a></li>
+                <li><a href="#section-12" class="hover:text-white hover:underline">✅ 結論</a></li>
+            </ol>
+        </nav>
+
+        <!-- 1. 研究動機與問題定義 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-1">1. 🧭 研究動機與問題定義</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p>非接觸式人機介面 (HMI) 需求日益增長，特別是在公共衛生考量下（如 COVID-19
+                    降低接觸傳染風險）。雷達感測器因其<strong>不受光照影響</strong>、<strong>可穿透介電材料</strong>（易於嵌入）及<strong>保護隱私</strong>（相較於攝影機）等優勢，成為極具潛力的技術。
+                </p>
+                <p>然而，現有的雷達手勢辨識系統（如 Google Soli 專案）多依賴深度神經網路（如 CNN 結合
+                    RNN/LSTM），這些模型<strong>計算量龐大且記憶體需求高</strong>，難以部署於資源受限的邊緣運算平台（如穿戴式裝置、智慧型手機）。此外，許多方法未能同時利用完整的手部輪廓資訊（距離、都卜勒、方位角、俯仰角）。
+                </p>
+                <p><strong>本研究目標：</strong>開發一個<strong>低計算成本</strong>、<strong>低延遲</strong>的即時手勢辨識框架，使其能高效執行於邊緣運算平台。</p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>輸入：</strong> 60 GHz FMCW 雷達原始中頻（IF）訊號。</li>
+                    <li><strong>輸出：</strong> 12 種類別的手勢分類結果。</li>
+                    <li><strong>核心問題：</strong>如何在維持高辨識準確度的前提下，顯著降低模型的計算複雜度與資源消耗，以符合邊緣部署要求？</li>
+                    <li><strong>評估指標：</strong> 準確度 (Accuracy)、F1-Score、計算複雜度 (GFLOPS)、模型大小 (MB)、即時延遲 (ms)。</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- 2. 背景與相關工作 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-2">2. 🧩 背景與相關工作</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p>既有雷達手勢辨識方法主要可分為三類：</p>
+                <ol class="list-decimal list-outside ml-6 space-y-2">
+                    <li><strong>微都卜勒 (Micro-Doppler) 特徵：</strong>
+                        分析時間-都卜勒-頻率（time-Doppler-frequency，TDF）譜，提取手部移動的獨特簽章。此法對精細動作敏感，但可能忽略空間資訊。
+                    </li>
+                    <li><strong>距離-都卜勒 (Range-Doppler, RD) 特徵：</strong> 使用 RD 譜序列作為輸入（如 Google
+                        Soli）。此法能同時捕捉距離和速度，但通常需要複雜的時序模型（如 RNN/LSTM）來解讀動態過程。</li>
+                    <li><strong>多模態特徵 (含 AoA)：</strong> 少數研究開始整合到達角度 (Angle of Arrival, AoA)
+                        資訊，以提供額外的空間維度，有助於區分旋轉或側滑等手勢。</li>
+                </ol>
+                <p><strong>主要技術缺口：</strong></p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>計算效率：</strong> 現有方法普遍採用 2D/3D CNN 結合 LSTM 的架構，這類模型參數多、計算成本高，不適於即時邊緣運算。
+                    </li>
+                    <li><strong>特徵完整性：</strong> 大多數研究未<strong>同時</strong>利用所有可用的雷達特徵（距離、都卜勒、方位角、俯仰角、時間序列）。</li>
+                </ul>
+                <p><strong>本研究定位：</strong> 提出一高效的<strong>特徵工程</strong>方法（多特徵編碼器）來取代原始 RD 譜序列，使<strong>淺層 CNN</strong>
+                    能夠在極低的計算預算下，達到甚至超越複雜深度模型的辨識效能。</p>
+            </div>
+        </details>
+
+        <!-- 3. 方法總覽（流程） -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-3">3. 🛠 方法總覽（流程）</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p>本框架（如圖 1 所示）包含兩條並行處理路徑：特徵提取與活動偵測。</p>
+                <div class="w-full p-6 border-2 border-dashed border-gray-600 rounded-lg bg-gray-900/50">
+                    <pre class="mermaid text-left">
+flowchart LR
+    Raw[原始資料] --> FFT[2D FFT 與點選取]
+    FFT --> AoA[AoA 估測]
+    AoA --> Cube[特徵立方體組成]
+    Cube --> CNN[淺層 CNN 分類器]
+    CNN --> Output[手勢預測]
+
+    Raw --> RWM[距離加權幅度計算]
+    RWM --> EMA[EMA 平滑]
+    EMA --> HAD[HAD]
+    HAD -->|結束訊號| Trigger[觸發分類器]
+    Trigger --> CNN
+                    </pre>
+                    <p class="mt-4 text-sm text-slate-400 text-center">圖 1. 系統框架流程圖，展示特徵提取與活動偵測的並行處理。</p>
+                </div>
+                <ol class="list-decimal list-outside ml-6 space-y-2">
+                    <li><strong>資料擷取：</strong> 接收原始 FMCW 中頻訊號。</li>
+                    <li><strong>2D FFT：</strong> 對每個接收天線的訊號進行 2D FFT，產生距離-都卜勒 (RD) 譜。</li>
+                    <li><strong>點選取與 AoA 估測：</strong>
+                        <ul class="list-disc list-outside ml-6">
+                            <li>非相干疊加 RD 譜，選取 <strong>K</strong> 個最強訊號點。</li>
+                            <li>利用 L 型天線陣列（Rx0, Rx1, Rx2）的相位差，計算這 K 個點的方位角 (Azimuth) 與俯仰角 (Elevation)。</li>
+                        </ul>
+                    </li>
+                    <li><strong>多特徵編碼器：</strong> 在每個量測週期 (measurement-cycle)，儲存這 K 個點的 5 項屬性：[距離, 都卜勒, 方位角, 俯仰角, 幅度]。
+                    </li>
+                    <li><strong>特徵立方體 (Feature Cube)：</strong> 將連續 \(I_L\) 個週期的特徵矩陣堆疊成 \(I_L \times K \times 5\)
+                        的特徵立方體。</li>
+                    <li><strong>HAD：</strong>（並行處理）
+                        <ul class="list-disc list-outside ml-6">
+                            <li>計算 距離加權幅度 (range-weighted magnitude，RWM) 作為活動指標。</li>
+                            <li>使用 STA/LTA 演算法監測 RWM 訊號，以偵測手勢的<strong>結束點 (tail)</strong>。</li>
+                        </ul>
+                    </li>
+                    <li><strong>分類：</strong> 當 HAD 偵測到手勢結束時，將先前 \(I_L\) 個週期組成的「特徵立方體」送入淺層 CNN 進行分類，輸出預測手勢。</li>
+                </ol>
+                <p><strong>關鍵設計：</strong> 偵測手勢的「結束點」而非「起始點」，可確保分類器接收到完整的手勢片段，同時最小化處理延遲（如圖 4 所示）。</p>
+            </div>
+        </details>
+
+        <!-- 4. 方法細節 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-4">4. 🧮 方法細節</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p><strong>a) RD 譜與 AoA 估測</strong></p>
+                <p>中頻訊號 \(b^{(z)}(u,v)\) 經 2D FFT 轉換可得到複數 RD 譜 \(B^{(z)}(p,q)\)（z 為天線索引）。非相干疊加幅度定義如方程式 (1)，並選取 \(K\)
+                    個最大幅度點，其索引為 \((\hat{f}_{rk}, \hat{f}_{Dk})\)。</p>
+                $$ RD(p,q) = \sum_{z=0}^{2} \left|B^{(z)}(p,q)\right| \tag{1} $$
+                <p>AoA 計算利用天線間距 \(d = \lambda/2\) 與相位差 \(\psi(\cdot)\)，分別對應方位角與俯仰角，如方程式 (2) 與 (3)：</p>
+                $$ \hat{\phi}_{k} = \arcsin\left(\frac{\big(\psi(a_{k}^{(1)}) - \psi(a_{k}^{(2)})\big)\lambda}{2\pi
+                d}\right) \tag{2} $$
+                $$ \hat{\vartheta}_{k} = \arcsin\left(\frac{\big(\psi(a_{k}^{(1)}) - \psi(a_{k}^{(0)})\big)\lambda}{2\pi
+                d}\right) \tag{3} $$
+                <p>其中 \(a_{k}^{(z)}\) 是第 z 天線在 \((\hat{f}_{rk}, \hat{f}_{Dk})\) 處的複數值。</p>
+
+                <p><strong>b) 特徵立方體 (Feature Cube)</strong></p>
+                <p>特徵立方體的維度為 \(I_L \times K \times 5\)，在第 \(l\) 週期、第 \(k\) 點的特徵向量如方程式 (4)。</p>
+                $$ \mathcal{V}(l, k, :) = [\hat{f}_{rk}, \hat{f}_{Dk}, \hat{\phi}_{k}, \hat{\vartheta}_{k}, A_k] \tag{4}
+                $$
+                <p>實驗中設定 \(I_L = 40\) (週期數), \(K = 25\) (點數)。</p>
+
+                <p><strong>c) 手勢尾端偵測器（STA/LTA）</strong></p>
+                <p>STA/LTA 的直觀想法是「拿短窗能量與長窗能量對比」。當短窗平均值 \(\mathrm{STA}(l)\) 顯著高於長窗平均值 \(\mathrm{LTA}(l)\)
+                    時，代表新事件正在發生；相反地，當短窗回落並與長窗接近甚至低於時，就意味著事件正在結束。這套指標原大量用於地震與音訊事件檢測，此處被改造為辨識「手勢尾部」——也就是在手勢收束時觸發分類器，把先前累積的量測週期送進
+                    CNN。</p>
+                <p>為補償雷達量測的距離衰減，系統先建立距離加權幅值（Range-Weighted Magnitude, RWM）作為活動指標：</p>
+                $$ x(l) = A_{\max}(l)\, \hat{f}_{r,\max}(l)^{\beta} \tag{5} $$
+                <p>其中 \(A_{\max}(l)\) 為第 \(l\) 次量測中最強點的幅值，\(\hat{f}_{r,\max}(l)\) 為對應距離，\(\beta\) 是傳播補償係數。為抑制雜訊，再以指數移動平均
+                    (EMA) 平滑：</p>
+                $$ M(l) = (1-\alpha) M(l-1) + \alpha x(l) \tag{6} $$
+                <p>接著在目前時刻使用不同長度的滑動窗計算短時平均與長時平均：</p>
+                $$ \mathrm{STA}(l) = \frac{1}{L_1} \sum_{t=l-L_1+1}^{l} M(t), \quad \mathrm{LTA}(l) = \frac{1}{L_2}
+                \sum_{t=l-L_2+1}^{l} M(t) \tag{7} $$
+                <p>只要滿足下列兩個條件，就判定第 \(l\) 週期為手勢尾端，並觸發特徵立方體送入分類器：</p>
+                $$ \sum_{t=l-L_2+1}^{l} x(t) \ge \gamma_1, \qquad \frac{\mathrm{STA}(l)}{\mathrm{LTA}(l)} \le \gamma_2
+                \tag{8} $$
+                <p>第一個條件確保長窗內確實發生過顯著手部活動；第二個條件則確認短窗能量已大幅回落，避免在手勢中段或短暫停頓時誤觸發。</p>
+                <pre class="bg-gray-900 p-4 rounded-md text-sm text-slate-300 overflow-x-auto"><code>// 偵測手勢尾端
+FUNCTION OnNewMeasurement(l):
+    x[l] = CalculateRWM()
+    M[l] = EMA(x[l], M[l-1], alpha)
+
+    STA[l] = Mean(M[l-L1+1 : l])
+    LTA[l] = Mean(M[l-L2+1 : l])
+
+    long_window_active = Sum(x[l-L2+1 : l]) >= gamma_1
+    activity_has_settled = (STA[l] / LTA[l]) <= gamma_2
+
+    IF (long_window_active AND activity_has_settled):
+        TriggerClassifier(Buffer[l-IL+1 : l])</code></pre>
+                <p>整體流程對應到每個 measurement-cycle（PRI = 34 ms）：(1) 從 range-Doppler 取出最強點並建立 RWM；(2) 使用 EMA 建立平滑能量指標；(3) 透過
+                    STA/LTA 的雙門檻判定手勢尾端；(4) 一旦觸發，將最近 \(I_L\) 個週期構成的特徵立方體傳入 CNN。</p>
+                <p>參數選擇遵循下列原則：\(\alpha\) 建議落在 0.1–0.3 以兼顧敏感度與穩定度；短窗長度 \(L_1\) 選擇 2–8 個週期以捕捉快速能量變化；長窗長度 \(L_2\)
+                    則涵蓋主要手勢時間（約 15–40 個週期）。距離補償係數 \(\beta\) 可從 1 起始，再視量測距離分布調整。門檻 \(\gamma_1\) 與 \(\gamma_2\)
+                    透過包含真實手勢與隨機動作的驗證資料進行網格搜尋或 ROC 分析，以取得漏偵與誤報間的最佳取捨；部署後若環境與人群改變，也應重新校準或引入自適應門檻。</p>
+
+                <p><strong>d) 淺層 CNN 分類器</strong></p>
+                <p>多特徵編碼器產出的特徵立方體本身就是 \(I_L \times K \times 5\) 的三維張量（論文設定 \(I_L = 40\)、\(K = 25\)），包含了手勢在時間軸上的 40
+                    個量測週期、每個週期抓取的 25 個代表性點，以及五個通道（距離、都卜勒、方位角、俯仰角、幅度）。作者強調：這個立方體已經是整理好的資料型態，<strong>可以直接送進 CNN，不需要再
+                        reshape</strong>，因此保留了時間與空間的原始結構。</p>
+                <p>最終採用的 CNN 架構（論文圖 6）經過多輪層數與通道數的嘗試後才定稿，目標是同時滿足四件事：</p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li>直接吃下特徵立方體作為輸入；</li>
+                    <li>維持高分類準確度（離線達 95.79%）；</li>
+                    <li>計算量與模型規模要小（0.26 GFLOPS、4.18 MB）；</li>
+                    <li>能在像 Jetson Nano 這樣的邊緣裝置上順利部署。</li>
+                </ul>
+                <p>整個網路只有四層摺積加兩層全連接，非常淺層但功能完整：</p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>Conv1–Conv4：</strong> 每層皆為 \(3 \times 3\) 摺積核、64 個 filters，使用 ReLU 激勵函數。第一層的輸入深度為
+                        5（對應五個特徵通道），後三層的輸入深度則是 64。</li>
+                    <li><strong>FC1、FC2：</strong> 各 256 個隱藏單元，後接 Dropout 以減少過擬合。</li>
+                    <li><strong>FC3：</strong> 輸出層的節點數與手勢類別數相同（12 類），配合 Softmax 產生機率分布。</li>
+                </ul>
+                <p>選擇 ReLU 是因為它能避免梯度消失並加快收斂，Dropout 則是作者用來保護這個小型網路不被少數樣本「背熟」。以這套配置訓練時（論文使用 Adam、逐步降低學習率），損失在約 2000
+                    個訓練步就幾乎收斂；與 3D CNN + LSTM 一類大網路相比，這個 CNN 因為輸入緊湊、網路淺，反而更好訓練。</p>
+                <p>部署時，研究團隊將多特徵編碼器與 STA/LTA 偵測器放在 Jetson Nano 的 CPU 上，以 C/C++ 直接實作；CNN 模型則透過 TensorRT 在 GPU
+                    上推論。整條管線不需任何額外的 reshape 或大量資料搬移，推論時間平均 25.84 ms，就能把完整手勢的特徵立方體轉成機率分布並輸出預測結果。</p>
+            </div>
+        </details>
+
+        <!-- 5. 實驗設計 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-5">5. 🧪 實驗設計</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p><strong>硬體平台：</strong></p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>雷達：</strong> Infineon BGT60TR13C (60 GHz FMCW, 5 GHz 頻寬)。</li>
+                    <li><strong>邊緣平台：</strong> NVIDIA Jetson Nano (Quad-core ARM A57 CPU, 128-core Maxwell GPU, 4GB
+                        RAM)。</li>
+                    <li><strong>軟體：</strong> C/C++ 實現處理流程，TensorRT 用於 CNN 推論加速。</li>
+                </ul>
+                <p><strong>資料集：</strong></p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>手勢類別：</strong> 12 種手勢（如圖 8：Check, Cross, Rotate CW/CCW, Swipe LT/RT/FW/BW 等）。</li>
+                    <li><strong>受試者：</strong> 20 位（年齡 20-35 歲，身高 160-200 cm）。
+                        <ul class="list-disc list-outside ml-6">
+                            <li><strong>10 位教授組 (Taught)：</strong> 接受規範化動作指導。</li>
+                            <li><strong>10 位非教授組 (Untaught)：</strong> 僅觀看範例後自行詮釋，增加資料多樣性。</li>
+                        </ul>
+                    </li>
+                    <li><strong>總樣本數：</strong> 12 (手勢) × 20 (人) × 30 (次) = 7200 筆。</li>
+                    <li><strong>參數設定：</strong> \(I_L = 40\) (觀測窗 1.36s), \(K = 25\) (經由圖 9 實驗確定為準確度與效率的平衡點)。</li>
+                </ul>
+                <p><strong>評估策略：</strong></p>
+                <ol class="list-decimal list-outside ml-6 space-y-2">
+                    <li><strong>離線評估 (Offline)：</strong> 使用「留一法交叉驗證」(LOOCV)，即每次留下一位受試者的全部資料作為測試集，其餘 19 位的資料作為訓練集。</li>
+                    <li><strong>即時評估 (Real-Time)：</strong> 採用硬體迴路 (HIL) 測試。
+                        <ul class="list-disc list-outside ml-6">
+                            <li><strong>訓練集：</strong> 隨機選 8 位教授組 + 8 位非教授組。</li>
+                            <li><strong>測試集：</strong> 剩餘 2 位教授組 + 2 位非教授組。</li>
+                            <li><strong>負樣本：</strong> 訓練時加入「隨機動作」(RMs)，比例約為 1:3 (RM:手勢)。</li>
+                        </ul>
+                    </li>
+                </ol>
+                <p><strong>對照方法 (Baselines)：</strong></p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li>2D CNN + LSTM (Soli)</li>
+                    <li>3D CNN + LSTM (Latern)</li>
+                    <li>3D CNN + LSTM (with AoA) (本研究修改版)</li>
+                    <li>Shallow 3D CNN + LSTM (with AoA) (本研究修改版，為公平比較計算量)</li>
+                </ul>
+                <p><strong>HAD 閾值訓練與終止條件：</strong> \(\gamma_1\) 與 \(\gamma_2\) 透過在 0.05 至 0.60 的範圍、以 0.05
+                    為步長的網格搜尋，配合留一法交叉驗證的訓練折數最大化驗證 F1-Score；當連續八次迭代的平均改善低於 0.3% 時即停止搜尋並保留最佳組合。淺層 CNN 採用 Adam (學習率
+                    \(1\times10^{-3}\)、批次大小 32) 訓練，並於驗證 F1-Score 連續 12 個 epoch 未提升時啟動 early stopping，保留對應權重作為最終模型。</p>
+            </div>
+        </details>
+
+        <!-- 6. 結果與詮釋 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-6">6. 📊 結果與詮釋</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p><strong>1. 離線準確度 (LOOCV, 表 II)</strong></p>
+                <p>本研究提出的「多特徵編碼器 + 淺層 CNN」框架達到 <strong>95.79%</strong> 的平均準確度。</p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li>顯著優於未含 AoA 的 2D CNN+LSTM (78.50%) 和 3D CNN+LSTM (79.76%)。這證實了 <strong>AoA (方位角/俯仰角)
+                            特徵對於區分旋轉和滑動手勢至關重要</strong>。</li>
+                    <li>與同樣使用 AoA 的複雜 3D CNN+LSTM (95.57%) 準確度相當，但計算成本遠低。</li>
+                </ul>
+
+                <p><strong>2. 計算複雜度與模型大小 (表 III)</strong></p>
+                <p>本研究框架在效能上的優勢極為顯著：</p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>GFLOPS：</strong> 僅 <strong>0.26 GFLOPS</strong>，相較於 3D CNN+LSTM (with AoA) 的 2.89
+                        GFLOPS，計算量<strong>降低了 11 倍</strong>。</li>
+                    <li><strong>模型大小：</strong> 僅 <strong>4.18 MB</strong>，相較於 3D CNN+LSTM (with AoA) 的 109
+                        MB，模型大小<strong>縮減了 26 倍</strong>。</li>
+                </ul>
+                <p><strong>詮釋：</strong> 成功的關鍵在於「特徵立方體」作為一種高效的特徵工程，它<strong>以稀疏且資訊密集的方式 (\(40 \times 25 \times 5\))
+                        取代了原始高維且稀疏的 RD 譜序列 (\(40 \times 32 \times 32 \times 3\))</strong>。這使得一個非常淺的 CNN 網路就能完成分類任務。</p>
+
+                <p><strong>3. 訓練效率 (圖 10)</strong></p>
+                <p>本研究模型的訓練損失 (Loss) 下降速度遠快於其他模型，約在 2000 訓練步驟即收斂，表明特徵立方體使網路更易於訓練。</p>
+
+                <p><strong>4. 資料多樣性影響 (圖 11)</strong></p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li>教授組 (動作規範)：準確度 98.47%。</li>
+                    <li>非教授組 (動作隨意)：準確度 93.11%。</li>
+                </ul>
+                <p><strong>詮釋：</strong> 雖然準確度下降約 5%，但 93.11% 仍是高度可用的結果，顯示模型對手勢變異具有一定的穩健性。</p>
+
+                <p><strong>5. 即時 HIL 效能 (表 IV, VI)</strong></p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>F1-Score (教授組)：</strong> 94.17%</li>
+                    <li><strong>F1-Score (非教授組)：</strong> 88.58%</li>
+                    <li><strong>總執行時間 (Jetson Nano)：</strong> <strong>33.15 ms</strong> (多特徵編碼器 7.12ms + HAD 0.38ms +
+                        CNN 推論 25.84ms)。</li>
+                </ul>
+                <p><strong>詮釋：</strong> 總延遲 33.15 ms 低於系統的 pulse repetition interval (PRI，脈衝重複間隔) 34
+                    ms，<strong>證實了系統具備逐週期 (cycle-by-cycle)
+                        即時處理的能力</strong>。即時 F1-Score 下降 (相較離線) 主要歸因於 HAD 演算法的不完美 (如表 V 所示，存在 5.90% 誤報率與 3.61% 漏偵測率)。</p>
+            </div>
+        </details>
+
+        <!-- 7. 與既有方法比較 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-7">7. ⚖️ 與既有方法比較</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p>本研究框架與主要對照方法在準確度、計算成本上的標準化比較 (基於表 II, III)。</p>
+                <div class="overflow-x-auto rounded-lg border border-gray-700">
+                    <table class="min-w-full divide-y divide-gray-700 bg-gray-800/70">
+                        <thead class="bg-gray-700/50">
+                            <tr>
+                                <th scope="col"
+                                    class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                    方法</th>
+                                <th scope="col"
+                                    class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                    輸入特徵</th>
+                                <th scope="col"
+                                    class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                    平均準確度 (Offline)</th>
+                                <th scope="col"
+                                    class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                    計算量 (GFLOPS)</th>
+                                <th scope="col"
+                                    class="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
+                                    模型大小 (MB)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-700">
+                            <tr class="hover:bg-gray-700/30">
+                                <td class="px-4 py-4 whitespace-nowrap">2D CNN + LSTM [14]</td>
+                                <td class="px-4 py-4 whitespace-nowrap">RD, 時間</td>
+                                <td class="px-4 py-4 whitespace-nowrap">78.50%</td>
+                                <td class="px-4 py-4 whitespace-nowrap">N/A</td>
+                                <td class="px-4 py-4 whitespace-nowrap">N/A</td>
+                            </tr>
+                            <tr class="hover:bg-gray-700/30">
+                                <td class="px-4 py-4 whitespace-nowrap">3D CNN + LSTM [21]</td>
+                                <td class="px-4 py-4 whitespace-nowrap">RD, 時間</td>
+                                <td class="px-4 py-4 whitespace-nowrap">79.76%</td>
+                                <td class="px-4 py-4 whitespace-nowrap">N/A</td>
+                                <td class="px-4 py-4 whitespace-nowrap">N/A</td>
+                            </tr>
+                            <tr class="hover:bg-gray-700/30">
+                                <td class="px-4 py-4 whitespace-nowrap">3D CNN + LSTM (with AoA)</td>
+                                <td class="px-4 py-4 whitespace-nowrap">RD, AoA, 時間</td>
+                                <td class="px-4 py-4 whitespace-nowrap">95.57%</td>
+                                <td class="px-4 py-4 whitespace-nowrap">2.89</td>
+                                <td class="px-4 py-4 whitespace-nowrap">109 MB</td>
+                            </tr>
+                            <tr class="hover:bg-gray-700/30">
+                                <td class="px-4 py-4 whitespace-nowrap">Shallow 3D CNN (with AoA)</td>
+                                <td class="px-4 py-4 whitespace-nowrap">RD, AoA, 時間</td>
+                                <td class="px-4 py-4 whitespace-nowrap">94.36%</td>
+                                <td class="px-4 py-4 whitespace-nowrap">0.34</td>
+                                <td class="px-4 py-4 whitespace-nowrap">101 MB</td>
+                            </tr>
+                            <tr class="hover:bg-gray-700/30 border-t-2 border-cyan-500">
+                                <td class="px-4 py-4 whitespace-nowrap font-bold text-white"><strong>本研究 (Multi-feat +
+                                        Shallow CNN)</strong></td>
+                                <td class="px-4 py-4 whitespace-nowrap font-bold text-white"><strong>Feature Cube (RD,
+                                        AoA, Mag, 時間)</strong></td>
+                                <td class="px-4 py-4 whitespace-nowrap font-bold text-white"><strong>95.79%</strong>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-bold text-white"><strong>0.26</strong></td>
+                                <td class="px-4 py-4 whitespace-nowrap font-bold text-white"><strong>4.18 MB</strong>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><strong>情境化優劣：</strong> 既有方法（如 3D CNN+LSTM w/
+                    AoA）雖然能達到高準確度，但其<strong>高昂的計算（11倍）與儲存（26倍）成本</strong>使其不適用於資源受限的邊緣裝置。本研究框架是<strong>唯一</strong>在達到頂尖準確度的同時，仍保持極低資源佔用（GFLOPS
+                    < 0.3, Size < 5MB）的方案，使其具備<strong>高度的實作可行性</strong>。
+                </p>
+            </div>
+        </details>
+
+        <!-- 8. 創新與貢獻 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-8">8. 🌟 創新與貢獻</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p>本研究的具體創新與貢獻條列如下：</p>
+                <ol class="list-decimal list-outside ml-6 space-y-2">
+                    <li><strong>高效的多特徵編碼器 (Multi-Feature Encoder)：</strong>
+                        提出一種新穎的特徵壓縮方法，將原始雷達訊號的四維資訊（距離、都卜勒、方位角、俯仰角）加上幅度，編碼為一低維度 (\(I_L \times K \times 5\)) 的「特徵立方體」。
+                    </li>
+                    <li><strong>適用於邊緣運算的淺層 CNN 架構：</strong> 證實了以特徵立方體為輸入，一個僅 4 層摺積的淺層 CNN 即可達到 SOTA
+                        準確度，<strong>打破了手勢辨識需依賴 RNN/LSTM 或深度 3D CNN 的迷思</strong>。</li>
+                    <li><strong>低延遲的手勢結束點偵測 (Tail Detection)：</strong> 開發了基於 STA/LTA 的 HAD
+                        演算法，專注於偵測手勢的「結束點」。相較於傳統偵測「起始點」的方法，此法能<strong>確保手勢完整性並最小化系統反應延遲</strong>。</li>
+                    <li><strong>完整的邊緣平台效能驗證：</strong> 提供了在 NVIDIA Jetson Nano 上的完整 HIL 測試資料，包含 CPU (Encoder/HAD) 與 GPU
+                        (CNN) 的詳細耗時 (總耗時 ~33ms)，為學界與業界提供了<strong>邊緣雷達應用的可行性基準</strong>。</li>
+                </ol>
+            </div>
+        </details>
+
+        <!-- 9. 限制與風險 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-9">9. 🧷 限制與風險</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>雷達靜止假設：</strong> 本框架假設雷達相對於使用者是靜止的。若應用於非靜止場景（如穿戴裝置或車載移動中），雷達的<strong>自我運動 (ego
+                            motion)</strong> 可能會干擾都卜勒訊號，導致辨識準確度下降。</li>
+                    <li><strong>HAD 演算法的穩健性：</strong> 即時 HIL 測試顯示，HAD 演算法是系統錯誤的主要來源（表 V）。
+                        <ul class="list-disc list-outside ml-6">
+                            <li><strong>漏偵測 (MDR)：</strong> 對於微小動作（如 "Pinch index"）可能因訊號太弱而錯過。</li>
+                            <li><strong>誤觸發 (FAR)：</strong> 對於包含短暫停頓的手勢（如 "Cross" 的轉折點），可能被誤判為手勢結束，導致分類器收到不完整的特徵。</li>
+                        </ul>
+                    </li>
+                    <li><strong>資料集局限性：</strong> 雖然包含了 20 位受試者與「非教授組」，但樣本多樣性仍有限，未包含複雜背景雜訊或多目標干擾情境。</li>
+                    <li><strong>可遷移性：</strong> 框架的效能（特別是 HAD 參數 \(\gamma_1, \gamma_2\)）可能需針對不同的應用場景與雜訊水平進行重新調校。</li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- 10. 可重現與實作建議 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-10">10. 🔁 可重現與實作建議</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p><strong>a) 通用執行骨架 (從零開始)</strong></p>
+                <ol class="list-decimal list-outside ml-6 space-y-2">
+                    <li><strong>資料準備：</strong>
+                        <ul class="list-disc list-outside ml-6">
+                            <li>使用具備至少 3 接收天線（L型陣列為佳）的 FMCW 雷達擷取原始資料。</li>
+                            <li>錄製定義的手勢類別及隨機動作（負樣本），並進行標記。</li>
+                        </ul>
+                    </li>
+                    <li><strong>環境配置：</strong>
+                        <ul class="list-disc list-outside ml-6">
+                            <li>目標平台（如 Jetson Nano, Raspberry Pi 5）。</li>
+                            <li>安裝雷達 SDK、FFT 函式庫 (e.g., FFTW) 及輕量化推論引擎 (e.g., TensorRT, TensorFlow Lite)。</li>
+                        </ul>
+                    </li>
+                    <li><strong>模型訓練 (Offline)：</strong>
+                        <ul class="list-disc list-outside ml-6">
+                            <li>批次執行「多特徵編碼器」將原始資料轉為特徵立方體 (\(I_L \times K \times 5\))。</li>
+                            <li>訓練淺層 CNN 模型（如圖 6 結構），儲存權重。</li>
+                        </ul>
+                    </li>
+                    <li><strong>即時推論流程 (Deployment)：</strong>
+                        <pre class="bg-gray-900 p-4 rounded-md text-sm text-slate-300 overflow-x-auto"><code>// 初始化
+Radar.Init()
+CNN.LoadModel()
+FeatureBuffer = new Buffer(size=IL)
+HAD.Init(params={L1, L2, g1, g2, alpha})
+
+// 主迴圈
+WHILE (true):
+    RawData = Radar.GetNextCycle()
+    
+    // 1. 特徵編碼 (CPU)
+    FeatureVector_1xKx5 = MultiFeatureEncoder(RawData, K=25)
+    FeatureBuffer.Append(FeatureVector_1xKx5) // 維持長度 IL
+    
+    // 2. 活動偵測 (CPU)
+    RWM = FeatureVector_1xKx5.GetRWM()
+    Trigger = HAD.Update(RWM)
+    
+    // 3. 分類 (GPU)
+    IF (Trigger == GESTURE_TAIL_DETECTED):
+        InputCube_ILxKx5 = FeatureBuffer.GetFull()
+        Prediction = CNN.Inference(InputCube_ILxKx5)
+        Output(Prediction)</code></pre>
+                    </li>
+                </ol>
+
+                <p><strong>b) 部署情境建議</strong></p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>邊緣/行動端：</strong> (如智慧音箱、平板、車載中控) 本框架的低資源佔用 (4.18MB, 0.26 GFLOPS) 非常適合此類應用。建議將
+                        Encoder/HAD 部署於 CPU，CNN 推論部署於 NPU/GPU (若有)。</li>
+                    <li><strong>雲端：</strong> 不建議。本框架的核心優勢在於邊緣端的即時性與低成本，無需雲端的高計算力。</li>
+                </ul>
+                <p><strong>c) 監測指標</strong></p>
+                <ul class="list-disc list-outside ml-6 space-y-2">
+                    <li><strong>效能：</strong> 總延遲 (ms) 應小於 PRI (34ms)，F1-Score 應維持在 90% 以上。</li>
+                    <li><strong>HAD 狀態：</strong> 監測 FAR (誤報率) 與 MDR (漏偵測率)，作為調整 HAD 閾值 (\(\gamma_1, \gamma_2\)) 的依據。
+                    </li>
+                </ul>
+            </div>
+        </details>
+
+        <!-- 11. 未來工作 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-11">11. 🔮 未來工作</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <ol class="list-decimal list-outside ml-6 space-y-2">
+                    <li><strong>擴展資料集：</strong> 針對特定應用場景（如浴室、廚房）建立更具多樣性與挑戰性（如水氣、油汙干擾）的手勢資料集。</li>
+                    <li><strong>自我運動補償 (Ego Motion Compensation)：</strong>
+                        研發補償演算法，以消除雷達在非靜止狀態下（如手持或穿戴時）的自我運動雜訊，提升都卜勒特徵的穩定性，拓展應用場G。</li>
+                    <li><strong>HAD 演算法優化：</strong> 探索更先進的時序異常偵測模型（而非 STA/LTA）來改善 HAD 的準確性，降低 FAR 與 MDR。</li>
+                </ol>
+            </div>
+        </details>
+
+        <!-- 12. 結論 -->
+        <details open class="bg-gray-800/30 rounded-lg border border-gray-700">
+            <summary class="cursor-pointer p-5 md:p-6 hover:bg-gray-700/50 rounded-t-lg transition-colors">
+                <h2 class="text-2xl font-bold text-white inline" id="section-12">12. ✅ 結論</h2>
+            </summary>
+            <div class="p-5 md:p-6 border-t border-gray-700 space-y-4">
+                <p>本研究成功開發並驗證了一套<strong>專為邊緣運算平台設計</strong>的即時雷達手勢辨識系統。核心貢獻在於提出了「多特徵編碼器」與「淺層 CNN」的組合，此架構在達到 SOTA 級辨識準確度
+                    (95.79% Offline, 94.17% Real-time F1) 的同時，將計算成本 (0.26 GFLOPS) 與模型大小 (4.18 MB) 降至最低。</p>
+                <p>結合創新的「手勢結束點偵測」(HAD) 演算法，系統在 NVIDIA Jetson Nano 上的總延遲僅約
+                    33ms。此研究證實了<strong>高效能雷達手勢辨識在資源受限的行動與穿戴裝置上的可行性</strong>，為下一代非接觸式人機介面提供了具體且高效的技術藍圖。</p>
+            </div>
+        </details>
+
+    </main>
+
+    <!-- 回到頂部按鈕 -->
+    <button id="to-top"
+        class="fixed bottom-20 right-5 md:right-10 p-3 bg-cyan-600/80 text-white rounded-full shadow-lg hover:bg-cyan-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-opacity-75 transition-all opacity-0 hidden"
+        aria-label="回到頂部">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
+
+    <!-- 頁腳 -->
+    <footer
+        class="fixed bottom-0 left-0 w-full bg-gray-900/90 backdrop-blur-sm border-t border-gray-700 py-3 px-4 text-center z-20">
+        <p class="text-sm text-slate-400">
+            <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="hover:text-white underline">
+                Generated by wellstsai.com
+            </a>
+            <span class="mx-2">|</span>
+            <span>撰寫日期：2025年11月11日</span>
+        </p>
+    </footer>
+
+    <!-- 留出頁腳空間 -->
+    <div class="h-24"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+        if (window.mermaid) {
+            mermaid.initialize({ startOnLoad: true, theme: "dark" });
+        }
+
+        // KaTeX 自動渲染
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "\\[", right: "\\]", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false }
+                ]
+            });
+        });
+
+        // 回到頂部按鈕邏輯
+        const toTopBtn = document.getElementById('to-top');
+        if (toTopBtn) {
+            // 顯示/隱藏按鈕
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 200) {
+                    toTopBtn.classList.remove('hidden', 'opacity-0');
+                    toTopBtn.classList.add('opacity-100');
+                } else {
+                    toTopBtn.classList.add('opacity-0');
+                    // 動畫結束後隱藏
+                    setTimeout(() => toTopBtn.classList.add('hidden'), 300);
+                }
+            });
+
+            // 點選事件
+            toTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+    </script>
+
+</body>
+
+</html>

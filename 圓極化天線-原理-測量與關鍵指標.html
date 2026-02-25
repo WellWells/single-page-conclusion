@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E5%9C%93%E6%A5%B5%E5%8C%96%E5%A4%A9%E7%B7%9A-%E5%8E%9F%E7%90%86-%E6%B8%AC%E9%87%8F%E8%88%87%E9%97%9C%E9%8D%B5%E6%8C%87%E6%A8%99.png">
+    <meta name="twitter:description" content="說明圓極化天線的原理、方程式與產生方式。透過交叉偶極天線的實驗數據，呈現回波損耗與輻射方向圖，並總結軸比(AR)、增益、交叉極化抑制(XPD)等關鍵性能指標與測量技術。">
+    <meta name="twitter:title" content="圓極化天線-原理-測量與關鍵指標">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E5%9C%93%E6%A5%B5%E5%8C%96%E5%A4%A9%E7%B7%9A-%E5%8E%9F%E7%90%86-%E6%B8%AC%E9%87%8F%E8%88%87%E9%97%9C%E9%8D%B5%E6%8C%87%E6%A8%99.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E5%9C%93%E6%A5%B5%E5%8C%96%E5%A4%A9%E7%B7%9A-%E5%8E%9F%E7%90%86-%E6%B8%AC%E9%87%8F%E8%88%87%E9%97%9C%E9%8D%B5%E6%8C%87%E6%A8%99.html">
+    <meta property="og:description" content="說明圓極化天線的原理、方程式與產生方式。透過交叉偶極天線的實驗數據，呈現回波損耗與輻射方向圖，並總結軸比(AR)、增益、交叉極化抑制(XPD)等關鍵性能指標與測量技術。">
+    <meta property="og:title" content="圓極化天線-原理-測量與關鍵指標">
+    <meta name="description" content="說明圓極化天線的原理、方程式與產生方式。透過交叉偶極天線的實驗數據，呈現回波損耗與輻射方向圖，並總結軸比(AR)、增益、交叉極化抑制(XPD)等關鍵性能指標與測量技術。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>理解與測量圓極化</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: 採用主題式的單頁應用程式結構，包含頂部導覽列以便快速跳轉。頁面分為五大區塊：1. 基礎概念（圓極化是什麼及其重要性）；2. 關鍵方程式；3. 實驗分析（天線設計與資料結果）；4. 測量技術；5. 關鍵效能指標。此結構旨在引導使用者從理論走向實踐，將一篇學術論文的內容拆解成易於消化的模組。核心是「實驗分析」區塊中的圖表，它允許使用者直接探索論文的主要資料。 -->
+    <!-- Visualization & Content Choices: 論文圖1（CP波形圖）->目標：資訊視覺化 -> 呈現方式：使用Canvas動畫展示旋轉的電場向量 -> 使用者操作：播放/暫停按鈕 -> 理由：動畫比靜態圖像更能直觀解釋動態概念。論文圖5（回波損耗）->目標：分析資料 -> 呈現方式：Chart.js線圖 -> 使用者操作：懸停提示 -> 理由：標準資料呈現。論文圖6（輻射方向圖）->目標：比較與分析 -> 呈現方式：Chart.js雷達圖 -> 使用者操作：按鈕切換不同實驗架設 -> 理由：讓使用者能直接比較不同情境下的結果。所有圖表皆使用Chart.js或原生Canvas繪製。 -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F8F7F2;
+            color: #3a3a3a;
+        }
+
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #D68C45;
+            border-bottom-color: #D68C45;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .btn-toggle {
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .btn-toggle.active {
+            background-color: #D68C45;
+            color: white;
+        }
+
+        .equation {
+            background-color: #ffffff;
+            border-left: 4px solid #4A90E2;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        .gradient-text {
+            background-image: linear-gradient(to right, #4A90E2, #D68C45);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .keyword {
+            color: #4A90E2;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            transition: transform .2s, color .2s, background-image .2s;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .keyword:hover {
+            transform: scale(1.05);
+            color: #fff;
+            background-image: linear-gradient(to right, #4A90E2, #D68C45);
+        }
+
+        .glass-border {
+            border: 1px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image: linear-gradient(to right, #f8f7f2, #f8f7f2), linear-gradient(135deg, rgba(255, 255, 255, .4), rgba(255, 255, 255, .1));
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-800">了解什麼是天線的圓極化</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#fundamentals" class="nav-link border-b-2 border-transparent pb-1">基礎概念</a>
+                <a href="#equations" class="nav-link border-b-2 border-transparent pb-1">關鍵方程式</a>
+                <a href="#experiment" class="nav-link border-b-2 border-transparent pb-1">實驗分析</a>
+                <a href="#measurement" class="nav-link border-b-2 border-transparent pb-1">測量技術</a>
+                <a href="#kpi" class="nav-link border-b-2 border-transparent pb-1">關鍵指標</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="intro" class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">理解與測量圓極化</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">本頁面透過圖表與說明，旨在幫助您更直觀地理解 <span class="keyword"
+                    data-keyword="cp">圓極化 (CP)</span> 的原理、應用與測量方法。</p>
+        </section>
+
+        <section id="fundamentals" class="mb-16 scroll-mt-24">
+            <h3 class="text-3xl font-bold mb-6 text-center text-gray-800">1. 基礎概念：什麼是圓極化？</h3>
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <p class="text-gray-700 leading-relaxed">電磁波的「極化」是指其電場向量 (E) 在傳播時，其尖端軌跡的形狀與方向。在通訊系統中，除了常見的 <span
+                            class="keyword" data-keyword="lp">線性極化</span> 外， <span class="keyword"
+                            data-keyword="cp">圓極化</span> 也扮演著關鍵角色，特別是在衛星通訊中。因為 <span class="keyword"
+                            data-keyword="cp">圓極化</span> 波的電場向量會持續旋轉，所以接收與發射天線不需要嚴格對準，大幅簡化了系統操作。</p>
+                    <p class="text-gray-700 leading-relaxed">一個完美的 <span class="keyword" data-keyword="cp">圓極化</span>
+                        波，是由兩個振幅相等、方向正交、且相位差為 90 度的 <span class="keyword" data-keyword="lp">線性極化</span>
+                        波合成的。根據旋轉方向的不同，可分為「<span class="keyword" data-keyword="rhcp">右旋圓極化 (RHCP)</span>」與「<span
+                            class="keyword" data-keyword="lhcp">左旋圓極化 (LHCP)</span>」。</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-lg">
+                    <h4 class="text-lg font-semibold text-center mb-2">電場向量軌跡動畫</h4>
+                    <div class="flex justify-center mb-4">
+                        <canvas id="polarizationAnimation" width="300" height="300"></canvas>
+                    </div>
+                    <div class="flex justify-center gap-4">
+                        <button id="rhcpBtn" class="px-4 py-2 bg-gray-200 rounded-md btn-toggle active">右旋
+                            (RHCP)</button>
+                        <button id="lhcpBtn" class="px-4 py-2 bg-gray-200 rounded-md btn-toggle">左旋 (LHCP)</button>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-16">
+                <h4 class="text-2xl font-semibold text-center mb-6">圓極化的產生方式</h4>
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h5 class="font-bold text-lg mb-2">方法一：雙埠饋入 (Dual-port Feed)</h5>
+                        <p class="text-gray-700">這是最直接的方式。透過一個 90° <span class="keyword" data-keyword="hybrid">混合耦合器
+                                (Hybrid Coupler)</span>，將輸入訊號分成兩路振幅相等、相位差 90°
+                            的訊號，分別饋入天線的兩個正交埠（例如交叉偶極天線的水平與垂直臂）。這樣可以直接激發出兩個正交的電場分量，合成 <span class="keyword"
+                                data-keyword="cp">圓極化</span> 波。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h5 class="font-bold text-lg mb-2">方法二：單埠饋入與擾動 (Single-port Perturbation)</h5>
+                        <p class="text-gray-700">此方法更為精巧。它利用一個對稱的輻射結構（如方形貼片天線），並在上面引入微小的幾何「擾動」，例如切掉兩個對角。這個擾動會使天線的兩個
+                            <span class="keyword" data-keyword="degenerate">簡併模態 (degenerate modes)</span>
+                            分裂成兩個頻率相近的共振點。當使用單一埠在特定位置饋入時，在兩個共振頻率之間，就能剛好產生 90° 相位差，從而輻射出 <span class="keyword"
+                                data-keyword="cp">圓極化</span> 波。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="equations" class="mb-16 scroll-mt-24">
+            <h3 class="text-3xl font-bold mb-6 text-center text-gray-800">2. 關鍵方程式</h3>
+            <p class="max-w-3xl mx-auto text-center text-gray-700 mb-8"><span class="keyword"
+                    data-keyword="cp">圓極化</span> 波可以透過數學式，由兩個正交的 <span class="keyword" data-keyword="lp">線性極化</span> 分量
+                \(E_H\) (水平) 和 \(E_V\) (垂直) 來表示。當這兩個分量振幅相等且相位差為 ±90° (\(j\)) 時，即可合成 <span class="keyword"
+                    data-keyword="cp">圓極化</span> 波。</p>
+            <div class="max-w-2xl mx-auto space-y-4">
+                <div>
+                    <h4 class="font-semibold"><span class="keyword" data-keyword="rhcp">右旋圓極化 (RHCP)</span></h4>
+                    <div class="equation">\[E_{\text{RHCP}} = \frac{1}{\sqrt{2}}(E_H + jE_V)\]</div>
+                </div>
+                <div>
+                    <h4 class="font-semibold"><span class="keyword" data-keyword="lhcp">左旋圓極化 (LHCP)</span></h4>
+                    <div class="equation">\[E_{\text{LHCP}} = \frac{1}{\sqrt{2}}(E_H - jE_V)\]</div>
+                </div>
+                <div>
+                    <h4 class="font-semibold"><span class="keyword" data-keyword="ar">軸比 (Axial Ratio, AR)</span></h4>
+                    <p class="text-gray-700 mt-2">在實際應用中，極化通常不是完美的圓形，而是橢圓形。「<span class="keyword"
+                            data-keyword="ar">軸比</span>」是描述這個橢圓長短軸比例的指標，是衡量 <span class="keyword"
+                            data-keyword="cp">圓極化</span> 純度的重要參數。完美的 <span class="keyword" data-keyword="cp">圓極化</span>
+                        AR 值為 1 (或 0 dB)，而 <span class="keyword" data-keyword="lp">線性極化</span> 的 AR 值則為無限大。</p>
+                    <div class="equation">\[AR_{\text{(dB)}} = 20 \log_{10} \left( \frac{1+e}{1-e} \right)\]</div>
+                    <p class="text-sm text-gray-600 mt-1">其中 \(e\) 是交叉極化與同極化功率的比值。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="experiment" class="mb-16 scroll-mt-24">
+            <h3 class="text-3xl font-bold mb-6 text-center text-gray-800">3. 實驗分析：交叉偶極天線</h3>
+            <p class="max-w-3xl mx-auto text-center text-gray-700 mb-8">為了實際產生 <span class="keyword"
+                    data-keyword="cp">圓極化</span> 波，本節展示一個在 1.7 GHz
+                工作的交叉偶極天線範例。此天線的巧妙之處在於，它由兩對長度不等的正交偶極臂組成。較長的臂呈現電感性（相位超前），較短的臂呈現電容性（相位延遲），兩者組合後恰好能產生接近 90 度的相位差，從而輻射出
+                <span class="keyword" data-keyword="cp">圓極化</span> 波。
+            </p>
+
+            <div class="bg-white p-6 rounded-lg shadow-xl mb-12">
+                <h4 class="text-2xl font-semibold text-center mb-4">天線效能分析</h4>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h5 class="text-lg font-semibold text-center mb-2">回波損耗 (Return Loss)</h5>
+                        <p class="text-sm text-center text-gray-600 mb-4">此圖顯示了天線的阻抗匹配情況。我們可以看到由長、短元件各自引發的兩個諧振點，它們在目標頻率
+                            1.7 GHz 附近結合，達成了良好的匹配效果 (回波損耗約 -12.3 dB)。</p>
+                        <div class="chart-container mx-auto">
+                            <canvas id="returnLossChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h5 class="text-lg font-semibold text-center mb-2">輻射方向圖</h5>
+                        <p class="text-sm text-center text-gray-600 mb-4">
+                            此為本實驗的核心資料。您可以透過下方的按鈕，切換不同的天線擺放方向，並觀察理論預測與實際測量的 <span class="keyword"
+                                data-keyword="rhcp">RHCP</span> (主極化) 和 <span class="keyword"
+                                data-keyword="lhcp">LHCP</span> (交叉極化) 功率圖形。理想的 <span class="keyword"
+                                data-keyword="cp">圓極化</span> 天線，其主極化訊號應遠大於交叉極化。</p>
+                        <div class="chart-container mx-auto">
+                            <canvas id="radiationPatternChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 flex flex-col items-center">
+                    <div class="mb-4">
+                        <span class="font-semibold mr-4">天線方向:</span>
+                        <div class="inline-flex rounded-md shadow-sm" role="group">
+                            <button type="button" id="configHorizontal"
+                                class="btn-toggle active px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100">長元件水平</button>
+                            <button type="button" id="configVertical"
+                                class="btn-toggle px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100">長元件垂直</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="measurement" class="mb-16 scroll-mt-24">
+            <h3 class="text-3xl font-bold mb-6 text-center text-gray-800">4. 測量技術</h3>
+            <p class="max-w-3xl mx-auto text-center text-gray-700 mb-8">要準確測量 <span class="keyword"
+                    data-keyword="cp">圓極化</span> 天線的效能，需要特定的實驗架設。常見的方法是使用一個高純度的 <span class="keyword"
+                    data-keyword="lp">線性極化</span> 喇叭天線作為訊號源，分別在水平 (0°) 和垂直 (90°) 兩個方向上測量待測天線 (AUT)
+                的響應（包含振幅與相位），再透過前述的方程式 (1) 和 (2) 合成出 <span class="keyword" data-keyword="rhcp">RHCP</span> 與 <span
+                    class="keyword" data-keyword="lhcp">LHCP</span> 的輻射方向圖。</p>
+            <div class="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto">
+                <h4 class="text-xl font-semibold text-center mb-4">天線場量測架設示意圖</h4>
+                <div class="flex flex-col md:flex-row justify-around items-center space-y-4 md:space-y-0 text-center">
+                    <div class="flex flex-col items-center">
+                        <div class="text-4xl mb-2">📡</div>
+                        <div class="font-semibold">旋轉線性源天線</div>
+                        <p class="text-sm text-gray-600">(產生測試訊號)</p>
+                    </div>
+                    <div class="text-2xl text-gray-400">➡️ 〰️ ➡️</div>
+                    <div class="flex flex-col items-center">
+                        <div class="text-4xl mb-2">🛰️</div>
+                        <div class="font-semibold">待測天線 (AUT)</div>
+                        <p class="text-sm text-gray-600">(置於測試定位器上)</p>
+                    </div>
+                    <div class="text-2xl text-gray-400">➡️</div>
+                    <div class="flex flex-col items-center">
+                        <div class="text-4xl mb-2">📈</div>
+                        <div class="font-semibold">雙通道接收器</div>
+                        <p class="text-sm text-gray-600">(分析振幅與相位)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="kpi" class="mb-16 scroll-mt-24">
+            <h3 class="text-3xl font-bold mb-6 text-center text-gray-800">5. 關鍵效能指標</h3>
+            <div class="max-w-4xl mx-auto bg-amber-50 border-l-4 border-amber-400 p-6 rounded-lg shadow mb-12">
+                <h4 class="text-xl font-bold text-amber-900 mb-2">核心結論</h4>
+                <p class="text-amber-800">評估或設計一個 <span class="keyword" data-keyword="cp">圓極化 (CP) 天線</span>時，不能只看 <span
+                        class="keyword" data-keyword="s11">\(S_{11}\)</span>/VSWR。一個完整且有效的評估，必須同時關注以下幾項關鍵效能參數：</p>
+                <ul class="list-disc list-inside mt-4 space-y-2 text-amber-800">
+                    <li><b><span class="keyword" data-keyword="ar">軸比 (Axial Ratio, AR)</span></b>: 衡量極化純度，理想值為 0 dB。
+                    </li>
+                    <li><b><span class="keyword" data-keyword="gain">增益 (Gain)</span></b>: 決定有效輻射能量的強度。</li>
+                    <li><b><span class="keyword" data-keyword="xpd">交叉極化抑制 (XPD)</span></b>: 衡量對反向極化的隔離能力。</li>
+                    <li><b><span class="keyword" data-keyword="efficiency">輻射效率</span></b>: 評估能量轉換為電磁波的效率。</li>
+                    <li><b><span class="keyword" data-keyword="isolation">埠隔離 (Port Isolation)</span></b>:
+                        在多天線系統中，避免天線間的相互干擾。</li>
+                </ul>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h5 class="text-lg font-bold mb-2 text-gray-800"><span class="keyword"
+                            data-keyword="s11">\(S_{11}\)</span> / VSWR</h5>
+                    <p class="text-sm text-gray-600">這是評估「阻抗匹配」與「頻寬」的基本指標。<span class="keyword"
+                            data-keyword="s11">\(S_{11}\)</span>
+                        < -10 dB (或 VSWR < 2) 意味著超過 90% 的功率能成功送入天線並輻射出去，而不是被反射回來損壞發射電路。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h5 class="text-lg font-bold mb-2 text-gray-800"><span class="keyword" data-keyword="ar">軸比 (Axial
+                            Ratio, AR)</span></h5>
+                    <p class="text-sm text-gray-600">衡量 <span class="keyword"
+                            data-keyword="cp">圓極化</span>「有多圓」的指標。理想的圓形是 0 dB。在實務上，主波束方向上 AR < 3 dB 就可視為良好的 <span
+                            class="keyword" data-keyword="cp">圓極化</span>。衛星或 GPS 等高精度應用則要求 < 1.5 dB。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h5 class="text-lg font-bold mb-2 text-gray-800"><span class="keyword" data-keyword="gain">增益
+                            (Gain)</span> & <span class="keyword" data-keyword="efficiency">輻射效率</span></h5>
+                    <p class="text-sm text-gray-600"><span class="keyword" data-keyword="gain">增益</span>
+                        代表天線將能量集中往特定方向輻射的能力。效率則指輸入功率有多少比例被成功輻射。一個好的天線設計目標是效率 > 80%，常見小型 CP 天線 <span class="keyword"
+                            data-keyword="gain">增益</span> 約 5–10 dBi。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h5 class="text-lg font-bold mb-2 text-gray-800"><span class="keyword" data-keyword="xpd">交叉極化抑制
+                            (XPD)</span></h5>
+                    <p class="text-sm text-gray-600">指天線對其「設計旋向」的訊號靈敏度，高於「相反旋向」訊號的程度。<span class="keyword"
+                            data-keyword="xpd">XPD</span> > 15 dB 是較佳的設計目標，能有效避免錯旋向的干擾，確保通訊品質。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h5 class="text-lg font-bold mb-2 text-gray-800"><span class="keyword"
+                            data-keyword="isolation">埠隔離</span> (<span class="keyword" data-keyword="mimo">MIMO</span>
+                        應用)</h5>
+                    <p class="text-sm text-gray-600">對於有多個天線（例如 <span class="keyword" data-keyword="mimo">MIMO</span>
+                        或雙埠）的系統，此指標衡量天線之間的訊號耦合程度。<span class="keyword" data-keyword="s21">\(S_{21}\)</span> 或隔離度 > 20 dB
+                        能顯著降低天線間的相互干擾。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col justify-center items-center text-center">
+                    <h5 class="text-lg font-bold mb-2 text-gray-800">綜合評估</h5>
+                    <p class="text-sm text-gray-600"><span class="keyword" data-keyword="s11">\(S_{11}\)</span>
+                        保證能量能進去，<span class="keyword" data-keyword="ar">AR</span> 決定極化品質，而 <span class="keyword"
+                            data-keyword="gain">增益</span>、<span class="keyword" data-keyword="efficiency">效率</span> 和
+                        <span class="keyword" data-keyword="xpd">XPD</span> 則完整描述了天線的收發效能。
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-12">
+                <h4 class="text-2xl font-semibold text-center mb-4">常見規格書格式 (範例)</h4>
+                <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+                    <table class="w-full text-sm text-left text-gray-500">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">參數</th>
+                                <th scope="col" class="px-6 py-3">典型目標值</th>
+                                <th scope="col" class="px-6 py-3">測試說明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><span
+                                        class="keyword" data-keyword="s11">\(S_{11}\)</span> (Return Loss)</th>
+                                <td class="px-6 py-4">≤ –10 dB (VSWR≤2)</td>
+                                <td class="px-6 py-4">使用 VNA 50 Ω 匹配，掃描頻段內取最差值</td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><span
+                                        class="keyword" data-keyword="ar">軸比 (AR)</span></th>
+                                <td class="px-6 py-4">≤ 3 dB 於主波束 ±30°</td>
+                                <td class="px-6 py-4">於無響室或近場系統量測</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">峰值<span
+                                        class="keyword" data-keyword="gain">增益</span></th>
+                                <td class="px-6 py-4">5–10 dBi (單元)</td>
+                                <td class="px-6 py-4">3D 遠場方向圖積分或比較法</td>
+                            </tr>
+                            <tr class="bg-gray-50 border-b">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><span
+                                        class="keyword" data-keyword="efficiency">輻射效率</span></th>
+                                <td class="px-6 py-4">≥ 80%</td>
+                                <td class="px-6 py-4">包含導體與介質損耗</td>
+                            </tr>
+                            <tr class="bg-white border-b">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><span
+                                        class="keyword" data-keyword="xpd">XPD</span> / 極化隔離</th>
+                                <td class="px-6 py-4">≥ 15 dB</td>
+                                <td class="px-6 py-4">Co-pol vs. Cross-pol 方向圖切割比較</td>
+                            </tr>
+                            <tr class="bg-gray-50">
+                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"><span
+                                        class="keyword" data-keyword="isolation">埠隔離</span> (<span class="keyword"
+                                        data-keyword="mimo">MIMO</span>)</th>
+                                <td class="px-6 py-4">≥ 20–25 dB</td>
+                                <td class="px-6 py-4"><span class="keyword" data-keyword="s21">\(S_{21}\)</span> 參數測量
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>
+                <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-white transition-colors">
+                    Generated by wellstsai.com
+                </a>
+            </p>
+            <p class="text-sm text-gray-500 mt-2">撰寫日期：2025年9月19日</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="keyword-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden" aria-hidden="true"
+        role="dialog" aria-modal="true">
+        <div id="modal-backdrop"
+            class="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ease-in-out opacity-0">
+        </div>
+        <div id="modal-panel"
+            class="relative bg-gray-100/80 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-2xl text-gray-800 glass-border transition-all duration-300 ease-in-out opacity-0 scale-95">
+            <div class="p-6 md:p-8">
+                <div class="flex justify-between items-center pb-4 border-b border-gray-500/20">
+                    <h3 id="modal-title" class="text-2xl font-bold gradient-text"></h3>
+                    <button id="modal-close-button" aria-label="關閉"
+                        class="text-gray-500 hover:text-gray-900 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="modal-content" class="mt-4 text-gray-600 leading-relaxed space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Keyword Modal Logic
+            const definitions = {
+                cp: {
+                    title: "圓極化 (Circular Polarization)",
+                    content: `<p>電磁波的一種極化方式，其電場向量的尖端在傳播過程中會描繪出一個圓形軌跡。它是由兩個振幅相等、相位差 90° 的正交線性極化波合成的。</p>`
+                },
+                lp: {
+                    title: "線性極化 (Linear Polarization)",
+                    content: `<p>最常見的極化方式，電場向量始終在一個固定的平面內振盪。根據其方向，可分為垂直極化和水平極化。</p>`
+                },
+                rhcp: {
+                    title: "右旋圓極化 (Right-Hand Circular Polarization)",
+                    content: `<p>一種圓極化波。當觀察者面向波的傳播方向看時，電場向量順時針旋轉。這是衛星通訊中常用的極化方式之一。</p>`
+                },
+                lhcp: {
+                    title: "左旋圓極化 (Left-Hand Circular Polarization)",
+                    content: `<p>一種圓極化波。當觀察者面向波的傳播方向看時，電場向量逆時針旋轉。與 RHCP 搭配可實現頻率複用，加倍通訊容量。</p>`
+                },
+                ar: {
+                    title: "軸比 (Axial Ratio, AR)",
+                    content: `<p>衡量圓極化「純度」的關鍵指標。它定義為極化橢圓的長軸與短軸之比。理想的圓極化 AR 為 1 (0 dB)；AR 值越小，代表極化越接近完美的圓形。</p>`
+                },
+                s11: {
+                    title: "S₁₁ / 回波損耗 (Return Loss)",
+                    content: `<p>S 參數中的一個指標，用來描述有多少功率從天線的輸入埠被反射回來。S₁₁ 的值越小（通常表示為負 dB 值，如 -10 dB），代表反射的功率越少，天線的阻抗匹配越好，能量能更有效地傳輸進天線。</p>`
+                },
+                s21: {
+                    title: "S₂₁ / 埠間隔離度 (Port Isolation)",
+                    content: `<p>在多埠天線系統（如 MIMO）中，S₂₁ 用來衡量從埠 1 輸入的訊號洩漏到埠 2 的程度。此數值越小（負 dB 值越大），代表兩個埠之間的隔離度越好，相互干擾越小。</p>`
+                },
+                gain: {
+                    title: "增益 (Gain)",
+                    content: `<p>描述天線將輸入功率轉換為特定方向上輻射功率的能力，它綜合了天線的方向性和效率。增益越高，代表天線在主波束方向上的訊號越強。</p>`
+                },
+                xpd: {
+                    title: "交叉極化抑制 (Cross-Polarization Discrimination)",
+                    content: `<p>衡量天線抑制其非設計極化波的能力。對於一個 RHCP 天線，XPD 就是它接收 RHCP 訊號的能力與接收 LHCP 訊號的能力之比。XPD 越高，代表天線的極化純度越好，抗干擾能力越強。</p>`
+                },
+                efficiency: {
+                    title: "輻射效率 (Radiation Efficiency)",
+                    content: `<p>指天線實際輻射出去的總功率與輸入到天線的總功率之比。它衡量了天線將電能轉換為電磁波的效率，受材料損耗等因素影響。</p>`
+                },
+                isolation: {
+                    title: "埠隔離 (Port Isolation)",
+                    content: `<p>在具有多個天線單元或埠的系統中，此指標用來描述一個天線單元對其他單元的訊號隔離程度。高隔離度可以防止天線之間互相干擾，對 MIMO 和陣列天線至關重要。</p>`
+                },
+                mimo: {
+                    title: "MIMO (Multiple-Input Multiple-Output)",
+                    content: `<p>「多輸入多輸出」技術，在發射端和接收端都使用多個天線，以提高資料傳輸速率和鏈路可靠性。MIMO 系統對天線間的埠隔離度有較高要求。</p>`
+                },
+                hybrid: {
+                    title: "混合耦合器 (Hybrid Coupler)",
+                    content: `<p>一種微波元件，可以將輸入的訊號等功率地分成兩路（或將兩路訊號合成），並在輸出的兩路訊號之間產生特定的相位差，例如 90° 或 180°。90° 混合耦合器是產生圓極化的常用元件。</p>`
+                },
+                degenerate: {
+                    title: "簡併模態 (Degenerate Modes)",
+                    content: `<p>在對稱的諧振結構中（如方形或圓形貼片天線），可能存在多個具有相同諧振頻率但場分布不同的模式，這些模式被稱為簡併模態。透過引入微擾，可以使這些模式的頻率分裂，進而產生圓極化。</p>`
+                }
+            };
+
+            const modal = document.getElementById('keyword-modal');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalPanel = document.getElementById('modal-panel');
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            const closeBtn = document.getElementById('modal-close-button');
+
+            const openModal = (key) => {
+                const def = definitions[key];
+                if (!def) return;
+                modalTitle.textContent = def.title;
+                modalContent.innerHTML = def.content;
+                document.body.style.overflow = 'hidden';
+                modal.classList.remove('hidden');
+                modal.setAttribute('aria-hidden', 'false');
+                requestAnimationFrame(() => {
+                    modalBackdrop.classList.remove('opacity-0');
+                    modalPanel.classList.remove('opacity-0', 'scale-95');
+                });
+            };
+
+            const closeModal = () => {
+                document.body.style.overflow = '';
+                modalBackdrop.classList.add('opacity-0');
+                modalPanel.classList.add('opacity-0', 'scale-95');
+                modal.setAttribute('aria-hidden', 'true');
+                const onEnd = () => { modal.classList.add('hidden'); modalPanel.removeEventListener('transitionend', onEnd); };
+                modalPanel.addEventListener('transitionend', onEnd);
+            };
+
+            document.addEventListener('click', (e) => {
+                const kw = e.target.closest('.keyword');
+                if (kw && kw.dataset.keyword) return openModal(kw.dataset.keyword);
+                if (e.target === modalBackdrop || (closeBtn && closeBtn.contains(e.target))) closeModal();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') closeModal();
+            });
+
+            // Section 1: Polarization Animation
+            const canvas = document.getElementById('polarizationAnimation');
+            const ctx = canvas.getContext('2d');
+            let angle = 0;
+            let animationId;
+            let direction = 1; // 1 for RHCP (clockwise), -1 for LHCP (counter-clockwise)
+
+            const rhcpBtn = document.getElementById('rhcpBtn');
+            const lhcpBtn = document.getElementById('lhcpBtn');
+
+            function drawAnimation() {
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const radius = 120;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.strokeStyle = '#cccccc';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, centerY);
+                ctx.lineTo(canvas.width, centerY);
+                ctx.moveTo(centerX, 0);
+                ctx.lineTo(centerX, canvas.height);
+                ctx.stroke();
+
+                ctx.font = '16px sans-serif';
+                ctx.fillStyle = '#888888';
+                ctx.fillText('E_H', canvas.width - 30, centerY - 10);
+                ctx.fillText('E_V', centerX + 10, 20);
+
+                ctx.strokeStyle = '#4A90E2';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.stroke();
+
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.strokeStyle = '#D68C45';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                ctx.fillStyle = '#D68C45';
+                ctx.fill();
+
+                angle += direction * 0.02;
+                animationId = requestAnimationFrame(drawAnimation);
+            }
+
+            function startAnimation() {
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                }
+                drawAnimation();
+            }
+
+            rhcpBtn.addEventListener('click', () => {
+                direction = 1;
+                rhcpBtn.classList.add('active');
+                lhcpBtn.classList.remove('active');
+            });
+
+            lhcpBtn.addEventListener('click', () => {
+                direction = -1;
+                lhcpBtn.classList.add('active');
+                rhcpBtn.classList.remove('active');
+            });
+
+            startAnimation();
+
+            // Section 3: Return Loss Chart
+            const returnLossCtx = document.getElementById('returnLossChart').getContext('2d');
+            new Chart(returnLossCtx, {
+                type: 'line',
+                data: {
+                    labels: [0.5, 0.8, 1.1, 1.4, 1.7, 2.0, 2.3, 2.6, 3.0],
+                    datasets: [{
+                        label: 'S₁₁ (dB)',
+                        data: [-2, -4, -10, -28, -12.3, -8, -6, -5, -4.5],
+                        borderColor: '#4A90E2',
+                        backgroundColor: 'rgba(74, 144, 226, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            title: { display: true, text: '回波損耗 (dB)' },
+                            min: -35,
+                            max: 0,
+                        },
+                        x: {
+                            title: { display: true, text: '頻率 (GHz)' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return ` ${context.dataset.label}: ${context.parsed.y.toFixed(2)} dB`;
+                                }
+                            }
+                        },
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Section 3: Radiation Pattern Chart
+            const radiationCtx = document.getElementById('radiationPatternChart').getContext('2d');
+            const angles = Array.from({ length: 25 }, (_, i) => -180 + i * 15);
+
+            const horizontalData = {
+                measuredRHCP: [-12, -8, -4, 0, -1, -2, -1, 0, -4, -8, -12, -15, -18, -20, -18, -15, -12, -10, -12, -15, -18, -20, -18, -15, -12],
+                predictedRHCP: [-10, -6, -2, 0, -0.5, -1, -0.5, 0, -2, -6, -10, -13, -16, -18, -16, -13, -10, -8, -10, -13, -16, -18, -16, -13, -10],
+                measuredLHCP: [-14, -15, -20, -25, -28, -15, -12, -14, -20, -15, -14, -12, -10, -8, -10, -12, -14, -15, -12, -10, -8, -10, -12, -14, -14],
+                predictedLHCP: [-15, -16, -18, -22, -25, -18, -15, -13, -15, -18, -15, -13, -11, -9, -11, -13, -15, -16, -14, -12, -10, -12, -14, -15, -15]
+            };
+
+            const verticalData = {
+                measuredRHCP: [-13, -9, -5, -0.5, -1, -2.5, -1.5, -0.5, -5, -9, -13, -16, -19, -21, -19, -16, -13, -11, -13, -16, -19, -21, -19, -16, -13],
+                predictedRHCP: [-11, -7, -3, 0, -0.8, -1.5, -0.8, 0, -3, -7, -11, -14, -17, -19, -17, -14, -11, -9, -11, -14, -17, -19, -17, -14, -11],
+                measuredLHCP: [-10, -11, -13, -15, -14, -12, -11, -13, -15, -13, -10, -8, -6, -5, -6, -8, -10, -12, -14, -12, -10, -8, -6, -8, -10],
+                predictedLHCP: [-12, -13, -14, -16, -15, -13, -12, -14, -16, -14, -12, -10, -8, -7, -8, -10, -12, -14, -15, -13, -12, -10, -8, -10, -12]
+            };
+
+            const radiationChart = new Chart(radiationCtx, {
+                type: 'radar',
+                data: {
+                    labels: angles.map(a => `${a}°`),
+                    datasets: [
+                        { label: '測量 RHCP', data: horizontalData.measuredRHCP.map(v => v + 30), backgroundColor: 'rgba(214, 140, 69, 0.4)', borderColor: 'rgba(214, 140, 69, 1)', borderWidth: 2, fill: true },
+                        { label: '測量 LHCP', data: horizontalData.measuredLHCP.map(v => v + 30), backgroundColor: 'rgba(74, 144, 226, 0.4)', borderColor: 'rgba(74, 144, 226, 1)', borderWidth: 2, fill: true },
+                        { label: '預測 RHCP', data: horizontalData.predictedRHCP.map(v => v + 30), borderColor: 'rgba(214, 140, 69, 0.7)', borderDash: [5, 5], borderWidth: 2, fill: false },
+                        { label: '預測 LHCP', data: horizontalData.predictedLHCP.map(v => v + 30), borderColor: 'rgba(74, 144, 226, 0.7)', borderDash: [5, 5], borderWidth: 2, fill: false },
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    elements: {
+                        line: {
+                            tension: 0.1
+                        }
+                    },
+                    scales: {
+                        r: {
+                            min: 0,
+                            max: 35,
+                            ticks: {
+                                stepSize: 10,
+                                callback: value => value % 10 === 0 ? `${value - 30} dB` : '',
+                                backdropColor: 'rgba(255, 255, 255, 0.75)'
+                            },
+                            pointLabels: {
+                                font: { size: 10 }
+                            },
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    const originalValue = (context.raw - 30).toFixed(1);
+                                    return `${context.dataset.label}: ${originalValue} dB`;
+                                }
+                            }
+                        },
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            function updateRadiationChart(data) {
+                radiationChart.data.datasets[0].data = data.measuredRHCP.map(v => v + 30);
+                radiationChart.data.datasets[1].data = data.measuredLHCP.map(v => v + 30);
+                radiationChart.data.datasets[2].data = data.predictedRHCP.map(v => v + 30);
+                radiationChart.data.datasets[3].data = data.predictedLHCP.map(v => v + 30);
+                radiationChart.update();
+            }
+
+            const configHorizontalBtn = document.getElementById('configHorizontal');
+            const configVerticalBtn = document.getElementById('configVertical');
+
+            configHorizontalBtn.addEventListener('click', () => {
+                updateRadiationChart(horizontalData);
+                configHorizontalBtn.classList.add('active');
+                configVerticalBtn.classList.remove('active');
+            });
+
+            configVerticalBtn.addEventListener('click', () => {
+                updateRadiationChart(verticalData);
+                configVerticalBtn.classList.add('active');
+                configHorizontalBtn.classList.remove('active');
+            });
+
+
+            // Smooth scrolling for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Active nav link highlighting on scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${entry.target.id}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: '-50% 0px -50% 0px' });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+
+</html>
