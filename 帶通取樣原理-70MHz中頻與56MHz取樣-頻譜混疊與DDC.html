@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E5%B8%B6%E9%80%9A%E5%8F%96%E6%A8%A3%E5%8E%9F%E7%90%86-70MHz%E4%B8%AD%E9%A0%BB%E8%88%8756MHz%E5%8F%96%E6%A8%A3-%E9%A0%BB%E8%AD%9C%E6%B7%B7%E7%96%8A%E8%88%87DDC.png">
+    <meta name="twitter:description" content="說明56MHz取樣70MHz中頻的帶通取樣原理。探討訊號如何利用頻譜混疊降頻至14MHz數位中頻，並釐清其與DDC後14MHz數據率的區別。">
+    <meta name="twitter:title" content="帶通取樣原理-70MHz中頻與56MHz取樣-頻譜混疊與DDC">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E5%B8%B6%E9%80%9A%E5%8F%96%E6%A8%A3%E5%8E%9F%E7%90%86-70MHz%E4%B8%AD%E9%A0%BB%E8%88%8756MHz%E5%8F%96%E6%A8%A3-%E9%A0%BB%E8%AD%9C%E6%B7%B7%E7%96%8A%E8%88%87DDC.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E5%B8%B6%E9%80%9A%E5%8F%96%E6%A8%A3%E5%8E%9F%E7%90%86-70MHz%E4%B8%AD%E9%A0%BB%E8%88%8756MHz%E5%8F%96%E6%A8%A3-%E9%A0%BB%E8%AD%9C%E6%B7%B7%E7%96%8A%E8%88%87DDC.html">
+    <meta property="og:description" content="說明56MHz取樣70MHz中頻的帶通取樣原理。探討訊號如何利用頻譜混疊降頻至14MHz數位中頻，並釐清其與DDC後14MHz數據率的區別。">
+    <meta property="og:title" content="帶通取樣原理-70MHz中頻與56MHz取樣-頻譜混疊與DDC">
+    <meta name="description" content="說明56MHz取樣70MHz中頻的帶通取樣原理。探討訊號如何利用頻譜混疊降頻至14MHz數位中頻，並釐清其與DDC後14MHz數據率的區別。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欠取樣與帶通取樣原理：頻譜摺疊、反轉與訊號重建</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- KaTeX CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+        xintegrity="sha384-sN স্বীক0iL0yIsAocIvuDgiHjrqRHz2N2vfxjhBYgwll0k2vCjCoqHnQvQ/kF/bS" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+        xintegrity="sha384-hIoPIeC8mAesDuBMS/RkEAFE9PVi/aOcMvU0PjS6MIdgCZ/d/q0WfGppM6bS/jSO"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+        xintegrity="sha384-43g4WJ4RzIuA6KYKkM0L1N9EaL452eBcA/vQ2xn8vH9atP2ZbCqBN2CBIrUfGgUe"
+        crossorigin="anonymous"></script>
+
+    <style>
+        /* 設定基本字體和滾動行為 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* KaTeX 樣式覆蓋，確保在深色主題下可讀 */
+        .katex {
+            font-size: 1.1em !important;
+            /* 確保字體大小一致 */
+            color: #e2e8f0;
+            /* slate-200 */
+        }
+
+        /* 自定義滾動條樣式 */
+        ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+            /* slate-900 */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            /* slate-700 */
+            border-radius: 6px;
+            border: 3px solid #0f172a;
+            /* slate-900 */
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+            /* slate-600 */
+        }
+    </style>
+</head>
+
+<body class="antialiased bg-gradient-to-b from-gray-950 via-gray-950 to-black text-slate-300 pb-24">
+
+    <!-- Header -->
+    <header class="text-center py-20 px-6 bg-gray-950 shadow-lg">
+        <h1
+            class="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-300 to-purple-400 mb-6">
+            解構帶通取樣：70MHz 中頻與 56MHz 取樣的深度解析
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 max-w-4xl mx-auto">
+            深入探討奈奎斯特區、頻譜混疊、DDC 原理及 14MHz 頻率之謎。
+        </p>
+    </header>
+
+    <!-- Main Content Body -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+
+        <!-- 摘要卡片 -->
+        <section
+            class="max-w-4xl mx-auto bg-gray-900/60 backdrop-blur-sm border border-slate-800 rounded-xl shadow-xl p-8">
+            <h2 class="text-3xl font-bold text-sky-300 mb-6 border-b border-slate-700 pb-4">
+                🚀 核心摘要
+            </h2>
+            <div class="space-y-4 text-lg text-slate-300 leading-relaxed">
+                <p>
+                    本文深入分析了「使用 <strong>56 MHz</strong> 取樣率捕獲 <strong>70 MHz</strong> 中頻 (IF) 訊號」這一看似違反奈奎斯特 (Nyquist)
+                    定理的工程實踐。其核心原理在於利用<strong>帶通取樣（或稱欠取樣）</strong>。
+                </p>
+                <p>
+                    此技術並非盲目取樣，而是透過精確選擇取樣率 \(f_s\)，<strong>故意</strong>使位於高奈奎斯特區 (Nyquist Zone) 的 70 MHz
+                    訊號，以可控的方式<strong>混疊 (Aliasing)</strong> 到第一奈奎斯特區（0 至 28 MHz），最終在數位域中表現為 <strong>14 MHz</strong>
+                    的數位中頻。
+                </p>
+                <p>
+                    此技術並非盲目取樣，而是透過精確選擇取樣率 \(f_s\)，<strong>故意</strong>使位於高奈奎斯特區 (Nyquist Zone) 的 70 MHz
+                    訊號，以可控的方式<strong>混疊 (Aliasing)</strong> 到第一奈奎斯特區（0 至 28 MHz），最終在數位域中表現為 <strong>14 MHz</strong>
+                    的數位中頻。
+                </p>
+                <p>
+                    本文將進一步解構此過程、探討實現此技術的關鍵前提（類比濾波器），並釐清 <strong>14 MHz 中頻</strong>與 <strong>14 MHz
+                        最終資料傳輸率</strong>之間的區別——後者是透過<strong>數位下變頻 (Digital Down-Conversion, DDC)</strong> 及 4 倍抽取
+                    (Decimation) 實現的，此設計同時帶來了顯著的<strong>處理增益</strong>。
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 1: 訊號取樣的理論基礎 -->
+        <section class="bg-gray-950/70 border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="p-6 md:p-10">
+                <h2 class="text-3xl font-bold mb-8 text-sky-300 border-b border-slate-700 pb-4">
+                    📡 第一部分：訊號取樣的理論基礎
+                </h2>
+                <div class="flex flex-col space-y-10">
+
+                    <!-- 1.1 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">1.1 低通取樣定理 (奈奎斯特-香農定理)</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            在數位訊號處理領域，一切分析的基石均源於取樣定理。傳統的、也是最廣為人知的取樣定理是奈奎斯特-香農 (Nyquist-Shannon)
+                            定理，它主要針對<strong>低通訊號</strong> (low-pass signals)。
+                            該定理指出，一個頻寬受限的低通訊號，其最高頻率分量為 \(f_{max}\)，如果取樣頻率 \(f_s\) 滿足 \(f_s >
+                            2f_{max}\)，那麼原始的連續時間訊號可以從其離散的取樣值中被完美地重建，而不會產生失真。
+                            當取樣條件未被滿足時，會發生<strong>頻譜混疊</strong> (aliasing)。高於 \(f_s/2\)（奈奎斯特頻率）的頻率分量會「摺疊」回 \(0\) 到
+                            \(f_s/2\) 的基頻範圍內，造成不可逆的失真。
+                        </p>
+                    </article>
+
+                    <!-- 1.2 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">1.2 帶通取樣 (欠取樣) 簡介</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            所討論的 70 MHz 訊號是一個<strong>中頻 (Intermediate Frequency, IF)</strong>
+                            訊號，它本質上是一個<strong>帶通訊號</strong> (bandpass signal)。
+                            帶通訊號的能量集中在某個中心頻率 \(f_c\) 附近，其頻寬為 \(B\)。對於典型的帶通訊號，\(f_c \gg B\)。
+                            訊號的真正「資訊」量，是由其<strong>頻寬 \(B\)</strong> 決定的，而不是其最高頻率 \(f_H\)。
+                            <strong>帶通取樣 (Bandpass Sampling)</strong>，也稱為<strong>欠取樣
+                                (Undersampling)</strong>，是一種利用更低的取樣率 \(f_s\) (即 \(f_s < 2f_H\)) 來採集高頻帶通訊號的技術。
+                                其關鍵在於，我們<strong>故意</strong>讓高頻訊號發生混疊，但以一種<strong>受控</strong>的方式，將其精確地「摺疊」或「搬移」到基頻 \(0\)
+                                到 \(f_s/2\) 範圍內，且不產生*自重疊* (self-overlap)。要實現這一點，取樣率 \(f_s\) 必須滿足一個基本條件：\(f_s \ge 2B\)。
+                        </p>
+                    </article>
+
+                    <!-- 1.3 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">1.3 頻譜複製與奈奎斯特區</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            取樣過程在頻域的效果是，原始類比訊號的頻譜 \(X(f)\) 被<strong>無限次地、週期性地複製</strong>到整個頻率軸上，每個複製的頻譜圖像都以 \(f_s\)
+                            的整數倍為中心（即 \(k \cdot f_s\)，其中 \(k\) 為任意整數）。
+                            整個頻率軸被 \(f_s/2\) 的倍數「摺疊」，劃分為多個<strong>奈奎斯特區 (Nyquist Zones)</strong>：
+                        </p>
+                        <ul class="list-disc list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li><strong>第 1 奈奎斯特區 (Zone 1):</strong> \(0\) 至 \(f_s/2\)</li>
+                            <li><strong>第 2 奈奎斯特區 (Zone 2):</strong> \(f_s/2\) 至 \(f_s\)</li>
+                            <li><strong>第 3 奈奎斯特區 (Zone 3):</strong> \(f_s\) 至 \(3f_s/2\)</li>
+                            <li><strong>第 4 奈奎斯特區 (Zone 4):</strong> \(3f_s/2\) 至 \(2f_s\)（以此類推）</li>
+                        </ul>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4 space-y-4">
+                            模數轉換器 (Analog-to-Digital Converter, ADC) 的輸出，只能「看到」第 1
+                            奈奎斯特區內的訊號。任何位於更高奈奎斯特區的類比訊號，都會在取樣時被「摺疊」回第 1 奈奎斯特區。
+                            一個頻率為 \(f_a\) 的類比訊號，在以 \(f_s\) 取樣後，其在數位域中表現出的混疊頻率 \(f_d\) 為：
+                        </p>
+                        <div class="my-4 p-4 bg-gray-900 rounded-lg text-center">
+                            $$ f_d = |f_a - k \cdot f_s| $$
+                        </div>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300">
+                            其中 \(k\) 是一個整數，選擇 \(k\) 使得 \(f_d\) 落在 \(0\) 到 \(f_s/2\) 範圍內。ADC 在這裡扮演了混頻器 (Mixer) 的角色。
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: 帶通取樣的嚴格數學表述 -->
+        <section class="bg-gray-950/70 border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="p-6 md:p-10">
+                <h2 class="text-3xl font-bold mb-8 text-sky-300 border-b border-slate-700 pb-4">
+                    📈 第二部分：帶通取樣的嚴格數學表述
+                </h2>
+                <div class="flex flex-col space-y-10">
+
+                    <!-- 2.1 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">2.1 廣義取樣定理：推導有效的 \(f_s\)</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            帶通取樣的目標是選擇一個 \(f_s\)，使得高頻的帶通訊號頻譜 \([f_L, f_H]\) 在摺疊回第 1 奈奎斯特區時，能夠完美地落入其中，而不發生*自重疊*。
+                            一個嚴格的數學推導表明，對於頻寬 \(B = f_H - f_L\) 的訊號，\(f_s\) 必須滿足以下不等式組之一：
+                        </p>
+                        <div class="my-4 p-4 bg-gray-900 rounded-lg text-center">
+                            $$ \frac{2f_H}{m} \le f_s \le \frac{2f_L}{m-1} $$
+                        </div>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            其中 \(m\) 是一個正整數，\(m = \lfloor f_H / B \rfloor\)。這個公式定義了一系列<strong>有效取樣率的「窗口」</strong>。
+
+                            (註：\(f_0 = [(2n+1)/4] \times f_s\) 是一個在工程實踐中為簡化 數位下變頻 (Digital Down-Conversion, DDC)
+                            運算而選擇的<strong>特殊情況</strong>，它使混疊後的中心頻率恰好落在 \(f_s/4\)，極大簡化了硬體實現，但這不是普適的理論。)
+                        </p>
+                    </article>
+
+                    <!-- 2.2 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">2.2 頻寬約束：\(f_s \ge 2B\)</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            在所有關於 \(f_s\) 的討論中，一個不可協商的、最根本的約束是：<strong>取樣率必須至少是訊號頻寬的兩倍</strong>，即 \(f_s \ge 2B\)。
+                            奈奎斯特準則仍然適用於訊號的*有效頻寬*。
+                            如果 \(f_s < 2B\)，那麼混疊後的頻譜，其「頂部」將會與「底部」發生重疊。這種*自混疊*會使訊號資訊（例如，上邊帶與下邊帶）相互干擾，導致資料被徹底破壞。 </p>
+                    </article>
+
+                    <!-- 2.3 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">2.3 頻譜反轉 (Spectral Inversion)</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            帶通取樣還有一個特性：<strong>頻譜反轉</strong>。
+                        </p>
+                        <ul class="list-disc list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li>當類比訊號的中心頻率位於<strong>奇數</strong>奈奎斯特區（Zone 1, Zone 3, Zone 5...）時，其混疊到基頻的頻譜將保持其原始的頻率結構。
+                            </li>
+                            <li>當類比訊號的中心頻率位於<strong>偶數</strong>奈奎斯特區（Zone 2, Zone 4, Zone 6...）時，其混疊到基頻的頻譜將會被「翻轉」或「反轉」。
+                            </li>
+                        </ul>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4">
+                            這種反轉並不會導致資訊遺失，但後續的數位訊號處理必須知曉並補償這種反轉。
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: 案例研究：70 MHz 中頻以 56 MHz 取樣 -->
+        <section class="bg-gray-950/70 border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="p-6 md:p-10">
+                <h2 class="text-3xl font-bold mb-8 text-sky-300 border-b border-slate-700 pb-4">
+                    🔬 第三部分：案例研究：70 MHz 中頻以 56 MHz 取樣
+                </h2>
+                <div class="flex flex-col space-y-10">
+
+                    <!-- 3.1 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">3.1 定位訊號：70 MHz 位於哪個奈奎斯特區？</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            首先，我們定義 \(f_s = 56\) MHz 時的奈奎斯特區：
+                        </p>
+                        <ul class="list-disc list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li>取樣率 \(f_s = 56\) MHz</li>
+                            <li>奈奎斯特頻率 \(f_s/2 = 28\) MHz</li>
+                            <li><strong>第 1 奈奎斯特區 (Zone 1):</strong> 0 MHz – 28 MHz</li>
+                            <li><strong>第 2 奈奎斯特區 (Zone 2):</strong> 28 MHz – 56 MHz</li>
+                            <li><strong>第 3 奈奎斯特區 (Zone 3):</strong> 56 MHz – 84 MHz</li>
+                        </ul>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4 space-y-4">
+                            <strong>結論：</strong> 我們的目標訊號，70 MHz 的中頻載波，<strong>清晰地落在第 3 奈奎斯特區 (56 MHz – 84 MHz)
+                                之內</strong>。
+                            <br>
+                            <strong>頻譜反轉檢查：</strong> 由於 70 MHz 位於<strong>奇數</strong>區（Zone
+                            3），取樣後<strong>不會發生頻譜反轉</strong>。
+                        </p>
+                    </article>
+
+                    <!-- 3.2 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">3.2 頻譜混疊計算（第一個「14 MHz」的由來）</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            接下來，我們計算 70 MHz 訊號在 56 MHz 取樣後，將混疊到第 1 奈奎斯特區（0 – 28 MHz）的哪個頻率。
+                            使用通用混疊公式 \(f_d = |f_a - k \cdot f_s|\)：
+                            <br>
+                            代入 \(f_a = 70\) MHz 和 \(f_s = 56\) MHz，取 \(k=1\)：
+                        </p>
+                        <div class="my-4 p-4 bg-gray-900 rounded-lg text-center">
+                            $$ f_d = |70 \text{ MHz} - 1 \times 56 \text{ MHz}| = 14 \text{ MHz} $$
+                        </div>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            <strong>分析結果：</strong> 這就是「56 MHz 為什麼能採集 70 MHz」的直接答案。ADC 的取樣過程本身充當了第一次下變頻。
+                            56 MHz 的 ADC 產生的是一個<strong>資料傳輸率為 56 MS/s</strong>（每秒 5600 萬個樣本）的數位流，在這個數位流中，原始的 70 MHz
+                            類比訊號被<strong>表示</strong>（或「混疊」）為了一個 <strong>14 MHz 的數位中頻 (Digital IF)</strong>。
+                        </p>
+                    </article>
+
+                    <!-- 3.3 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">3.3 關鍵的「巧合」：\(f_s/4\) 的聯繫</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            在 2.1 節中，我們討論了一個特殊的工程實踐，它將混疊後的載波置於 \(f_s/4\)。現在我們來審視我們的案例：
+                        </p>
+                        <ul class="list-disc list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li>取樣率 \(f_s = 56\) MHz</li>
+                            <li>該取樣率下的「特殊頻率」 \(f_s / 4 = 56 \text{ MHz} / 4 = 14 \text{ MHz}\)</li>
+                        </ul>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4 space-y-4">
+                            <strong>一個重大的發現：</strong>
+                            在我們的案例中，取樣 70 MHz 訊號所產生的混疊數位中頻 \(f_d = 14\) MHz，<strong>與 \(f_s/4\) 的值（14 MHz）完全相等</strong>。
+                            <br><br>
+                            這揭示了該案例設計的真正精妙之處。70 MHz (\(f_a\)) 和 56 MHz (\(f_s\))
+                            這組參數<strong>絕非隨意選擇</strong>。它們是系統設計者<strong>有意為之</strong>的，目的就是在利用帶通取樣的同時，將混疊後的數位中頻 \(f_d\)
+                            <strong>精確地</strong>落在 \(f_s/4\) 這一計算效率最高的「甜點」上。這為後續的 DDC 處理提供了極大的便利。
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: 系統前提：類比濾波器的關鍵角色 -->
+        <section class="bg-gray-950/70 border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="p-6 md:p-10">
+                <h2 class="text-3xl font-bold mb-8 text-sky-300 border-b border-slate-700 pb-4">
+                    ⚠️ 第四部分：系統前提：類比濾波器的關鍵角色
+                </h2>
+                <div class="flex flex-col space-y-10">
+
+                    <!-- 4.1 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">4.1 「鏡像問題」：帶通取樣不是魔法</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            ADC 的取樣過程是「盲目」的。它無法區分一個 14 MHz 的訊號是來自第 1 區的 14 MHz，還是來自第 3 區的 70 MHz。
+                            如果在 70 MHz 訊號（我們想要的）存在的同時，在其他奈奎斯特區也存在強干擾訊號，而這些干擾訊號*同樣*會混疊到 14
+                            MHz（或其附近），它們將在數位域中與我們的目標訊號疊加在一起，導致訊號被永久破壞。
+                            這些同樣會混疊到目標頻帶的其他頻率，被稱為<strong>鏡像頻率 (Image Frequencies)</strong>。
+                        </p>
+                    </article>
+
+                    <!-- 4.2 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">4.2 識別「敵人」：計算鏡像頻率</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            我們的目標數位中頻 \(f_d = 14\) MHz。我們使用公式 \(f_a = k \cdot f_s \pm f_d\) 來找出所有可能混疊到 14 MHz 的類比頻率
+                            \(f_a\)（其中 \(f_s = 56\) MHz, \(f_d = 14\) MHz）：
+                        </p>
+                        <!-- Table -->
+                        <div class="mt-6 overflow-x-auto relative rounded-lg border border-slate-700">
+                            <table class="w-full text-left text-slate-300">
+                                <thead class="text-sm text-sky-300 uppercase bg-gray-900/50">
+                                    <tr>
+                                        <th scope="col" class="py-3 px-6">奈奎斯特區 (Zone)</th>
+                                        <th scope="col" class="py-3 px-6">區域頻率範圍 (MHz)</th>
+                                        <th scope="col" class="py-3 px-6">頻譜是否反轉？</th>
+                                        <th scope="col" class="py-3 px-6">混疊至 14 MHz 的類比頻率 \(f_a\)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800 bg-gray-900/80">
+                                    <tr class="hover:bg-gray-800/60">
+                                        <td class="py-4 px-6">Zone 1</td>
+                                        <td class="py-4 px-6">0 – 28</td>
+                                        <td class="py-4 px-6">否 (奇數區)</td>
+                                        <td class="py-4 px-6"><strong>14 MHz</strong></td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-800/60">
+                                        <td class="py-4 px-6">Zone 2</td>
+                                        <td class="py-4 px-6">28 – 56</td>
+                                        <td class="py-4 px-6">是 (偶數區)</td>
+                                        <td class="py-4 px-6"><strong>42 MHz</strong></td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-800/60 bg-sky-900/30">
+                                        <td class="py-4 px-6 font-bold">Zone 3</td>
+                                        <td class="py-4 px-6 font-bold">56 – 84</td>
+                                        <td class="py-4 px-6 font-bold">否 (奇數區)</td>
+                                        <td class="py-4 px-6 font-bold"><strong>70 MHz (我們的目標訊號)</strong></td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-800/60">
+                                        <td class="py-4 px-6">Zone 4</td>
+                                        <td class="py-4 px-6">84 – 112</td>
+                                        <td class="py-4 px-6">是 (偶數區)</td>
+                                        <td class="py-4 px-6"><strong>98 MHz</strong></td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-800/60">
+                                        <td class="py-4 px-6">Zone 5</td>
+                                        <td class="py-4 px-6">112 – 140</td>
+                                        <td class="py-4 px-6">否 (奇數區)</td>
+                                        <td class="py-4 px-6"><strong>126 MHz</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <!-- 4.3 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">4.3 類比抗混疊帶通濾波器 (BPF) 規範</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            上表直觀地展示了系統的脆弱性。為了使 70/56 的方案可行，系統<strong>必須</strong>在 ADC 之前放置一個高效能的<strong>類比帶通濾波器
+                                (Bandpass Filter, BPF)</strong>。
+                            該 BPF 的技術指標必須是：
+                        </p>
+                        <ul class="list-disc list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li><strong>通帶 (Passband):</strong> 必須以 70 MHz 為中心，其寬度 \(B\) 必須足以無失真地通過整個目標訊號的頻寬。</li>
+                            <li><strong>阻帶 (Stopband):</strong> 必須對<strong>所有</strong>其他的鏡像頻率（特別是 42 MHz 和 98
+                                MHz）提供極高的衰減（抑制）。</li>
+                        </ul>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4">
+                            採用帶通取樣來降低 ADC 時鐘速率，其代價是<strong>急劇增加</strong>了對*類比*前端濾波器的效能要求。
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: 解密數位下變頻 (DDC) 與第二個「14 MHz」 -->
+        <section class="bg-gray-950/70 border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="p-6 md:p-10">
+                <h2 class="text-3xl font-bold mb-8 text-sky-300 border-b border-slate-700 pb-4">
+                    ⚙️ 第五部分：解密數位下變頻 (DDC) 與第二個「14 MHz」
+                </h2>
+                <div class="flex flex-col space-y-10">
+
+                    <!-- 5.1 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">5.1 糾正核心誤解：14 MHz IF vs 14 MS/s Data Rate
+                        </h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            這是一個嚴重的混淆。此案例將兩個<strong>完全不同</strong>，只是在數值上<strong>恰好相等</strong>的概念混為一談：
+                        </p>
+                        <ul class="list-decimal list-inside mt-4 space-y-3 text-base md:text-lg text-slate-400">
+                            <li><strong>14 MHz 的數位中頻 (IF)：</strong>
+                                如 Part 3 所述，這是 70 MHz 類比訊號在 56 MS/s 取樣後，在數位域中的<strong>頻率
+                                    (Hz)</strong>。此時，資料流的<strong>速率</strong>仍然是 56 MS/s。
+                            </li>
+                            <li><strong>14 MHz 的資料速率 (Data Rate)：</strong>
+                                這是 DDC 處理的*最終輸出*。它是 DDC 對 56 MS/s 輸入資料進行 4 倍<strong>抽取 (Decimation)</strong>
+                                後得到的<strong>新取樣率 (Samples/sec)</strong>（\(56 \text{ MS/s} / 4 = 14 \text{ MS/s}\)）。
+                            </li>
+                        </ul>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4">
+                            最終的 14 MS/s 資料速率，是工程師為了降低後續 數位訊號處理器 (Digital Signal Processor, DSP)
+                            負擔而做出的<strong>設計選擇</strong>。
+                        </p>
+                    </article>
+
+                    <!-- 5.2 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">5.2 軟體無線電中的 DDC 架構</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            DDC 是 軟體無線電 (Software-Defined Radio, SDR) 中一個標準的數位訊號處理模組，其目的是：
+                        </p>
+                        <ol class="list-decimal list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li><strong>頻率搬移 (Translation)：</strong> 將所需的數位中頻 \(f_d\)（在我們的案例中是 14 MHz）精確地搬移到 0
+                                Hz（即「基頻」）。</li>
+                            <li><strong>濾波 (Filtering)：</strong> 通過一個低通濾波器 (Lowpass Filter, LPF)，只選擇我們感興趣的信道頻寬 \(B\)。
+                            </li>
+                            <li><strong>抽取 (Decimation)：</strong> 大幅降低資料取樣率，使其僅略高於新基頻訊號的奈奎斯特率（即 \(f_{s\_out} \ge
+                                2B\)），從而極大地減輕後續 DSP 的計算負擔。</li>
+                        </ol>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4">
+                            DDC 的標準訊號鏈是：<strong>輸入 (56MS/s 實數) -> NCO 與混頻器 -> LPF -> 抽取器 -> 輸出 (14MS/s 複數 I/Q)</strong>。
+                        </p>
+                    </article>
+
+                    <!-- 5.3 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">5.3 DDC 流程的正確步驟</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            DDC 的 NCO（數控振盪器, Numerically Controlled Oscillator）目的是將 14 MHz 的數位中頻 \(f_c\) 搬移到 0 Hz。因此，NCO
+                            必須被設定為 <strong>14 MHz</strong>（而不是 56 MHz）。
+                            <br><br>
+                            混頻操作是：\(x[n] \cdot e^{-j 2\pi f_c n / f_s}\)。代入我們的參數：
+                        </p>
+                        <div class="my-4 p-4 bg-gray-900 rounded-lg text-center">
+                            $$ x[n] \cdot e^{-j 2\pi (14 \text{ MHz}) n / (56 \text{ MHz})} = x[n] \cdot e^{-j \pi n /
+                            2} $$
+                        </div>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            正如 3.3 節所預測的，這個 NCO 訊號就是簡單的 \(\{-j, -1, +j, +1, \dots\}\) 序列，計算效率極高，不需要執行昂貴的乘法運算。
+                            <br><br>
+                            在與 14 MHz NCO 混頻之後，我們期望的訊號（14 MHz IF）<strong>已經被搬移到了 0 Hz (基頻)</strong>。混頻過程還會產生一個 \(14 + 14
+                            = 28\) MHz 的鏡像分量。
+                            <br><br>
+                            最後，進行 <strong>4 倍抽取</strong>，將取樣率從 56 MS/s 降至 14 MS/s。這就是第二個「14 MHz」的由來。
+                        </p>
+                    </article>
+
+                    <!-- 5.4 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">5.4 實際的 DDC 濾波器實現 (CIC & FIR)</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            在實際的硬體（如 FPGA）中，DDC 的濾波和抽取過程是一個<strong>多級</strong>實現，以節省資源：
+                        </p>
+                        <ul class="list-disc list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li><strong>CIC 濾波器 (級聯積分梳狀, Cascaded Integrator-Comb)：</strong> DDC 的第一級。CIC
+                                濾波器<strong>不需要任何乘法器</strong>（只使用加法器和暫存器），非常適合高速、高抽取率的粗略濾波。</li>
+                            <li><strong>FIR 濾波器 (有限脈衝響應, Finite Impulse Response)：</strong> CIC 之後通常會跟隨一個或多個 FIR
+                                濾波器，用於校正 CIC 濾波器的通帶衰落，並提供最終的、具有陡峭滾降特性的「磚牆」式信道選擇，精確地濾出頻寬 \(B\)。</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: 處理增益與系統效能 -->
+        <section class="bg-gray-950/70 border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="p-6 md:p-10">
+                <h2 class="text-3xl font-bold mb-8 text-sky-300 border-b border-slate-700 pb-4">
+                    💡 第六部分：處理增益與系統效能
+                </h2>
+                <div class="flex flex-col space-y-10">
+
+                    <!-- 6.1 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">6.1 「處理增益」(Processing Gain)</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            過取樣 (Oversampling) 和數位濾波/抽取（即 DDC 過程）帶來了「處理增益」這一核心優勢。
+                            <strong>機理：</strong>
+                        </p>
+                        <ol class="list-decimal list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li><strong>雜訊散布：</strong> ADC 的量化雜訊被認為是白雜訊，其總功率均勻地分布在整個第一奈奎斯特區，即 \(0\) 到 \(f_s/2\) (28
+                                MHz)。</li>
+                            <li><strong>過取樣：</strong> 當我們使用 \(f_s = 56\) MHz（遠大於
+                                \(2B\)）時，我們是在*過取樣*。這使得總的雜訊功率被「攤薄」在一個非常寬的 28 MHz 頻帶上。</li>
+                            <li><strong>濾波：</strong> DDC 的 LPF（例如，頻寬 \(B\) = 5 MHz）只保留了我們想要的訊號，同時<strong>濾除</strong>了 28
+                                MHz 頻帶中絕大部分的雜訊（即 5 MHz 到 28 MHz 頻帶內的所有雜訊）。</li>
+                            <li><strong>抽取：</strong> 降低資料傳輸率，等效於將所有被 LPF 濾除的雜訊功率「丟棄」。</li>
+                        </ol>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4">
+                            結果是：訊號功率不變，雜訊功率大幅降低。因此，<strong>訊雜比 (Signal-to-Noise Ratio, SNR) 得到提升</strong>。
+                        </p>
+                    </article>
+
+                    <!-- 6.2 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">6.2 量化增益</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            訊雜比 (SNR) 是*功率*比，其增益應使用 \(10 \cdot \log_{10}\)。
+                            僅由抽取因子 \(D\) 帶來的處理增益 (PG) 為：
+                        </p>
+                        <div class="my-4 p-4 bg-gray-900 rounded-lg text-center">
+                            $$ PG_{decimation} = 10 \cdot \log_{10}(D) $$
+                        </div>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            <strong>計算：</strong>
+                            抽取因子 \(D = 4\) (從 56 MS/s 降至 14 MS/s)。
+                            \(PG = 10 \cdot \log_{10}(4) \approx 6.02\) dB。
+                            <br><br>
+                            整個過取樣過程所能提供的*總*處理增益，與*過取樣率* (OSR) 相關，OSR 定義為 \(f_s / (2B)\)。
+                        </p>
+                        <div class="my-4 p-4 bg-gray-900 rounded-lg text-center">
+                            $$ PG_{total} = 10 \cdot \log_{10}(\text{OSR}) = 10 \cdot \log_{10}(f_s / 2B) $$
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 7: 綜合與最終結論 -->
+        <section class="bg-gray-950/70 border border-slate-800 rounded-xl shadow-xl overflow-hidden">
+            <div class="p-6 md:p-10">
+                <h2 class="text-3xl font-bold mb-8 text-sky-300 border-b border-slate-700 pb-4">
+                    🏁 第七部分：綜合與最終結論
+                </h2>
+                <div class="flex flex-col space-y-10">
+
+                    <!-- 7.1 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">7.1 原理總結：兩個問題，兩個「14」</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            70/56/14 這一經典案例的核心是澄清兩個在數值上「巧合」的「14」：
+                        </p>
+                        <ul class="list-decimal list-inside mt-4 space-y-3 text-base md:text-lg text-slate-400">
+                            <li><strong>第一個 14 MHz (數位中頻 IF)：</strong>
+                                <ul>
+                                    <li><strong>• 它是什麼？</strong> 訊號頻率 (Hz)。</li>
+                                    <li><strong>• 它來自哪裡？</strong> 物理取樣過程。</li>
+                                    <li><strong>• 原理：</strong> <strong>帶通取樣</strong>。類比的 70 MHz 訊號（位於第 3 奈奎斯特區）在被 56 MHz
+                                        時鐘取樣時，發生了受控的<strong>頻譜混疊</strong>，在數位域中被「搬移」到了 <strong>14 MHz</strong>。</li>
+                                    <li><strong>• 資料流：</strong> 此時的資料<strong>速率</strong>仍然是 <strong>56 MS/s</strong>。
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="mt-4"><strong>第二個 14 MHz (輸出資料傳輸率)：</strong>
+                                <ul>
+                                    <li><strong>• 它是什麼？</strong> 取樣速率 (MS/s)。</li>
+                                    <li><strong>• 它來自哪裡？</strong> 數位訊號處理。</li>
+                                    <li><strong>• 原理：</strong> <strong>數位下變頻 (DDC)</strong>。這個 DSP 模組對 56 MS/s 的資料流進行處理。
+                                    </li>
+                                    <li><strong>• 步驟：</strong> (a) 使用 <strong>14 MHz NCO</strong> 將 14 MHz IF 搬移到 0 Hz
+                                        (基頻 I/Q) -> (b) 使用 LPF 濾出信道頻寬 \(B\) -> (c) 進行 <strong>4 倍抽取</strong>，將資料傳輸率從 56
+                                        MS/s 降低到 \(56 / 4 =\) <strong>14 MS/s</strong>。</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </article>
+
+                    <!-- 7.2 -->
+                    <article>
+                        <h3 class="text-2xl font-semibold text-teal-300 mb-4">7.2 最終評估</h3>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 space-y-4">
+                            70/56/14 這個組合，遠非巧合，它是一個<strong>極其精妙</strong>的軟體無線電系統設計典範：
+                        </p>
+                        <ul class="list-disc list-inside mt-4 space-y-2 text-base md:text-lg text-slate-400">
+                            <li><strong>類比域：</strong> 70 MHz 的中頻是一個常見的工業標準。</li>
+                            <li><strong>取樣域 (ADC)：</strong> 選擇 56 MHz 的取樣率，利用帶通取樣（Zone 3），<strong>有意地</strong>將 70 MHz
+                                混疊到 14 MHz。</li>
+                            <li><strong>設計精髓：</strong> 14 MHz 恰好是 \(f_s/4\) (\(56/4\))，這使得 DDC 中的 NCO 混頻器計算效率極高（無需乘法）。
+                            </li>
+                            <li><strong>數位域 (DDC)：</strong> 選擇 4 倍抽取，將資料傳輸率降低到 14 MS/s，這不僅極大地減輕了後續 DSP 的負擔，還（作為副產品）提供了 6
+                                dB 的處理增益。</li>
+                        </ul>
+                        <p class="text-base md:text-lg leading-relaxed text-slate-300 mt-4">
+                            因此，這個案例中兩個「14」的巧合，是連接類比取樣物理學和數位處理實現效率的<strong>設計紐帶</strong>。其背後的理論與原理，是帶通取樣定理和 DDC
+                            架構在實際高效能系統中協同優化的經典體現。
+                            </S>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center p-8 mt-16 text-slate-500 text-sm border-t border-slate-800">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4">
+            <span>
+                <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-sky-400 transition-colors duration-200">
+                    Generated by wellstsai.com
+                </a>
+            </span>
+            <span class="hidden sm:inline">|</span>
+            <span>撰寫日期：2025年11月18日</span>
+        </div>
+    </footer>
+
+    <!-- KaTeX Auto-render Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                // 偵測 KaTeX 的分隔符
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },     // 顯示模式
+                    { left: '\\[', right: '\\]', display: true },   // 顯示模式
+                    { left: '\\(', right: '\\)', display: false },  // 行內模式 (JS 字串 '\\(' 尋找 '\(')
+                    { left: '$', right: '$', display: false }       // 行內模式
+                ],
+                // 處理在 <pre>, <code>, <script> 等標籤中找到的數學
+                throwOnError: false
+            });
+        });
+    </script>
+
+</body>
+
+</html>

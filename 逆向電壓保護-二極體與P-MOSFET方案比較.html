@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E9%80%86%E5%90%91%E9%9B%BB%E5%A3%93%E4%BF%9D%E8%AD%B7-%E4%BA%8C%E6%A5%B5%E9%AB%94%E8%88%87P-MOSFET%E6%96%B9%E6%A1%88%E6%AF%94%E8%BC%83.png">
+    <meta name="twitter:description" content="比較三種逆向電壓保護方案：標準二極體、蕭特基二極體與 P-Channel MOSFET。重點說明 P-MOSFET 如何利用低 Rds(on) 實現極低功率損耗，並介紹其 Vgs 運作原理與高壓保護電路。">
+    <meta name="twitter:title" content="逆向電壓保護-二極體與P-MOSFET方案比較">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E9%80%86%E5%90%91%E9%9B%BB%E5%A3%93%E4%BF%9D%E8%AD%B7-%E4%BA%8C%E6%A5%B5%E9%AB%94%E8%88%87P-MOSFET%E6%96%B9%E6%A1%88%E6%AF%94%E8%BC%83.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E9%80%86%E5%90%91%E9%9B%BB%E5%A3%93%E4%BF%9D%E8%AD%B7-%E4%BA%8C%E6%A5%B5%E9%AB%94%E8%88%87P-MOSFET%E6%96%B9%E6%A1%88%E6%AF%94%E8%BC%83.html">
+    <meta property="og:description" content="比較三種逆向電壓保護方案：標準二極體、蕭特基二極體與 P-Channel MOSFET。重點說明 P-MOSFET 如何利用低 Rds(on) 實現極低功率損耗，並介紹其 Vgs 運作原理與高壓保護電路。">
+    <meta property="og:title" content="逆向電壓保護-二極體與P-MOSFET方案比較">
+    <meta name="description" content="比較三種逆向電壓保護方案：標準二極體、蕭特基二極體與 P-Channel MOSFET。重點說明 P-MOSFET 如何利用低 Rds(on) 實現極低功率損耗，並介紹其 Vgs 運作原理與高壓保護電路。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>電路逆向電壓保護：從二極體到 MOSFET</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- KaTeX CSS (for Math Formulas) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+        xintegrity="sha384-KiWOvVjnN8qwKMvhioyehrEMMfDXXYkaYGIuRWgtxlRIPpmTTenvcUvLtvY5A/B5" crossorigin="anonymous">
+
+    <!-- KaTeX JS -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+        xintegrity="sha384-hIoBPJpTadx52GjYCMN1vE9Uo8GjWYJmSyrqGcA8SluEaPGBMCAGaN5MyRzKFhBf"
+        crossorigin="anonymous"></script>
+
+    <!-- KaTeX Auto-render Extension -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+        xintegrity="sha384-4wFqLgwUCDY4YF/zIOHnU+GohBlgSShk7t6UHJpgsNnS2FLIIrY5ZOLPIsVReV5S"
+        crossorigin="anonymous"></script>
+
+    <style>
+        /* Base styling */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #0f172a;
+            /* slate-900 */
+            color: #e2e8f0;
+            /* slate-200 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Gradient text utility */
+        .gradient-text {
+            background-image: linear-gradient(to bottom, #38bdf8, #c084fc);
+            /* from-sky-400 to-purple-400 */
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* Keyword styling for tooltips */
+        .keyword {
+            border-bottom: 2px dotted #64748b;
+            /* slate-500 */
+            cursor: help;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .keyword:hover {
+            border-bottom-color: #38bdf8;
+            /* sky-400 */
+            color: #e2e8f0;
+            /* slate-200 */
+        }
+
+        /* Tooltip container */
+        .tooltip {
+            position: absolute;
+            /* ❗️ [FIX] Changed to absolute for pageX/pageY positioning */
+            display: none;
+            /* ❗️ [FIX] Start hidden */
+            padding: 1rem;
+            /* p-4 */
+            background-color: rgba(30, 41, 59, 0.95);
+            /* bg-slate-800/95 */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid #475569;
+            /* border-slate-700 */
+            border-radius: 0.5rem;
+            /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            /* shadow-lg */
+            z-index: 50;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            max-width: 90vw;
+            /* Responsive max-width */
+            color: #e2e8f0;
+            /* text-slate-200 */
+        }
+
+        /* Tooltip internal styling */
+        .tooltip h3 {
+            font-size: 1.125rem;
+            /* text-lg */
+            font-weight: 700;
+            /* font-bold */
+            color: #fff;
+            padding-bottom: 0.5rem;
+            /* pb-2 */
+            border-bottom: 1px solid #475569;
+            /* border-slate-700 */
+            margin-bottom: 0.75rem;
+            /* mb-3 */
+        }
+
+        .tooltip p {
+            font-size: 0.875rem;
+            /* text-sm */
+            line-height: 1.6;
+            /* leading-relaxed */
+        }
+
+        .tooltip code {
+            background-color: #475569;
+            /* bg-slate-700 */
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            /* rounded */
+            font-size: 0.8rem;
+        }
+
+        /* Card base style */
+        .info-card {
+            background-color: rgba(30, 41, 59, 0.5);
+            /* bg-slate-800/50 */
+            border: 1px solid #334155;
+            /* border-slate-700 */
+            border-radius: 0.75rem;
+            /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            /* shadow-2xl */
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+            /* To contain the emoji card */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            /* Make cards in a row same height */
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: #64748b;
+            /* border-slate-500 */
+        }
+
+        /* Emoji container within cards */
+        .emoji-card {
+            font-size: 4rem;
+            /* text-6xl */
+            line-height: 1;
+            padding: 1.5rem;
+            /* p-6 */
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(51, 65, 85, 0.8), rgba(30, 41, 59, 0.8));
+            /* from-slate-700/80 to-slate-800/80 */
+        }
+
+        /* Custom scrollbar for aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+            /* slate-800 */
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            /* slate-700 */
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+            /* slate-500 */
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-200">
+
+    <!-- Tooltip Element -->
+    <div id="tooltip" class="tooltip hidden" role="tooltip"></div>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-12 md:py-16 pb-24"> <!-- 調整了 pb (padding-bottom) -->
+
+        <!-- Header / Hero Section -->
+        <header class="text-center mb-12 md:mb-16">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+                ⚡ <span class="gradient-text bg-gradient-to-b from-sky-400 to-purple-400">電路逆向電壓保護</span>
+            </h1>
+            <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto">
+                從基礎二極體到高效 P-MOSFET 解決方案的完整指南，防止您的電路因電源反接而「BOOM 💥」！
+            </p>
+        </header>
+
+        <!-- Summary Card -->
+        <section class="max-w-4xl mx-auto mb-16">
+            <div class="bg-slate-800/50 border border-slate-700 rounded-lg shadow-xl p-6 md:p-8 backdrop-blur-sm">
+                <h2 class="text-2xl font-bold mb-4 text-white">🚫 糟糕！電源接反了...</h2>
+                <p class="text-base md:text-lg leading-relaxed text-slate-300">
+                    在電子設計中，意外地將電源（例如 12V 電池）反向連接是一個常見且代價高昂的錯誤。即使是短暫的反向電壓，也可能立即燒毀昂貴的元件。
+                    <br>
+                    本篇將深入探討三種主流的逆向電壓保護技術，分析它們的運作原理、效率與選擇考量，幫助您建構更強固的電子產品。
+                </p>
+            </div>
+        </section>
+
+        <!-- Solutions Grid -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
+
+            <!-- Card 1: Standard Diode -->
+            <div class="info-card">
+                <div class="emoji-card">🚦</div>
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold mb-3 text-white">解法一：標準二極體</h3>
+                    <p class="text-slate-300 mb-4">
+                        這是最簡單的方法。在電源正極串聯一個二極體。當電源反接時，二極體處於逆向偏壓，阻斷電流，保護後級電路。
+                    </p>
+                    <p class="text-slate-400">
+                        <strong>缺點：</strong> 效率低落。二極體本身會產生一個「順向電壓降」，導致<strong>顯著的功率損耗</strong>（以熱量形式散失）。
+                    </p>
+                    <div class="mt-4 p-4 bg-slate-900 rounded-lg">
+                        <p class="font-mono text-sm text-amber-300">範例: 1N5401T (12V, 2A)</p>
+                        <p class="text-white mt-2">順向壓降 $V_f \approx 0.85\text{V}$</p>
+                        <p class="text-white">功率損耗 $P = V_f \times I$</p>
+                        <p class="text-white">$P = 0.85\text{V} \times 2\text{A} = $ <strong
+                                class="text-red-400 text-base">1.7W</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Schottky Diode -->
+            <div class="info-card">
+                <div class="emoji-card">💡</div>
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold mb-3 text-white">解法二：蕭特基二極體</h3>
+                    <p class="text-slate-300 mb-4">
+                        為了改善效率，我們可以使用蕭特基二極體。它的順向壓降 $V_f$ 遠低於標準二極體，因此功率損耗更低。
+                    </p>
+                    <p class="text-slate-400">
+                        <strong>注意：</strong> 選擇時必須小心！許多蕭特基二極體有很高的
+                        <span class="keyword" data-keyword="reverseLeakage">逆向漏電流</span>，
+                        這在反接時反而會消耗電量（尤其在電池供電應用中），甚至失效。
+                    </p>
+                    <div class="mt-4 p-4 bg-slate-900 rounded-lg">
+                        <p class="font-mono text-sm text-amber-300">範例: STPS2L60 (低漏電型)</p>
+                        <p class="text-white mt-2">順向壓降 $V_f \approx 0.55\text{V}$</p>
+                        <p class="text-white">功率損耗 $P = V_f \times I$</p>
+                        <p class="text-white">$P = 0.55\text{V} \times 2\text{A} = $ <strong
+                                class="text-yellow-400 text-base">1.1W</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: P-Channel MOSFET (Intro) -->
+            <div class="info-card md:col-span-2 lg:col-span-1">
+                <div class="emoji-card">🏆</div>
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold mb-3 text-white">解法三：P-Channel MOSFET</h3>
+                    <p class="text-slate-300 mb-4">
+                        這是最高效、最專業的解決方案。它利用一個 P-Channel MOSFET 作為「智慧開關」。
+                    </p>
+                    <p class="text-slate-400">
+                        這種方法幾乎不產生壓降，功率損耗極低。它依賴 MOSFET 的
+                        <span class="keyword" data-keyword="rdsOn">$R_{ds(on)}$</span>
+                        （導通電阻）而非 $V_f$。
+                    </p>
+                    <div class="mt-4 p-4 bg-slate-900 rounded-lg">
+                        <p class="font-mono text-sm text-amber-300">範例: <span class="keyword"
+                                data-keyword="mosfetFQP47P06">FQP47P06</span></p>
+                        <p class="text-white mt-2">導通電阻 $R_{ds(on)} \approx 26\text{m}\Omega$</p>
+                        <p class="text-white">功率損耗 $P = I^2 \times R_{ds(on)}$</p>
+                        <p class="text-white">$P = (2\text{A})^2 \times 0.026\Omega = $ <strong
+                                class="text-green-400 text-base">0.104W</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: MOSFET - Correct Connection -->
+            <div class="info-card">
+                <div class="emoji-card">✅</div>
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold mb-3 text-white">MOSFET 原理：正向連接</h3>
+                    <p class="text-slate-300 mb-4">
+                        1. <strong>初始狀態：</strong> 電流首先流經 MOSFET 內部的
+                        <span class="keyword" data-keyword="bodyDiode">寄生體二極體</span>，
+                        產生約 1V 壓降。
+                    </p>
+                    <p class="text-slate-300 mb-4">
+                        2. <strong>電壓建立：</strong> 假設輸入 12V，Source (S) 端電壓約為 11V。Gate (G) 端接地 (0V)。
+                    </p>
+                    <p class="text-slate-300 mb-4">
+                        3. <strong>開啟：</strong> 閘源極電壓
+                        $V_{gs} = V_g - V_s = 0\text{V} - 11\text{V} = -11\text{V}$。
+                    </p>
+                    <p class="text-slate-300">
+                        4. <strong>導通：</strong> -11V 遠低於
+                        <span class="keyword" data-keyword="vgsThreshold">閘極閾值電壓</span>
+                        (例如 -4V)，MOSFET 完全導通。電流改道流經低電阻的 $R_{ds(on)}$ 通道，體二極體被旁路。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 5: MOSFET - Reverse Connection -->
+            <div class="info-card">
+                <div class="emoji-card">❌</div>
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold mb-3 text-white">MOSFET 原理：反向連接</h3>
+                    <p class="text-slate-300 mb-4">
+                        1. <strong>反向狀態：</strong> 電源反接，電路主軌變為 -12V。Gate (G) 仍接地 (0V)。
+                    </p>
+                    <p class="text-slate-300 mb-4">
+                        2. <strong>邏輯矛盾：</strong> 我們可以「反證」它不會導通。<strong>假設</strong> MOSFET 導通了，則 Source (S) 端電壓會接近 Drain
+                        (D) 端的 -12V。
+                    </p>
+                    <p class="text-slate-300 mb-4">
+                        3. <strong>計算 $V_{gs}$：</strong>
+                        $V_{gs} = V_g - V_s = 0\text{V} - (-12\text{V}) = $ <strong class_="text-lg">+12V</strong>。
+                    </p>
+                    <p class="text-slate-300">
+                        4. <strong>結論：</strong> P-Channel MOSFET 需要<strong>負的</strong> $V_{gs}$ 才能開啟。+12V 的 $V_{gs}$
+                        是一個<strong>邏輯矛盾</strong>，因此我們的「假設」不成立。MOSFET 保持關斷，電路安全。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Card 6: High Voltage Add-on -->
+            <div class="info-card">
+                <div class="emoji-card">🏔️</div>
+                <div class="p-6 flex-grow">
+                    <h3 class="text-2xl font-bold mb-3 text-white">進階：高電壓應用</h3>
+                    <p class="text-slate-300 mb-4">
+                        MOSFET 的一個關鍵參數是
+                        <span class="keyword" data-keyword="vgsMax">$V_{gs(max)}$</span>
+                        (最大閘源極電壓)，通常僅 ±15V 或 ±20V。
+                    </p>
+                    <p class="text-slate-300 mb-4">
+                        如果您的輸入電壓超過這個值（例如 30V），$V_{gs}$ 會變成 -29V，<strong>這會擊穿 MOSFET 的閘極！</strong>
+                    </p>
+                    <p class="text-slate-300">
+                        <strong>解決方案：</strong> 如圖所示，在 Gate 和 Ground 之間並聯一個
+                        <span class="keyword" data-keyword="zenerDiode">稽納二極體</span>
+                        (例如 10V 的 1N5240)，並串聯一個電阻。稽納二極體會將 $V_{gs}$ 鉗位在 -10V，保護 MOSFET。
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- P-MOSFET Conditions Section -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                💡 <span class="gradient-text bg-gradient-to-b from-sky-400 to-purple-400">P-MOSFET 開關條件</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+
+                <!-- Card 1: ON Condition -->
+                <div class="info-card">
+                    <div class="emoji-card">🟢</div>
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">導通條件 (ON)</h3>
+                        <p class="text-slate-300 mb-4">
+                            P-MOSFET 要導通，<strong>Gate (G) 必須相對於 Source (S) 為負電壓</strong>。
+                        </p>
+                        <p class="text-slate-400">
+                            具體來說，閘源極電壓 $V_{gs}$ 必須<strong>低於</strong>
+                            <span class="keyword" data-keyword="vgsThreshold">閘極閾值電壓</span>。
+                            (例如 $V_{gs} < -4\text{V}$) </p>
+                                <p class="text-slate-400 mt-2">
+                                    最簡單的做法是將 Gate 接地 (0V)，使 $V_{gs}$ 為負值，MOSFET 進入飽和區，允許電流從 Source 流向 Drain。
+                                </p>
+                    </div>
+                </div>
+
+                <!-- Card 2: OFF Condition -->
+                <div class="info-card">
+                    <div class="emoji-card">🔴</div>
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">截止條件 (OFF)</h3>
+                        <p class="text-slate-300 mb-4">
+                            P-MOSFET 要截止，<strong>Gate (G) 電壓應等於或高於 Source (S) 電壓</strong>。
+                        </p>
+                        <p class="text-slate-400">
+                            這使得閘源極電壓 $V_{gs}$ <strong>接近 0V 或為正值</strong>。
+                        </p>
+                        <p class="text-slate-400 mt-2">
+                            當 Gate 和 Source 處於相同電位時，不存在足夠的電壓差來維持導通通道，MOSFET 進入截止區，表現為開路開關。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 3: Comparison & Application -->
+                <div class="info-card md:col-span-2 lg:col-span-1">
+                    <div class="emoji-card">🔄</div>
+                    <div class="p-6 flex-grow">
+                        <h3 class="text-2xl font-bold mb-3 text-white">對比 & G應用</h3>
+                        <p class="text-slate-300 mb-4">
+                            <strong>與 N-MOSFET 相反：</strong> N-MOSFET 在 $V_{gs}$ <strong>高於</strong> Source 時導通，在
+                            $V_{gs}$ 接近 0V 時截止。
+                        </p>
+                        <p class="text-slate-400 mb-4">
+                            P-MOSFET 因其特性，常被用於<strong>高側開關 (High-Side Switching)</strong>，因為它不需要額外的升壓電路來驅動閘極。
+                        </p>
+                        <p class="text-slate-400">
+                            <strong>注意：</strong> 應使用拉高 (Pull-up) 電阻確保 Gate 不會浮空，避免意外導通。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Table Section -->
+        <section class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                📊 <span class="gradient-text bg-gradient-to-b from-sky-400 to-purple-400">效能比較總覽</span>
+            </h2>
+            <div class="overflow-x-auto bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg">
+                <table class="w-full min-w-[700px] text-left">
+                    <thead class="border-b border-slate-600 bg-slate-800">
+                        <tr>
+                            <th class="p-4 text-sm font-semibold text-white tracking-wider">方案</th>
+                            <th class="p-4 text-sm font-semibold text-white tracking-wider">關鍵參數</th>
+                            <th class="p-4 text-sm font-semibold text-white tracking-wider">功率損耗 (12V, 2A)</th>
+                            <th class="p-4 text-sm font-semibold text-white tracking-wider">優點</th>
+                            <th class="p-4 text-sm font-semibold text-white tracking-wider">缺點</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700">
+                        <tr class="hover:bg-slate-800/60 transition-colors">
+                            <td class="p-4 font-medium text-white">標準二極體</td>
+                            <td class="p-4 text-slate-300">$V_f \approx 0.85\text{V}$</td>
+                            <td class="p-4 text-red-400 font-bold">1.7 W</td>
+                            <td class="p-4 text-green-400">簡單、便宜</td>
+                            <td class="p-4 text-red-400">效率極低、發熱嚴重</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/60 transition-colors">
+                            <td class="p-4 font-medium text-white">蕭特基二極體</td>
+                            <td class="p-4 text-slate-300">$V_f \approx 0.55\text{V}$</td>
+                            <td class="p-4 text-yellow-400 font-bold">1.1 W</td>
+                            <td class="p-4 text-green-400">效率中等</td>
+                            <td class="p-4 text-red-400">仍有損耗、需慎選低漏電型號</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/60 transition-colors">
+                            <td class="p-4 font-medium text-white">P-Channel MOSFET</td>
+                            <td class="p-4 text-slate-300">$R_{ds(on)} \approx 26\text{m}\Omega$</td>
+                            <td class="p-4 text-green-400 font-bold">0.104 W</td>
+                            <td class="p-4 text-green-400">效率極高、損耗可忽略</td>
+                            <td class="p-4 text-red-400">成本稍高、需注意 $V_{gs(max)}$</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Conclusion -->
+        <section class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-4">🎯 總結</h2>
+            <p class="text-lg text-slate-300 leading-relaxed">
+                您現在已經是逆向電壓保護的專家了！雖然二極體提供了最簡單的保護，但 <strong>P-Channel MOSFET
+                    解決方案在效率上提供了壓倒性的優勢</strong>，特別是在電流較大或使用電池供電的應用中。下次設計電路時，別忘了這個高效的技巧！
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Static Footer -->
+    <footer class="w-full bg-slate-900 border-t border-slate-700 p-4 text-center mt-24">
+        <p class="text-sm text-slate-400">
+            <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="hover:text-sky-400 transition-colors">
+                Generated by wellstsai.com
+            </a>
+            <span class="mx-2">|</span>
+            撰寫日期：2025年11月03日
+        </p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // --- 1. KaTeX Auto-Render Initialization ---
+            try {
+                // 檢查 renderMathInElement 是否存在
+                if (typeof renderMathInElement === 'function') {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false },
+                            { left: '\\(', right: '\\)', display: false },
+                            { left: '\\[', right: '\\]', display: true }
+                        ],
+                        throwOnError: false
+                    });
+                } else {
+                    console.warn('KaTeX auto-render script not loaded correctly.');
+                }
+            } catch (error) {
+                console.warn('KaTeX auto-render failed:', error);
+            }
+
+            // --- 2. Keyword Definition Data (from your code) ---
+            const keywordDefinitions = {
+                'reverseLeakage': {
+                    title: '逆向漏電流 (Reverse Leakage Current)',
+                    content: '<p>理想的二極體在反向偏壓時應不導通（電流為0）。但在現實中，仍會有非常微小的電流流過，這就是漏電流。</p><p>許多蕭特基二極體為了追求低 $V_f$，其漏電流可能高達數毫安 (mA)，這在反接保護或低G功耗應用中是不可接受的。</p>'
+                },
+                'mosfetFQP47P06': {
+                    title: 'FQP47P06 (P-Channel MOSFET)',
+                    content: '<p>這是一款 P-Channel 功率 MOSFET。選用它有幾個關鍵原因：</p><ul class="list-disc list-inside mt-2"><li><strong>$V_{ds}$ (汲源極電壓):</strong> -60V，足夠應對 12V 系統。</li><li><strong>$R_{ds(on)}$ (導通電阻):</strong> 僅 $0.026\\Omega$ ($26\\text{m}\\Omega$)，效率極高。</li><li><strong>$V_{gs(max)}$ (最大閘源極電壓):</strong> <strong>±25V</strong>，提供了更大的安全邊際。</li></ul>'
+                },
+                'bodyDiode': {
+                    title: '寄生體二極體 (Parasitic Body Diode)',
+                    content: '<p>所有 MOSFET 在其物理結構中，都天然存在一個介於 Drain (D) 和 Source (S) 之間的二極體。</p><p>在此保護電路中，我們巧妙地「反向」安裝 MOSFET，使其體二極體的方向朝向正向電流，從而允許電路在 $V_{gs}$ 建立之前先行啟動。</p>'
+                },
+                'vgsThreshold': {
+                    title: '閘極閾值電壓 ($V_{gs(th)}$)',
+                    content: '<p>驅動 MOSFET 開啟所需的最小 $V_{gs}$ (閘源極電壓)。</p><p>對於 P-Channel，這是一個負值，例如 $V_{gs(th)} = -2\\text{V}$ 至 $-4\\text{V}$。我們的 $V_{gs} = -11\\text{V}$ 遠比這個值更負，確保了 MOSFET 處於「完全導通」狀態。</p>'
+                },
+                'rdsOn': {
+                    title: '導通電阻 ($R_{ds(on)}$)',
+                    content: '<p>MOSFET 完全導通時，Drain 和 Source 之間的電阻。這個值越低越好，代表效率越高，發熱越少。</p><p>功率損耗公式為 $P = I^2 \\times R_{ds(on)}$。因為 $R_{ds(on)}$ 極低（毫歐姆等級），所以功率損耗遠小於二極體的 $P = V_f \\times I$。</p>'
+                },
+                'vds': {
+                    title: '汲源極電壓 ($V_{ds}$)',
+                    content: '<p>Drain (汲極) 和 Source (源極) 之間的電壓。MOSFET 的 $V_{ds}$ 額定值必須高於電路的最大工作電壓，以防被擊穿。例如，12V 的系統，選擇 $V_{ds}$ > 20V (例如 60V) 是安全的。</p>'
+                },
+                'vgsMax': {
+                    title: '最大閘源極電壓 ($V_{gs(max)}$)',
+                    content: '<p>Gate (閘極) 和 Source (源極) 之間所能承受的最大電壓差，通常是 ±15V、±20V 或 ±25V。</p><p>在我們的電路中，$V_{gs}$ 約等於 $-V_{in}$。如果 $V_{in}$ 超過 $V_{gs(max)}$，閘極會被永久損壞。</p>'
+                },
+                'zenerDiode': {
+                    title: '稽納二極體 (Zener Diode)',
+                    content: '<p>一種特殊的二極體，設計用於在「逆向崩潰區」穩定工作。當反向電壓達到其「稽納電壓」 (例如 10V) 時，它會開始導通並將電壓鉗位在該值。</p><p>在此電路中，它與閘極並聯，確保 $V_{gs}$ 永遠不會超過稽納二極體的崩潰電壓 (例如 -10V)，從而保護 MOSFET。</p>'
+                }
+            };
+
+            // --- 3. Tooltip DOM Elements ---
+            const tooltip = document.getElementById('tooltip');
+            const keywords = document.querySelectorAll('.keyword');
+
+            if (!tooltip || keywords.length === 0) {
+                console.log('Tooltip or keywords not found.');
+                return;
+            }
+
+            // --- 4. Event Listeners (Combined Logic) ---
+            keywords.forEach(keyword => {
+                const key = keyword.dataset.keyword;
+
+                // Desktop: Hover events
+                keyword.addEventListener('mouseover', (e) => showTooltip(e, key));
+                keyword.addEventListener('mousemove', (e) => positionTooltip(e.pageX, e.pageY));
+                keyword.addEventListener('mouseout', hideTooltip);
+
+                // Mobile & Desktop: Click/Tap event
+                keyword.addEventListener('click', (e) => {
+                    e.stopPropagation(); // 防止冒泡到 body 的 click
+                    // 點選邏輯：如果點擊的是目前已開啟的，則關閉。
+                    if (tooltip.style.display === 'block' && tooltip.dataset.currentKey === key) {
+                        hideTooltip();
+                    } else {
+                        // 否則，顯示新的
+                        showTooltip(e, key);
+                    }
+                });
+            });
+
+            // Global listeners to hide tooltip
+            document.addEventListener('scroll', hideTooltip, { passive: true, capture: true });
+            document.body.addEventListener('click', hideTooltip); // 點選空白處隱藏
+
+            // --- 5. Core Functions ---
+            function showTooltip(e, key) {
+                const definition = keywordDefinitions[key];
+                if (!definition) return;
+
+                tooltip.innerHTML = `<h3>${definition.title}</h3>${definition.content}`;
+                tooltip.style.display = 'block'; // ❗️ [FIX] Use display block/none
+                tooltip.dataset.currentKey = key; // 追蹤目前顯示的 key
+
+                // Re-render KaTeX
+                try {
+                    if (typeof renderMathInElement === 'function') {
+                        renderMathInElement(tooltip, {
+                            delimiters: [
+                                { left: '$$', right: '$$', display: true },
+                                { left: '$', right: '$', display: false }
+                            ],
+                            throwOnError: false
+                        });
+                    }
+                } catch (error) {
+                    console.warn('KaTeX tooltip render failed:', error);
+                }
+
+                positionTooltip(e.pageX, e.pageY); // 初始定位
+            }
+
+            function hideTooltip() {
+                tooltip.style.display = 'none'; // ❗️ [FIX] Use display block/none
+                tooltip.dataset.currentKey = null; // 清除狀態
+            }
+
+            // --- 6. Positioning Algorithm (Using 'position: absolute' logic) ---
+            function positionTooltip(pageX, pageY) {
+                if (tooltip.style.display !== 'block') return; // 如果隱藏了就不用計算
+
+                const tooltipWidth = tooltip.offsetWidth;
+                const tooltipHeight = tooltip.offsetHeight;
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                const scrollY = window.scrollY; // ❗️ [FIX] Get current scrollY
+                const padding = 15; // 邊界間距
+
+                let x = pageX + padding;
+                let y = pageY + padding;
+
+                // 窄螢幕優化
+                let maxTooltipWidth = 350;
+                if (viewportWidth < 400) {
+                    maxTooltipWidth = viewportWidth - (padding * 2);
+                }
+                tooltip.style.maxWidth = `${maxTooltipWidth}px`;
+
+                // 因為 maxWidth 可能改變了尺寸，重新獲取
+                const newTooltipWidth = tooltip.offsetWidth;
+                const newTooltipHeight = tooltip.offsetHeight;
+
+                // X-axis: 偵測右邊界
+                if (x + newTooltipWidth > viewportWidth - padding) {
+                    x = pageX - newTooltipWidth - padding;
+                }
+                // X-axis: 偵測左邊界
+                if (x < padding) {
+                    x = padding;
+                }
+
+                // Y-axis: 偵測下邊界 (相對於視窗)
+                if ((pageY - scrollY) + newTooltipHeight > viewportHeight - padding) {
+                    y = pageY - newTooltipHeight - padding;
+                }
+                // Y-axis: 偵測上邊界 (相對於視窗)
+                if ((pageY - scrollY) < padding) {
+                    y = pageY + padding; // ❗️ [FIX] Re-adjust if flipped top is also out
+                }
+
+                // ❗️ [FIX] Final check: Ensure Y is not above the scrolled document
+                if (y < scrollY + padding) {
+                    y = scrollY + padding;
+                }
+
+
+                tooltip.style.left = `${x}px`;
+                tooltip.style.top = `${y}px`;
+            }
+        });
+    </script>
+</body>
+
+</html>

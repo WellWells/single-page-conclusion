@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E4%BD%9C%E6%A5%AD%E7%B3%BB%E7%B5%B1%E8%A1%8C%E7%A8%8B%E5%BB%BA%E7%AB%8B%E6%A9%9F%E5%88%B6-Windows%E8%88%87Linux%E7%B3%BB%E7%B5%B1%E5%91%BC%E5%8F%AB%E5%B0%8D%E6%AF%94.png">
+    <meta name="twitter:description" content="探討作業系統如何建立行程（Process）。比較 Windows 的 CreateProcess 與 Linux 的 Fork 及 Exec 系統呼叫機制，說明行程複製與程式替換的運作邏輯，並解析 Discord 等現代應用程式的多行程架構原理。">
+    <meta name="twitter:title" content="作業系統行程建立機制-Windows與Linux系統呼叫對比">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E4%BD%9C%E6%A5%AD%E7%B3%BB%E7%B5%B1%E8%A1%8C%E7%A8%8B%E5%BB%BA%E7%AB%8B%E6%A9%9F%E5%88%B6-Windows%E8%88%87Linux%E7%B3%BB%E7%B5%B1%E5%91%BC%E5%8F%AB%E5%B0%8D%E6%AF%94.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E4%BD%9C%E6%A5%AD%E7%B3%BB%E7%B5%B1%E8%A1%8C%E7%A8%8B%E5%BB%BA%E7%AB%8B%E6%A9%9F%E5%88%B6-Windows%E8%88%87Linux%E7%B3%BB%E7%B5%B1%E5%91%BC%E5%8F%AB%E5%B0%8D%E6%AF%94.html">
+    <meta property="og:description" content="探討作業系統如何建立行程（Process）。比較 Windows 的 CreateProcess 與 Linux 的 Fork 及 Exec 系統呼叫機制，說明行程複製與程式替換的運作邏輯，並解析 Discord 等現代應用程式的多行程架構原理。">
+    <meta property="og:title" content="作業系統行程建立機制-Windows與Linux系統呼叫對比">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作業系統行程建立機制：Windows 與 Linux 系統呼叫對比</title>
+    <meta name="description" content="探討作業系統如何建立行程（Process）。比較 Windows 的 CreateProcess 與 Linux 的 Fork 及 Exec 系統呼叫機制，說明行程複製與程式替換的運作邏輯，並解析 Discord 等現代應用程式的多行程架構原理。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Prism.js CSS for Syntax Highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 850: '#151e2e', 925: '#0c1222' }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .code-block {
+            background-color: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 0.5rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #a78bfa 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.2), transparent);
+        }
+
+        /* Fix Prism.js code block formatting */
+        pre[class*="language-"],
+        pre {
+            white-space: pre !important;
+            word-wrap: normal !important;
+            overflow-x: auto !important;
+            margin: 0 !important;
+            padding: 1rem !important;
+            background: #0d1117 !important;
+            border-radius: 0 !important;
+        }
+
+        pre code {
+            white-space: pre !important;
+            display: block !important;
+            font-family: 'JetBrains Mono', monospace !important;
+            font-size: 0.8rem !important;
+            line-height: 1.6 !important;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-b from-slate-925 via-slate-900 to-slate-925 min-h-screen text-slate-300 antialiased selection:bg-violet-500 selection:text-white">
+
+    <!-- ========== HEADER ========== -->
+    <header class="pt-20 pb-16 px-4 text-center max-w-5xl mx-auto">
+        <div
+            class="mb-6 inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-500/10 border border-indigo-500/30 rounded-full text-indigo-300 text-sm font-medium tracking-wider uppercase">
+            <span>🖥️</span> Operating System Internals
+        </div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-8 text-white leading-tight">
+            作業系統行程建立機制<br>
+            <span class="gradient-text">Windows 與 Linux 系統呼叫實務對比</span>
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto font-light leading-relaxed">
+            從多行程架構的實務需求出發，剖析記憶體隔離、系統呼叫原理，<br class="hidden md:block">
+            以及 Windows「直接建立」與 Linux「Fork + Exec」兩大設計哲學的底層實作差異。
+        </p>
+    </header>
+
+    <!-- ========== SECTION 1: WHY MULTI-PROCESS ========== -->
+    <section class="px-4 max-w-5xl mx-auto mb-24 relative">
+        <div class="glass-card rounded-3xl p-8 md:p-12 shadow-2xl hover-lift transition-all duration-500">
+            <h2 class="text-3xl font-bold text-white mb-8 flex items-center gap-3">
+                <span class="text-4xl">🤔</span> 為什麼我們需要多行程架構？
+            </h2>
+            <div class="grid md:grid-cols-5 gap-8 text-lg leading-relaxed">
+                <div class="md:col-span-3 space-y-6">
+                    <p class="text-slate-300">
+                        現代應用程式（如 <strong class="text-white">Discord</strong>、<strong
+                            class="text-white">Chrome</strong>、<strong class="text-white">VS Code</strong>）都是典型的 <strong
+                            class="text-indigo-400">Electron
+                            App</strong>。它們本質上是包裝在精美外殼中的網頁應用程式，背後採用的是<strong>多行程架構（Multi-process Architecture）</strong>。
+                    </p>
+                    <p class="text-slate-300">
+                        當你開啟這些程式時，並不只是一個程式在跑，而是背景同時啟動了<strong>多個行程</strong>（如渲染行程、GPU
+                        加速行程、網路請求行程），它們彼此分工合作、相互通訊。之所以我們通常感覺不到，是因為我們只與負責顯示<strong>圖形使用者介面（GUI）</strong>的那個行程互動。
+                    </p>
+                    <div class="bg-indigo-900/20 border-l-4 border-indigo-500 p-5 rounded-r-lg">
+                        <p class="text-indigo-200 font-medium mb-2">💡 一個常見的疑問：</p>
+                        <p class="text-indigo-100/80 text-base">
+                            既然 Discord 本質上只是一個在 Web View 裡渲染的網頁，為什麼我們不需要先手動啟動本地伺服器、再開啟瀏覽器、輸入 localhost 網址，才能看到這個 App？
+                        </p>
+                    </div>
+                </div>
+                <div class="md:col-span-2 flex flex-col justify-center">
+                    <div class="bg-slate-800/60 p-6 rounded-xl border border-slate-700/50">
+                        <h3 class="text-emerald-400 font-bold mb-4 text-lg flex items-center gap-2">
+                            <span>✨</span> 答案
+                        </h3>
+                        <p class="text-slate-300 text-base leading-relaxed">
+                            因為應用程式具備<strong>「程式化產生新行程」</strong>的能力。一旦主程式被使用者啟動，它就能在執行過程中的任何時刻，<strong>自動衍生出新的行程</strong>，而不需要使用者再做任何介入。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="absolute -top-16 -left-16 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -z-10"></div>
+        <div class="absolute -bottom-16 -right-16 w-64 h-64 bg-violet-600/10 rounded-full blur-3xl -z-10"></div>
+    </section>
+
+    <!-- ========== SECTION 2: THE CORE PROBLEM ========== -->
+    <section class="px-4 max-w-6xl mx-auto mb-24">
+        <h2 class="text-3xl font-bold text-white mb-10 text-center flex items-center justify-center gap-3">
+            <span>🛡️</span> 核心難題：記憶體隔離與系統呼叫
+        </h2>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Left: The Problem -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-xl font-bold text-red-400 mb-4">❌ 為什麼 P1 無法直接建立 P2？</h3>
+                <p class="text-slate-300 mb-6 leading-relaxed">
+                    假設行程 P1 想要建立一個新的行程 P2。第一步，P1 需要將 P2 的<strong>執行檔程式碼載入記憶體</strong>，讓 CPU 可以開始執行。但問題來了：
+                </p>
+                <ul class="space-y-4 text-slate-400">
+                    <li class="flex items-start gap-3">
+                        <span class="text-red-500 font-bold text-lg">1.</span>
+                        <div>
+                            <strong class="text-slate-200">位址空間限制（Address Space）</strong>
+                            <p class="text-sm mt-1">在現代作業系統中，每個使用者行程都被限制在 OS 指派的特定記憶體區域內。這塊區域之外的任何記憶體，<strong
+                                    class="text-red-300">即使沒有被任何行程使用</strong>，也完全無法存取。</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-red-500 font-bold text-lg">2.</span>
+                        <div>
+                            <strong class="text-slate-200">安全性考量</strong>
+                            <p class="text-sm mt-1">如果任何行程都可以在記憶體的任意位置放置程式碼，那整個系統將毫無安全性可言。惡意程式可以輕易覆蓋其他行程的資料。</p>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mt-6 p-4 bg-slate-900/50 rounded-lg border border-slate-700 text-sm">
+                    <p class="text-slate-500 italic">
+                        「P1 可以從磁碟讀取 P2 的執行檔到自己的記憶體中，但它沒有任何方法將這段程式碼放置到自己位址空間之外的地方。換句話說，<strong class="text-slate-300">P1
+                            完全無法靠自己建立一個全新的行程</strong>。」
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right: The Solution -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-xl font-bold text-emerald-400 mb-4">✅ 解決方案：系統呼叫（System Call）</h3>
+                <p class="text-slate-300 mb-6 leading-relaxed">
+                    行程建立這類涉及硬體資源管理的操作，必須委託給權限最高的<strong class="text-white">作業系統核心（Kernel）</strong>來處理。程式透過一種標準化的 API 介面向
+                    OS 發出請求，這就是<strong class="text-emerald-300">系統呼叫（System Call）</strong>。
+                </p>
+                <div class="bg-emerald-900/20 p-5 rounded-lg border border-emerald-500/30 mb-6">
+                    <p class="text-emerald-200 font-medium mb-2">💡 系統呼叫的本質</p>
+                    <p class="text-emerald-100/80 text-sm">
+                        它們是<strong>從使用者空間（User Space）發起呼叫</strong>，但<strong>在核心空間（Kernel Space）執行</strong>的函式。OS
+                        執行完請求的任務後，再將控制權交回使用者模式。
+                    </p>
+                </div>
+                <h4 class="text-white font-bold mb-2 text-sm">系統呼叫能做什麼？</h4>
+                <ul class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                    <li class="bg-slate-800/50 p-2 rounded">📁 讀寫磁碟檔案</li>
+                    <li class="bg-slate-800/50 p-2 rounded">🖥️ 輸出字元到螢幕</li>
+                    <li class="bg-slate-800/50 p-2 rounded">📊 取得系統資訊</li>
+                    <li class="bg-slate-800/50 p-2 rounded">📡 建立行程間通訊</li>
+                    <li class="bg-slate-800/50 p-2 rounded col-span-2 text-center text-emerald-300 font-bold">🚀
+                        行程管理（建立、終止）</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto mb-24"></div>
+
+    <!-- ========== SECTION 3: WINDOWS APPROACH ========== -->
+    <section class="px-4 max-w-6xl mx-auto mb-24">
+        <div class="flex items-center gap-4 mb-10">
+            <div class="w-14 h-14 rounded-xl bg-blue-500/20 flex items-center justify-center text-3xl">🪟</div>
+            <h2 class="text-3xl font-bold text-white">Windows 的做法：直接建立 (CreateProcess)</h2>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 glass-card p-8 rounded-2xl">
+                <p class="text-slate-300 text-lg leading-relaxed mb-6">
+                    Windows 的設計哲學傾向於<strong class="text-white">「單一且明確」</strong>的指令。雖然真正的底層 API（<code
+                        class="text-blue-300">NtCreateUserProcess</code>）參數極為複雜，但我們可以將其簡化為一個概念性的 <code
+                        class="text-blue-300 font-bold">CreateProcess</code> 函式，它主要只需要兩個關鍵資訊：
+                </p>
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <div class="bg-slate-800/50 p-5 rounded-lg border border-blue-500/20">
+                        <h4 class="text-blue-300 font-bold mb-2">📁 Image Path（映像檔路徑）</h4>
+                        <p class="text-sm text-slate-400">告訴作業系統要去硬碟的哪個位置找到新程式的執行檔（.exe）。</p>
+                    </div>
+                    <div class="bg-slate-800/50 p-5 rounded-lg border border-blue-500/20">
+                        <h4 class="text-blue-300 font-bold mb-2">⌨️ Command Line（命令列參數）</h4>
+                        <p class="text-sm text-slate-400">一個包含完整命令列的字串，包括傳遞給新行程的任何 flags 或 options。</p>
+                    </div>
+                </div>
+                <p class="text-slate-300 leading-relaxed">
+                    當 OS 收到這個呼叫，它會執行一條龍服務：在磁碟上定位檔案 → 為新行程找到一塊空閒的記憶體區域 → 將執行檔程式碼載入該記憶體 → 完成所有必要步驟以將新行程插入<strong
+                        class="text-white">排程器（Scheduler）</strong>。這是一個<strong
+                        class="text-blue-400">「從無到有」</strong>的直接建立過程。
+                </p>
+            </div>
+            <div class="flex flex-col justify-center">
+                <div
+                    class="bg-gradient-to-br from-blue-900/30 to-slate-900 p-6 rounded-2xl border border-blue-500/20 text-center">
+                    <p class="text-xs text-slate-500 uppercase tracking-widest mb-3">Memory Model</p>
+                    <p class="text-2xl font-bold text-white mb-2">🆕 從零開始</p>
+                    <p class="text-sm text-slate-400">OS 為 Child 開闢全新記憶體區塊。Parent 與 Child 在記憶體內容上<strong
+                            class="text-blue-300">毫無繼承關係</strong>，Child 是一個全新的生命體。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto mb-24"></div>
+
+    <!-- ========== SECTION 4: LINUX APPROACH (FORK) ========== -->
+    <section class="px-4 max-w-6xl mx-auto mb-24">
+        <div class="flex items-center gap-4 mb-10">
+            <div class="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center text-3xl">🐧</div>
+            <h2 class="text-3xl font-bold text-white">Linux 的做法：先複製，再取代</h2>
+        </div>
+
+        <p class="text-slate-300 text-lg leading-relaxed max-w-4xl mb-12">
+            Unix 體系的設計哲學與 Windows 截然不同。它將「建立行程」與「執行新程式」這兩件事<strong class="text-white">拆分為兩個獨立的步驟</strong>，由兩個不同的系統呼叫來完成。
+        </p>
+
+        <!-- Part A: Fork -->
+        <div class="glass-card p-8 rounded-2xl mb-10 relative overflow-hidden">
+            <div
+                class="absolute top-0 right-0 text-[200px] font-black text-emerald-500/5 leading-none select-none pointer-events-none">
+                1</div>
+            <h3 class="text-2xl font-bold text-emerald-400 mb-6 flex items-center gap-3">
+                <span>👯</span> 步驟一：Fork() — 細胞分裂般的複製
+            </h3>
+            <div class="grid lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-3 space-y-6">
+                    <p class="text-slate-300 leading-relaxed">
+                        在 Unix 中，建立新行程的唯一方式是呼叫 <code class="text-emerald-300 font-bold">fork()</code>。有趣的是，<strong
+                            class="text-white">fork() 不需要任何參數</strong>，也就無法指定要執行哪個程式。
+                    </p>
+                    <p class="text-slate-300 leading-relaxed">
+                        當 OS 收到 fork 請求，它會<strong class="text-emerald-300">完整複製（Clone）</strong>目前的呼叫行程，包括：
+                    </p>
+                    <ul class="grid grid-cols-2 gap-3 text-sm">
+                        <li class="bg-slate-800/50 p-3 rounded-lg border border-emerald-500/20"><strong
+                                class="text-slate-200">Text Section</strong>：程式碼本身</li>
+                        <li class="bg-slate-800/50 p-3 rounded-lg border border-emerald-500/20"><strong
+                                class="text-slate-200">Data Section</strong>：全域變數</li>
+                        <li class="bg-slate-800/50 p-3 rounded-lg border border-emerald-500/20"><strong
+                                class="text-slate-200">Heap</strong>：動態配置的記憶體</li>
+                        <li class="bg-slate-800/50 p-3 rounded-lg border border-emerald-500/20"><strong
+                                class="text-slate-200">Stack</strong>：函式呼叫堆疊</li>
+                    </ul>
+                    <div class="bg-amber-900/20 border border-amber-500/30 p-4 rounded-lg">
+                        <p class="text-amber-200 font-medium text-sm">
+                            <span class="font-bold">🔑 關鍵點：CPU 狀態也會被複製！</span><br>
+                            這包括<strong>程式計數器（Program Counter）</strong>——它記錄了「下一條要執行的指令在哪裡」。這意味著子行程並不會從
+                            <code>main()</code> 的開頭重新開始，而是<strong class="text-amber-100">從 fork()
+                                呼叫之後的那一行指令繼續執行</strong>。
+                        </p>
+                    </div>
+                </div>
+                <div class="lg:col-span-2">
+                    <div
+                        class="bg-gradient-to-br from-emerald-900/30 to-slate-900 p-6 rounded-2xl border border-emerald-500/20 text-center mb-6">
+                        <p class="text-xs text-slate-500 uppercase tracking-widest mb-3">Memory Model</p>
+                        <p class="text-2xl font-bold text-white mb-2">📋 完整複製</p>
+                        <p class="text-sm text-slate-400">Parent 與 Child 的記憶體結構<strong
+                                class="text-emerald-300">一模一樣</strong>。(現代 OS 使用 Copy-on-Write 最佳化實際複製時機)</p>
+                    </div>
+                    <!-- Fork Bomb Warning -->
+                    <div class="border border-red-500/30 bg-red-900/10 rounded-xl p-5">
+                        <h4 class="font-bold text-red-400 text-sm mb-2 flex items-center gap-2"><span>⚠️</span> Fork 炸彈
+                            (Fork Bomb)</h4>
+                        <p class="text-xs text-red-200/70 leading-relaxed mb-2">
+                            若在迴圈中粗心呼叫 fork()，行程數量會呈<strong>指數級成長</strong>！
+                        </p>
+                        <div class="bg-black/30 p-2 rounded text-xs font-mono text-red-300 text-center">
+                            呼叫 3 次 fork() → 2³ = <strong class="text-white">8 個行程</strong>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Note: vfork -->
+                    <div class="mt-4 border border-slate-700 bg-slate-800/50 rounded-xl p-5">
+                        <h4 class="font-bold text-slate-400 text-sm mb-2 flex items-center gap-2"><span>🤓</span>
+                            冷知識：vfork()</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            在 Copy-on-Write 技術普及前，為了避免 fork() 複製整個記憶體太慢，Unix 曾引入
+                            <code>vfork()</code>。它會暫停父行程，讓子行程借用記憶體直到 exec()。雖現代 fork() 已極快，但這個歷史遺蹟仍存在。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part A-2: Fork Code Examples -->
+        <div class="glass-card p-8 rounded-2xl mb-10">
+            <h3 class="text-2xl font-bold text-cyan-400 mb-6 flex items-center gap-3">
+                <span>🧪</span> 實驗驗證：Fork 的行為觀察
+            </h3>
+            <p class="text-slate-300 mb-8 leading-relaxed">
+                透過實際的 C 語言程式碼，我們可以直接觀察 <code class="text-emerald-300">fork()</code> 的運作方式。以下兩個範例將清楚展示「單次 Fork」與「多次
+                Fork」的差異。
+            </p>
+
+            <div class="grid lg:grid-cols-2 gap-8 mb-10">
+                <!-- Example 1: Single Fork -->
+                <div class="border border-slate-700 rounded-xl overflow-hidden">
+                    <div class="bg-slate-800 px-4 py-3 border-b border-slate-700 flex items-center justify-between">
+                        <span class="text-emerald-400 font-bold text-sm">範例一：單次 Fork</span>
+                        <span class="text-xs text-slate-500">fork_single.c</span>
+                    </div>
+                    <pre class="!m-0 !rounded-none text-sm"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+#define SLEEPTIME 1
+
+int main(){
+    int i = 1;
+    for(; i &lt;= 5; i++){
+        printf("count: %d\n", i);
+        sleep(SLEEPTIME);
+    }
+
+    printf("Calling fork()\n");
+    fork();  // 🔀 只呼叫一次
+
+    for(; i &lt;= 10; i++){
+        printf("count: %d\n", i);
+        sleep(SLEEPTIME);
+    }
+}</code></pre>
+                </div>
+
+                <!-- Example 2: Triple Fork -->
+                <div class="border border-slate-700 rounded-xl overflow-hidden">
+                    <div class="bg-slate-800 px-4 py-3 border-b border-slate-700 flex items-center justify-between">
+                        <span class="text-red-400 font-bold text-sm">範例二：連續三次 Fork</span>
+                        <span class="text-xs text-slate-500">fork_bomb.c</span>
+                    </div>
+                    <pre class="!m-0 !rounded-none text-sm"><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+
+#define SLEEPTIME 1
+
+int main(){
+    int i = 1;
+    for(; i &lt;= 5; i++){
+        printf("count: %d\n", i);
+        sleep(SLEEPTIME);
+    }
+
+    printf("Calling fork()\n");
+    fork();  // 🔀 第一次：1 → 2
+    fork();  // 🔀 第二次：2 → 4
+    fork();  // 🔀 第三次：4 → 8
+
+    for(; i &lt;= 10; i++){
+        printf("count: %d\n", i);
+        sleep(SLEEPTIME);
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Output Analysis -->
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Output 1 -->
+                <div class="space-y-4">
+                    <h4 class="text-emerald-400 font-bold flex items-center gap-2">
+                        <span>📟</span> 範例一的終端機輸出
+                    </h4>
+                    <div class="bg-slate-950 rounded-lg p-4 font-mono text-sm border border-slate-800">
+                        <p class="text-slate-500">$ gcc fork_single.c -o prog && ./prog</p>
+                        <p class="text-slate-300 mt-2">count: 1</p>
+                        <p class="text-slate-300">count: 2</p>
+                        <p class="text-slate-300">count: 3</p>
+                        <p class="text-slate-300">count: 4</p>
+                        <p class="text-slate-300">count: 5</p>
+                        <p class="text-amber-300 mt-1">Calling fork()</p>
+                        <div class="flex gap-4 mt-1">
+                            <div class="text-emerald-300">
+                                <p>count: 6</p>
+                                <p>count: 7</p>
+                                <p>...</p>
+                            </div>
+                            <div class="text-blue-300">
+                                <p>count: 6</p>
+                                <p>count: 7</p>
+                                <p>...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-emerald-900/20 border border-emerald-500/30 p-4 rounded-lg text-sm">
+                        <p class="text-emerald-200"><strong>結果：</strong>Fork 之後，count 6~10 出現<strong
+                                class="text-white">兩次</strong>（交錯出現），因為有 <strong>2 個行程</strong>（Parent + Child）同時在計數。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Output 2 -->
+                <div class="space-y-4">
+                    <h4 class="text-red-400 font-bold flex items-center gap-2">
+                        <span>📟</span> 範例二的終端機輸出
+                    </h4>
+                    <div class="bg-slate-950 rounded-lg p-4 font-mono text-sm border border-slate-800">
+                        <p class="text-slate-500">$ gcc fork_bomb.c -o prog && ./prog</p>
+                        <p class="text-slate-300 mt-2">count: 1 ... count: 5</p>
+                        <p class="text-amber-300 mt-1">Calling fork()</p>
+                        <div class="grid grid-cols-4 gap-1 mt-1 text-xs">
+                            <p class="text-red-300">count: 6</p>
+                            <p class="text-red-300">count: 6</p>
+                            <p class="text-red-300">count: 6</p>
+                            <p class="text-red-300">count: 6</p>
+                            <p class="text-red-300">count: 6</p>
+                            <p class="text-red-300">count: 6</p>
+                            <p class="text-red-300">count: 6</p>
+                            <p class="text-red-300">count: 6</p>
+                        </div>
+                        <p class="text-slate-500 mt-1">... (每個數字出現 8 次)</p>
+                    </div>
+                    <div class="bg-red-900/20 border border-red-500/30 p-4 rounded-lg text-sm">
+                        <p class="text-red-200"><strong>結果：</strong>連續三次 Fork 後，count 6~10 每個數字都出現<strong
+                                class="text-white">八次</strong>！這是因為 2³ = <strong>8 個行程</strong>同時在執行完全相同的後半段程式碼。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deep Explanation -->
+            <div class="mt-10 border-t border-slate-700 pt-8">
+                <h4 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span>🔬</span> 原理實證剖析
+                </h4>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700">
+                        <h5 class="text-cyan-300 font-bold mb-3">為什麼子行程從 count:6 開始？</h5>
+                        <p class="text-sm text-slate-400 leading-relaxed">
+                            因為 <strong class="text-white">CPU 狀態（包含程式計數器）被複製了</strong>。當 <code>fork()</code> 發生時，變數
+                            <code>i</code> 的值已經是 6。子行程「醒來」時，它記憶體中的 <code>i</code> 也是 6，所以它直接從 6 開始往下數，<strong
+                                class="text-cyan-200">而不是從 1 重新開始</strong>。
+                        </p>
+                    </div>
+                    <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700">
+                        <h5 class="text-amber-300 font-bold mb-3">Fork 的指數成長公式</h5>
+                        <p class="text-sm text-slate-400 leading-relaxed mb-3">
+                            每次 <code>fork()</code> 都會讓當前所有行程「分裂」一次。如果連續呼叫 <strong>n</strong> 次 fork：
+                        </p>
+                        <div class="bg-black/30 p-3 rounded text-center font-mono">
+                            <span class="text-white text-lg">最終行程數 = 2<sup class="text-amber-400">n</sup></span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-3 text-center">
+                            n=1 → 2 | n=2 → 4 | n=3 → 8 | n=10 → 1024!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part B: Exec -->
+        <div class="glass-card p-8 rounded-2xl mb-10 relative overflow-hidden">
+            <div
+                class="absolute top-0 right-0 text-[200px] font-black text-violet-500/5 leading-none select-none pointer-events-none">
+                2</div>
+            <h3 class="text-2xl font-bold text-violet-400 mb-6 flex items-center gap-3">
+                <span>🎭</span> 步驟二：Execv() — 華麗的變身（腦部移植）
+            </h3>
+            <div class="grid lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-3 space-y-6">
+                    <p class="text-slate-300 leading-relaxed">
+                        Fork 產生的子行程只是父行程的複製品。如果我們希望它執行不同的程式（如 Chrome 或 <code>ls</code>），就需要 <code
+                            class="text-violet-300 font-bold">execv()</code> 或其變體 <code
+                            class="text-violet-300 font-bold">execve()</code>。
+                    </p>
+                    <p class="text-slate-300 leading-relaxed">
+                        <strong class="text-white">Execv 並不會建立新行程！</strong>它的作用是<strong
+                            class="text-violet-300">取代（Replace）</strong>當前行程的內容：
+                    </p>
+                    <ol class="list-decimal list-inside space-y-2 text-slate-400 text-sm pl-2">
+                        <li>重設 Stack（堆疊）與 Heap（堆積）</li>
+                        <li>捨棄舊的 Text 與 Data Section</li>
+                        <li>從磁碟載入<strong>新的執行檔</strong></li>
+                        <li>重設 CPU 狀態，<strong>Program Counter 指向新程式的第一條指令</strong></li>
+                        <li>將命令列參數陣列（argv）載入特定記憶體區段供新程式存取</li>
+                    </ol>
+                    <p class="text-slate-400 text-sm">
+                        這是一種<strong class="text-violet-200">「借殼上市」</strong>的概念：行程 ID（PID）不變，但靈魂（執行的程式碼）被完全抽換。
+                    </p>
+                </div>
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="bg-slate-900 p-5 rounded-xl border border-violet-500/20">
+                        <h4 class="text-violet-300 font-bold text-sm mb-3">參數傳遞方式對比</h4>
+                        <div class="space-y-3 text-xs">
+                            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                                <span class="text-slate-400">Linux (execv)</span>
+                                <code class="text-emerald-300">path + argv[]</code>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Windows</span>
+                                <code class="text-blue-300">command_line 字串</code>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- The Irreversibility -->
+                    <div
+                        class="bg-gradient-to-br from-violet-900/30 to-slate-900/80 p-5 rounded-xl border border-violet-500/30">
+                        <h4 class="text-violet-300 font-bold text-sm mb-3">⚡ Execv 的不可逆性</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                            一旦 <code>execv()</code> 成功執行，<strong class="text-white">原程式碼將不復存在</strong>。之後的任何程式碼都永遠不會被執行。
+                        </p>
+                        <pre class="code-block p-3 text-xs overflow-x-auto font-mono"><span class="text-slate-500">// 範例</span>
+<span class="text-blue-300">printf</span>("Hello");
+<span class="text-violet-300">execv</span>("/usr/bin/chrome", args);
+<span class="text-blue-300">printf</span>("Bye"); <span class="text-red-400">// 永遠不會執行！</span></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Part C: The Hilarious Solution -->
+        <div class="glass-card p-8 rounded-2xl bg-gradient-to-br from-slate-800/50 to-emerald-900/10">
+            <h3 class="text-2xl font-bold text-white mb-6 text-center">🎯 結合兩者：Fork-Exec 模式</h3>
+            <p class="text-slate-300 text-center text-lg leading-relaxed max-w-3xl mx-auto mb-8">
+                Fork 負責複製，Execv 負責變身。單獨使用都不是我們要的。<br>
+                解決方案其實有點好笑：<strong class="text-emerald-300">先讓 OS 複製自己，然後只讓複製品去變身，而本尊繼續原本的工作。</strong>
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center font-mono">
+                <div class="bg-slate-800 px-6 py-4 rounded-xl border border-slate-700">
+                    <p class="text-emerald-400 font-bold">fork()</p>
+                    <p class="text-xs text-slate-500">複製行程</p>
+                </div>
+                <span class="text-3xl text-slate-600">→</span>
+                <div class="bg-slate-800 px-6 py-4 rounded-xl border border-slate-700">
+                    <p class="text-amber-400 font-bold">if (pid == 0)</p>
+                    <p class="text-xs text-slate-500">判斷身分</p>
+                </div>
+                <span class="text-3xl text-slate-600">→</span>
+                <div class="bg-slate-800 px-6 py-4 rounded-xl border border-slate-700">
+                    <p class="text-violet-400 font-bold">execv()</p>
+                    <p class="text-xs text-slate-500">子行程變身</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto mb-24"></div>
+
+    <!-- ========== SECTION 5: IDENTITY CHECK ========== -->
+    <section class="px-4 max-w-6xl mx-auto mb-24">
+        <h2 class="text-3xl font-bold text-white mb-10 text-center flex items-center justify-center gap-3">
+            <span>🔍</span> 身分識別：我是爸爸？還是小孩？
+        </h2>
+        <p class="text-slate-400 text-center text-lg max-w-3xl mx-auto mb-12">
+            Fork 後，父子行程一模一樣，且都停在同一行程式碼。它們必須知道自己是誰，才能決定誰該去「變身」，誰該留在原地。
+        </p>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Method 1 -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-xl font-bold text-slate-400 mb-4">方法一：記憶體繼承驗證 (Conceptual)</h3>
+                <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                    利用 Fork 前存下的父行程 ID（ppid）來比對。
+                </p>
+                <ol class="list-decimal list-inside space-y-3 text-sm text-slate-300">
+                    <li>Fork 前，父行程呼叫 <code class="text-cyan-300">getpid()</code> 存入變數 <code>ppid = 102</code></li>
+                    <li>Fork 後，因記憶體被複製，子行程的 <code>ppid</code> 也是 <code>102</code></li>
+                    <li>兩個行程都再次呼叫 <code class="text-cyan-300">getpid()</code> 取得當前 ID</li>
+                </ol>
+                <div class="mt-4 grid grid-cols-2 gap-3 text-xs font-mono">
+                    <div class="bg-blue-900/20 p-3 rounded-lg text-center border border-blue-500/20">
+                        <p class="text-blue-300">ppid(102) == 現在(102)</p>
+                        <p class="text-slate-500 mt-1">→ 我是<strong class="text-white">父行程</strong></p>
+                    </div>
+                    <div class="bg-emerald-900/20 p-3 rounded-lg text-center border border-emerald-500/20">
+                        <p class="text-emerald-300">ppid(102) != 現在(130)</p>
+                        <p class="text-slate-500 mt-1">→ 我是<strong class="text-white">子行程</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Method 2: Standard -->
+            <div class="glass-card p-8 rounded-2xl border-2 border-emerald-500/30 relative">
+                <div
+                    class="absolute -top-3 left-6 bg-emerald-500 text-slate-900 text-xs font-bold px-3 py-1 rounded-full">
+                    ✨ 標準做法</div>
+                <h3 class="text-xl font-bold text-emerald-400 mb-4 mt-2">方法二：Fork 回傳值</h3>
+                <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                    <code class="text-emerald-300 font-bold">fork()</code> 函式非常神奇：它<strong
+                        class="text-white">呼叫一次，卻會回傳兩次</strong>（分別在父、子行程中各回傳一次）。
+                </p>
+                <div class="grid grid-cols-2 gap-3 text-sm font-mono mb-4">
+                    <div class="bg-blue-900/30 p-4 rounded-lg text-center">
+                        <p class="text-2xl font-bold text-blue-300">130</p>
+                        <p class="text-xs text-slate-400 mt-1">父行程收到<br><strong>子行程的 PID</strong></p>
+                    </div>
+                    <div class="bg-emerald-900/30 p-4 rounded-lg text-center">
+                        <p class="text-2xl font-bold text-emerald-300">0</p>
+                        <p class="text-xs text-slate-400 mt-1">子行程收到<br><strong>永遠是零</strong></p>
+                    </div>
+                </div>
+                <pre class="code-block p-4 text-xs overflow-x-auto font-mono">pid_t <span class="text-amber-300">cpid</span> = fork();
+if (<span class="text-amber-300">cpid</span> == 0) {
+    <span class="text-emerald-400">// 我是子行程，去執行 execv()</span>
+} else {
+    <span class="text-blue-400">// 我是父行程，繼續原本工作</span>
+}</pre>
+                <p class="text-xs text-slate-500 mt-4 italic">
+                    這就是為什麼函式叫做 "Fork"（分叉）——它不只是複製，而是讓執行流分道揚鑣。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto mb-24"></div>
+
+    <!-- ========== SECTION 6: POSIX SPAWN & ERROR HANDLING ========== -->
+    <section class="px-4 max-w-5xl mx-auto mb-24">
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- POSIX Spawn -->
+            <div class="glass-card p-8 rounded-2xl">
+                <h3 class="text-xl font-bold text-purple-400 mb-4 flex items-center gap-2"><span>📦</span>
+                    封裝複雜度：posix_spawn</h3>
+                <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                    <code class="text-purple-300 font-bold">posix_spawn()</code> 是 POSIX 相容系統提供的函式，用於產生新行程。但重要的是：<strong
+                        class="text-white">它不是系統呼叫，而是一個包裝器（Wrapper）</strong>。
+                </p>
+                <p class="text-slate-400 text-sm mb-4">如果你查看它的內部實作，會發現它就是在做我們討論的事情：</p>
+                <pre class="code-block p-4 text-xs overflow-x-auto font-mono text-purple-200">
+1. fork()             <span class="text-slate-500">// 建立子行程</span>
+2. 設定子行程屬性/檔案  <span class="text-slate-500">// 在 fork 與 exec 之間</span>
+3. execve()           <span class="text-slate-500">// 讓子行程變身</span></pre>
+                <p class="text-xs text-slate-500 mt-4">
+                    這證明了 <strong class="text-slate-300">fork + exec</strong> 是 Unix/Linux 世界中行程建立的基石。
+                </p>
+            </div>
+
+            <!-- Error Handling -->
+            <div class="glass-card p-8 rounded-2xl border border-amber-500/20">
+                <h3 class="text-xl font-bold text-amber-400 mb-4 flex items-center gap-2"><span>⚠️</span> 專業提醒：錯誤處理</h3>
+                <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                    系統呼叫可能會失敗！例如 Fork 可能因為 <strong class="text-white">PID 用盡</strong>或<strong
+                        class="text-white">記憶體不足</strong>而回傳錯誤（-1）。專業的程式碼應該總是處理這些情況。
+                </p>
+                <pre class="code-block p-4 text-xs overflow-x-auto font-mono">pid_t pid = fork();
+if (pid < 0) {
+    <span class="text-red-400">// 錯誤！Fork 失敗了</span>
+    perror("fork failed");
+    exit(1);
+} else if (pid == 0) {
+    <span class="text-emerald-400">// 子行程</span>
+} else {
+    <span class="text-blue-400">// 父行程</span>
+}</pre>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto mb-24"></div>
+
+    <!-- ========== SECTION 7: PROCESS TREE ========== -->
+    <section class="px-4 max-w-5xl mx-auto mb-24">
+        <h2 class="text-3xl font-bold text-white mb-10 text-center flex items-center justify-center gap-3">
+            <span>🌳</span> 最終結果：行程樹 (Process Tree)
+        </h2>
+        <div class="glass-card p-8 md:p-12 rounded-3xl">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <p class="text-slate-300 text-lg leading-relaxed">
+                        在 Unix/Linux 中，所有使用者行程都是由其他行程「生」出來的。這自然形成了一個<strong class="text-emerald-300">巨大的家族樹狀結構</strong>。
+                    </p>
+                    <p class="text-slate-300 leading-relaxed">
+                        使用 <code class="text-cyan-300">pstree</code> 指令可以視覺化這棵樹。你會發現所有行程（如
+                        NetworkManager、gdm3、sshd）最終都能追溯到唯一的共同祖先：
+                    </p>
+                    <div
+                        class="bg-gradient-to-r from-amber-900/20 to-transparent p-5 rounded-lg border-l-4 border-amber-500">
+                        <p class="text-amber-100 font-bold text-lg">systemd (PID 1)</p>
+                        <p class="text-amber-200/70 text-sm">在舊系統中可能是 <code>init</code></p>
+                    </div>
+                </div>
+                <div
+                    class="bg-slate-900 p-6 rounded-xl border border-slate-700 font-mono text-sm text-slate-400 overflow-x-auto">
+                    <p class="text-amber-400 font-bold">$ pstree</p>
+                    <pre class="mt-2 text-xs">
+systemd(1)─┬─systemd-journal
+           ├─cron
+           ├─NetworkManager
+           ├─gdm3───Xorg
+           │        └─gnome-shell
+           ├─sshd───sshd───bash───vim
+           └─docker───containerd</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SECTION 8: PHILOSOPHICAL QUESTION ========== -->
+    <section class="px-4 max-w-4xl mx-auto mb-24 text-center">
+        <div
+            class="glass-card p-10 rounded-3xl border border-violet-500/20 bg-gradient-to-br from-violet-900/10 to-slate-900/50">
+            <h2 class="text-2xl font-bold text-violet-300 mb-6">🤯 延伸思考：第一個行程從何而來？</h2>
+            <p class="text-slate-300 text-lg leading-relaxed mb-4">
+                如果 Unix 中所有使用者行程都是由其他行程 fork 出來的，那麼最終一定存在一個「起源行程」。<br>
+                <strong class="text-white">那個最初的行程——PID 1——是怎麼誕生的？</strong>
+            </p>
+            <p class="text-slate-400 leading-relaxed">
+                答案揭示了<strong class="text-violet-200">「核心（Kernel）」與「作業系統」之間的界線</strong>在哪裡。這是另一個深入的主題：第一個行程是由 Kernel
+                在開機流程中直接「憑空」建立，而非透過 Fork。它是使用者空間與核心空間的交接點。
+            </p>
+        </div>
+    </section>
+
+    <!-- ========== SECTION 9: SUMMARY TABLE ========== -->
+    <section class="max-w-6xl mx-auto px-4 mb-24">
+        <h2 class="text-2xl font-bold text-white mb-8 text-center">📊 機制總覽對比表</h2>
+        <div class="overflow-hidden rounded-2xl border border-slate-700 shadow-2xl">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-800 text-white border-b border-slate-700">
+                        <th class="p-5 font-semibold w-1/4">比較維度</th>
+                        <th class="p-5 font-semibold text-blue-300">Windows</th>
+                        <th class="p-5 font-semibold text-emerald-300">Linux / Unix</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700 bg-slate-800/40 text-slate-300 text-sm">
+                    <tr class="hover:bg-slate-700/30 transition-colors">
+                        <td class="p-5 font-medium text-slate-200">核心 API</td>
+                        <td class="p-5"><code>CreateProcess</code> (概念) / <code>NtCreateUserProcess</code></td>
+                        <td class="p-5"><code>fork()</code> + <code>execve()</code></td>
+                    </tr>
+                    <tr class="hover:bg-slate-700/30 transition-colors">
+                        <td class="p-5 font-medium text-slate-200">設計哲學</td>
+                        <td class="p-5">一步到位，直接建立全新個體</td>
+                        <td class="p-5">兩步拆分：先複製（Fork），再變身（Exec）</td>
+                    </tr>
+                    <tr class="hover:bg-slate-700/30 transition-colors">
+                        <td class="p-5 font-medium text-slate-200">記憶體模型</td>
+                        <td class="p-5">OS 分配全新記憶體區塊</td>
+                        <td class="p-5">複製父行程記憶體 (Copy-on-Write 最佳化)</td>
+                    </tr>
+                    <tr class="hover:bg-slate-700/30 transition-colors">
+                        <td class="p-5 font-medium text-slate-200">資源繼承</td>
+                        <td class="p-5">檔案控制代碼預設不繼承，但<strong>環境變數由 Parent 複製</strong></td>
+                        <td class="p-5"><strong class="text-emerald-300">完整繼承</strong>（檔案描述符、環境變數等）</td>
+                    </tr>
+                    <tr class="hover:bg-slate-700/30 transition-colors">
+                        <td class="p-5 font-medium text-slate-200">彈性</td>
+                        <td class="p-5">參數複雜但結構固定</td>
+                        <td class="p-5">極高（可在 Fork 與 Exec 之間修改子行程屬性）</td>
+                    </tr>
+                    <tr class="hover:bg-slate-700/30 transition-colors">
+                        <td class="p-5 font-medium text-slate-200">形成結構</td>
+                        <td class="p-5">較扁平</td>
+                        <td class="p-5"><strong class="text-emerald-300">行程樹 (Process Tree)</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ========== CONCLUSION ========== -->
+    <section class="max-w-4xl mx-auto px-6 mb-24 text-center">
+        <h2 class="text-2xl font-bold text-white mb-6">📌 結語：回到最初的問題</h2>
+        <p class="text-lg text-slate-300 leading-loose">
+            當你啟動一個像 Discord 這樣的應用程式時，你實際上是在啟動一個執行檔，它會成為一個行程。而這個行程的<strong
+                class="text-white">主要目的，就是衍生出多個相互合作的子行程</strong>，共同構成我們所認識的那個應用程式。
+        </p>
+        <p class="text-lg text-slate-300 leading-loose mt-4">
+            無論是 Windows 的「直接創造」還是 Linux 的「分裂演化」，作業系統的設計都反映了不同的工程哲學。<br>
+            理解這些底層機制，能幫助我們更透徹地看待那些在此之上運行的現代軟體世界。
+        </p>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="bg-slate-925 border-t border-slate-800 py-12 mt-auto">
+        <div class="max-w-4xl mx-auto text-center space-y-4">
+            <p class="text-slate-500 text-sm">
+                <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-indigo-400 transition-colors duration-200 border-b border-transparent hover:border-indigo-400 pb-0.5">
+                    Generated by wellstsai.com
+                </a>
+            </p>
+            <p class="text-slate-600 text-xs font-mono tracking-widest">
+                撰寫日期：2026-01-21
+            </p>
+        </div>
+    </footer>
+
+    <!-- Prism.js Scripts (loaded at end for proper DOM access) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script>
+        // Re-highlight after DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function () {
+            Prism.highlightAll();
+        });
+    </script>
+</body>
+
+</html>

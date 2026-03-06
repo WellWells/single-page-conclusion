@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/UWB%E9%9B%B7%E9%81%94%E5%BF%83%E7%8E%87%E7%9B%A3%E6%B8%AC-%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92%E6%96%B9%E6%B3%95.png">
+    <meta name="twitter:description" content="研究UWB雷達心率監測。透過2D+1D ResNet模型，將FMCW數據集預訓練成果遷移至IR-UWB系統，實現4.1 bpm MAE，證明遷移學習加速模型開發的可行性。">
+    <meta name="twitter:title" content="UWB雷達心率監測-遷移學習方法">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/UWB%E9%9B%B7%E9%81%94%E5%BF%83%E7%8E%87%E7%9B%A3%E6%B8%AC-%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92%E6%96%B9%E6%B3%95.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/UWB%E9%9B%B7%E9%81%94%E5%BF%83%E7%8E%87%E7%9B%A3%E6%B8%AC-%E9%81%B7%E7%A7%BB%E5%AD%B8%E7%BF%92%E6%96%B9%E6%B3%95.html">
+    <meta property="og:description" content="研究UWB雷達心率監測。透過2D+1D ResNet模型，將FMCW數據集預訓練成果遷移至IR-UWB系統，實現4.1 bpm MAE，證明遷移學習加速模型開發的可行性。">
+    <meta property="og:title" content="UWB雷達心率監測-遷移學習方法">
+    <meta name="description" content="研究UWB雷達心率監測。透過2D+1D ResNet模型，將FMCW數據集預訓練成果遷移至IR-UWB系統，實現4.1 bpm MAE，證明遷移學習加速模型開發的可行性。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UWB 雷達心率監測：一種遷移學習方法</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+TC:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+
+        /* 針對 Emoji 不套用字型，使其顯示為系統預設樣式 */
+        h1,
+        h2,
+        h3,
+        h4,
+        p,
+        span,
+        li,
+        th,
+        td {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+        }
+
+        .page-wrapper {
+            max-width: 78rem;
+            margin: 0 auto;
+            padding: clamp(1.5rem, 5vw, 3.5rem);
+            display: flex;
+            flex-direction: column;
+            gap: clamp(2.5rem, 5vw, 4.5rem);
+        }
+
+        .page-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1.25rem;
+        }
+
+        .page-header p {
+            max-width: 42rem;
+        }
+
+        .section-stack {
+            display: flex;
+            flex-direction: column;
+            gap: clamp(2.5rem, 4vw, 4.5rem);
+        }
+
+        .summary-section>div {
+            max-width: 56rem;
+            margin-inline: auto;
+        }
+
+        .table-container {
+            border-radius: 1rem;
+            overflow: hidden;
+            overflow-x: auto;
+        }
+
+        .table-container table {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-container thead {
+            backdrop-filter: blur(8px);
+        }
+
+        .footer-bar {
+            padding-inline: clamp(1.5rem, 6vw, 3rem);
+        }
+
+        .styled-list,
+        .numbered-list,
+        .nested-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .styled-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .styled-list li {
+            position: relative;
+            padding: 1rem 1.25rem 1rem 1.75rem;
+            background: linear-gradient(140deg, rgba(15, 23, 42, 0.92), rgba(22, 78, 99, 0.45));
+            border: 1px solid rgba(148, 163, 184, 0.22);
+            border-radius: 1rem;
+            box-shadow: 0 18px 32px rgba(15, 23, 42, 0.35);
+            color: #e2e8f0;
+        }
+
+        .styled-list li::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 1rem;
+            width: 0.45rem;
+            height: 0.45rem;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #38bdf8, #22d3ee);
+            box-shadow: 0 0 0.75rem rgba(34, 211, 238, 0.45);
+            transform: translateY(-50%);
+        }
+
+        .numbered-list {
+            counter-reset: step;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .numbered-list li {
+            counter-increment: step;
+            position: relative;
+            padding: 1.5rem 1.5rem 1.5rem 3.5rem;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 64, 175, 0.2));
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 1.25rem;
+            box-shadow: 0 24px 40px rgba(15, 23, 42, 0.35);
+            color: #e2e8f0;
+        }
+
+        .numbered-list li::before {
+            content: counter(step, decimal-leading-zero);
+            position: absolute;
+            left: 1.3rem;
+            top: 1.45rem;
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: 9999px;
+            display: grid;
+            place-items: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #0f172a;
+            background: linear-gradient(135deg, #38bdf8, #22d3ee);
+            box-shadow: 0 12px 25px rgba(56, 189, 248, 0.35);
+        }
+
+        .numbered-list--feature li {
+            padding: 0;
+            padding-left: 3.75rem;
+        }
+
+        .numbered-list--feature li::before {
+            left: 1.5rem;
+            top: 1.2rem;
+        }
+
+        li.feature-card {
+            background: rgba(15, 23, 42, 0.68);
+            border: 1px solid rgba(71, 85, 105, 0.6);
+            border-radius: 1.25rem;
+            padding: 1.35rem 1.5rem 1.35rem 5.25rem;
+            display: grid;
+            gap: 0.85rem;
+            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.38);
+        }
+
+        .nested-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 0.85rem;
+        }
+
+        .nested-list li {
+            position: relative;
+            padding: 0.75rem 0.9rem 0.75rem 1.65rem;
+            background: rgba(15, 23, 42, 0.78);
+            border: 1px solid rgba(148, 163, 184, 0.14);
+            border-radius: 0.9rem;
+            color: #d1d5db;
+        }
+
+        .nested-list li::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            width: 0.35rem;
+            height: 0.35rem;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, #facc15, #f97316);
+            box-shadow: 0 0 0.45rem rgba(250, 204, 21, 0.35);
+            transform: translateY(-50%);
+        }
+
+        @media (min-width: 1024px) {
+            .page-header {
+                gap: 1.75rem;
+            }
+
+            .page-header h1 {
+                font-size: clamp(3.5rem, 3vw, 4.5rem);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-b from-slate-900 to-slate-950 text-slate-300">
+
+    <!-- 主要內容容器，底部留白以避免被固定頁尾遮擋 -->
+    <div class="relative min-h-screen pb-16 md:pb-32">
+        <div class="page-wrapper">
+
+            <!-- 標頭 -->
+            <header class="page-header">
+                <!-- 修正：將 Emoji 放在獨立 span，避免漸層效果 -->
+                <h1 class="text-4xl md:text-5xl font-black text-white">
+                    <span>📡</span>
+                    <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-teal-300 ml-2">
+                        UWB 雷達心率監測：一種遷移學習方法
+                    </span>
+                </h1>
+                <p class="text-xl md:text-2xl text-slate-400">
+                    利用 FMCW 雷達資料集加速 IR-UWB 系統的模型開發
+                </p>
+            </header>
+
+            <!-- 文章摘要卡片 -->
+            <section class="summary-section">
+                <div
+                    class="p-6 md:p-8 bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-2xl shadow-2xl space-y-4 text-lg text-slate-200 leading-relaxed">
+                    <h2 class="text-2xl font-bold text-center text-cyan-300 mb-4">🎯 核心摘要</h2>
+                    <p>雷達技術為消費電子產品（如手機）提供了連續、非接觸式的心率監測潛力。然而，每種雷達系統都需要龐大的配對資料集進行訓練。</p>
+                    <p>本研究展示了在 <strong>FMCW（調頻連續波）</strong>和 <strong>IR-UWB（脈衝無線電超寬頻）</strong>雷達系統之間的遷移學習。研究提出一種新穎的
+                        <strong>2D + 1D ResNet</strong> 架構，在 FMCW 雷達上達成了 <strong>0.85 bpm</strong> 的平均絕對誤差（MAE）。
+                    </p>
+                    <p>關鍵的是，將此模型在小型的 IR-UWB 資料集上進行微調後，達到了 <strong>4.1 bpm</strong> 的 MAE（符合 ANSI/AAMI <5 bpm 標準），相較於
+                            IR-UWB 基線模型 <strong>MAE 降低了 25%</strong>。這項成果證明了遷移學習的可行性，能大幅加速將雷達心率監測功能引入現有消費設備的進展。</p>
+                </div>
+            </section>
+
+            <!-- 主體內容 -->
+            <main class="section-stack max-w-5xl mx-auto">
+
+                <!-- 1. 核心理論與背景 -->
+                <section>
+                    <h2 class="text-3xl font-bold text-cyan-400 border-b-2 border-slate-700 pb-2 mb-6">
+                        📜 核心理論與背景
+                    </h2>
+                    <div class="space-y-4 text-base text-slate-300 leading-relaxed">
+                        <p>心率（HR）是關鍵的生理參數。雖然智慧手錶等穿戴式裝置可提供監測，但其採用率遠低於智慧型手機。透過手機等無處不在的設備實現非接觸式監測，將使更廣泛的人群受益。</p>
+                        <p>雷達技術因其<strong>隱私保護、不受膚色影響、可穿透衣物</strong>等特性而成為首選。FMCW 和 IR-UWB 是最有潛力的兩種技術，且已逐漸整合到消費電子產品中。</p>
+                        <p>主要的挑戰在於，心臟搏動引起的胸壁運動幅度僅為呼吸運動的 <strong>1/20</strong>。因此，演算法必須能準確區分心臟、呼吸及其他身體運動的訊號。</p>
+                        <p>機器學習（ML）模型依賴大量高品質資料，為每個新的雷達配置收集資料既耗時又昂貴。本研究的核心目標是利用遷移學習，將一個大型資料集（FMCW）上學到的知識，轉移到一個資料集小得多的新系統（IR-UWB）上。
+                        </p>
+                    </div>
+                </section>
+
+                <!-- 2. 系統方法與模型架構 (重構與補充) -->
+                <section>
+                    <h2 class="text-3xl font-bold text-cyan-400 border-b-2 border-slate-700 pb-2 mb-6">
+                        🛠️ 系統方法與詳細流程
+                    </h2>
+                    <div class="space-y-6 text-base text-slate-300 leading-relaxed">
+
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-100 mb-2">🎯 研究目的：為何使用兩種雷達？</h3>
+                            <p>本研究的<strong>目的並非要同時使用兩種雷達</strong>，而是要解決一個關鍵的「資料困境」：</p>
+                            <ul class="styled-list">
+                                <li><strong>FMCW 雷達 (Soli):</strong> 已擁有一個<strong>大型、現有</strong>的高品質資料集（980
+                                    小時），但硬體較複雜，尚未普及到所有手機。</li>
+                                <li><strong>IR-UWB 雷達 (手機內建):</strong>
+                                    這是<strong>未來的目標應用</strong>（已內建於許多旗艦手機），但目前只有一個<strong>小型</strong>的專用資料集（37.3 小時）。
+                                </li>
+                            </ul>
+                            <p class="mt-2"><strong>核心挑戰：</strong>如果直接用小型資料集訓練 UWB 模型，效果不佳（MAE 5.4 bpm）。因此，研究的核心是探索能否利用
+                                FMCW
+                                的「大型資料集」知識，來「轉移」並顯著提升 IR-UWB 上的「小型資料集」模型效能？這就是<strong>遷移學習（Transfer
+                                    Learning）</strong>的價值所在。
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-100 mb-2 mt-6">🔍 特徵提取詳細流程 (訊號處理)</h3>
+                            <p>論文的詳細方法論分為訊號處理（特徵提取）和模型架構。訊號處理是將原始雷達反射訊號轉換為模型可用的「乾淨特徵」的關鍵步驟：</p>
+                            <ol class="numbered-list">
+                                <li><strong>資料分段 (Windowing):</strong> 原始資料被切割成 <strong>60 秒</strong>的片段，並以 <strong>15
+                                        秒</strong>的步進 (Step) 產生重疊的樣本，以增加資料量。</li>
+                                <li><strong>速率統一 (Resampling):</strong>
+                                    <ul class="nested-list">
+                                        <li>FMCW (Soli): 原始 Chirps 先在 Burst 內取平均，達到 30 Hz。</li>
+                                        <li>IR-UWB: 原始 200 Hz 取樣率透過平均「降取樣」至 <strong>30 Hz</strong>，以統一模型的時間維度。</li>
+                                    </ul>
+                                </li>
+                                <li><strong>訊號轉換 (FFT):</strong> 對於 FMCW 雷達，對每個 30 Hz 的 Chirp (含 256 取樣點) 進行 FFT，轉換為
+                                    <strong>129 個有效「距離切片」(Range Bins)</strong>，構成「距離-時間圖」(Range Profile)。(IR-UWB
+                                    原始訊號已是此形式)。
+                                </li>
+                                <li><strong>靜態過濾 (Clutter Filter):</strong>
+                                    減去訊號的「時間平均值」，以消除來自房間內靜止物體（如桌椅、牆壁）的穩定反射，只保留動態訊號。
+                                </li>
+                                <li><strong>使用者偵測 (Presence Detection):</strong> 使用恆定誤報率 (CFAR) 演算法（<strong>閾值設為
+                                        1.5</strong>），在距離圖上動態找到最強的訊號峰值（即使用者）。若偵測不到，則該 60 秒片段將被<strong>丟棄</strong>。</li>
+                                <li><strong>關鍵特徵生成 (Key Features):</strong> 這是論文的關鍵貢獻。傳統方法多只用「幅度
+                                    (Magnitude)」，本研究<strong>同時提取了複數訊號的「幅度」和「解包裝後的相位 (Unwrapped
+                                        Phase)」</strong>。相位對於偵測由心跳引起的
+                                    sub-mm 級微小運動極為敏感。</li>
+                                <li><strong>呼吸移除 (Adaptive Filter):</strong>
+                                    <ul class="nested-list">
+                                        <li>首先，使用 <strong>3 Hz 高通濾波器</strong> 移除 &lt;3 Hz 的低頻雜訊。</li>
+                                        <li>接著，使用 <strong>Savitzky-Golay 濾波器（窗長 1.5s）</strong>估算出呼吸的訊號趨勢。</li>
+                                        <li>最後將原始訊號<strong>減去</strong>這個呼吸趨勢。這能有效移除呼吸的主頻率及其諧波干擾。</li>
+                                    </ul>
+                                </li>
+                                <li><strong>模型輸入 (T×S×1):</strong> 特徵被送入模型前，會先進行 <strong>Min-Max 標準化</strong>
+                                    (Normalization)，並重塑 (Reshape) 為 <strong>T (時間) x S (空間特徵) x 1 (通道)</strong> 的張量，以便
+                                    2D
+                                    摺積核能同時捕捉空間相鄰特徵。</li>
+                            </ol>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-100 mb-2 mt-6">🧠 創新的 2D + 1D ResNet 架構</h3>
+                            <p class="mb-2"><strong>ResNet (殘差網路)</strong> 是一種深度神經網路，它使用「跳躍連接」(skip connections)
+                                允許資訊直接跳過幾層，將原始輸入訊號「殘差」(residual)
+                                添加到後續層的輸出上。這使得網路可以建得非常深，而不會因為梯度消失而「忘記」早期的重要特徵，非常適合處理複雜的模式。
+                            </p>
+
+                            <p class="mb-2 text-cyan-300 font-medium">本研究中 <strong>2D</strong> 與 <strong>1D</strong>
+                                的維度定義非常關鍵：</p>
+                            <ul class="styled-list">
+                                <li><strong>2D 維度</strong> 指的是：<strong>[維度1: 時間] x [維度2: 空間特徵]</strong></li>
+                                <li><strong>1D 維度</strong> 指的是：<strong>[維度1: 時間]</strong></li>
+                            </ul>
+
+                            <p class="mt-4">本研究設計的混合架構，每一步都有明確目的：</p>
+                            <ol class="numbered-list">
+                                <li><strong>輸入層 (Input):</strong> 將所有特徵（例如：天線1的幅度、天線1的相位...等）在空間維度上「攤平」，排成一個 2D 矩陣
+                                    <strong>(時間 T x 空間特徵 S)</strong>。
+                                </li>
+                                <li><strong>2D ResNet (時空特徵):</strong> 模型首先像處理「圖像」一樣處理資料。它包含 <strong>2 個
+                                        Stage</strong>（Filters: 64, 128），<strong>Stride=2</strong>。它在 <strong>[時間] x
+                                        [空間特徵]</strong> 的 2D 平面上進行摺積，同時學習時間和空間的關聯性。</li>
+                                <li><strong>平均池化 (Avg. Pooling):</strong> 在 2D ResNet
+                                    提取了豐富的時空特徵後，此步驟將「空間」維度進行<strong>壓縮（平均）</strong>。這就像是將所有空間特徵「總結」成一個單一的描述符，輸出變為一個 1D
+                                    的時間序列。</li>
+                                <li><strong>1D ResNet (時間特徵):</strong> 接著，一個非常深的 1D ResNet 專注於分析這個 <strong>[時間]</strong>
+                                    維度的
+                                    1D 序列。它包含 <strong>4 個 Stage</strong>（Filters: 128, 256, 512,
+                                    1024），<strong>Stride=2</strong>。它在更長的時間尺度上尋找複雜的節律和模式。</li>
+                                <li><strong>輸出層 (Output):</strong> 最終所有時間步的特徵被平均，形成一個 <strong>1024
+                                        維向量</strong>，再通過一個全連接層
+                                    (FC Layer) 估算出最終的心率值（BPM）。</li>
+                            </ol>
+                        </div>
+
+                        <!-- 新增區塊：本研究 vs 傳統方法 -->
+                        <div class="mt-8 pt-6 border-t border-slate-700">
+                            <h3 class="text-2xl font-bold text-cyan-300 mb-4">⚔️ 本研究 vs. 傳統方法：關鍵差異</h3>
+                            <p class="text-base text-slate-300 leading-relaxed mb-6">
+                                本研究的成功不僅來自遷移學習，更在於訊號處理與模型架構上，針對「傳統方法」的重大缺陷進行了改進：</p>
+
+                            <div class="grid gap-6 md:grid-cols-3">
+                                <!-- 1. 特徵選擇 -->
+                                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5 h-full">
+                                    <h4 class="text-lg font-bold text-slate-100 mb-2">1. 特徵選擇：「幅度」+「相位」</h4>
+                                    <p class="text-slate-400 mb-2"><strong>傳統方法：</strong>許多相關研究僅使用雷達訊號的「幅度」(Magnitude)
+                                        來估算心率，遺失了訊號的另一半資訊。</p>
+                                    <p class="text-slate-300"><strong>本研究方法：</strong>同時提取「幅度」與「解包裝後的相位」(Unwrapped
+                                        Phase)。相位對
+                                        sub-mm 級微小運動極為敏感。<br><strong class="text-cyan-300">定量貢獻：</strong>消融實驗證實，兩者並用可使
+                                        MAE
+                                        <strong>降低達 65%</strong>。
+                                    </p>
+                                </div>
+
+                                <!-- 2. 呼吸干擾 -->
+                                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5 h-full">
+                                    <h4 class="text-lg font-bold text-slate-100 mb-2">2. 呼吸干擾：移除「諧波」</h4>
+                                    <p class="text-slate-400 mb-2"><strong>傳統方法：</strong>使用標準的「帶通濾波器」(Band-pass filters)
+                                        來濾除低頻的呼吸訊號。但這有重大缺陷：它們雖然能濾掉呼吸的「主頻率」，但無法濾除呼吸的<strong>「諧波」(Harmonics)</strong>。</p>
+                                    <p class="text-orange-300 font-medium mb-2"><strong>例如：</strong>如果呼吸是 0.3 Hz，它的諧波
+                                        0.6
+                                        Hz、0.9 Hz... 就可能落入心率的範圍（例如 1.0 Hz / 60 bpm），造成嚴重干擾。</p>
+                                    <p class="text-slate-300"><strong>本研究方法：</strong>採用「自適應濾波器」(Adaptive
+                                        Filter)，先估算出完整的呼吸趨勢（使用 Savitzky-Golay
+                                        濾波器），然後將其從原始訊號中<strong>「減去」</strong>。這能同時移除主頻率及其惱人的「諧波」。</p>
+                                </div>
+
+                                <!-- 3. 模型架構 -->
+                                <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5 h-full">
+                                    <h4 class="text-lg font-bold text-slate-100 mb-2">3. 模型架構：「時空」vs.「效率」</h4>
+                                    <p class="text-slate-400 mb-2"><strong>傳統方法：</strong>多數模型（如 1D CNN 或
+                                        LSTMs）將多天線、多距離的訊號視為多個獨立「通道」(Channels) 來分析。這忽略了特徵之間在「空間」上的物理關聯性。</p>
+                                    <p class="text-slate-300"><strong>本研究方法：</strong>創新的 <strong>2D + 1D ResNet</strong>
+                                        架構。先用 2D ResNet 捕捉「時空」特徵，再用 1D ResNet 深入分析「時間」節律。<br><strong
+                                            class="text-cyan-300">定量貢獻：</strong>此架構 (MAE 0.89 bpm) 遠勝於標準 1D ResNet (MAE
+                                        1.30
+                                        bpm)，且後者的參數量是本架構的 <strong>15 倍以上</strong>，突顯本架構的「效率優勢」。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- 3. 規格比較表 -->
+                <section>
+                    <h2 class="text-3xl font-bold text-cyan-400 border-b-2 border-slate-700 pb-2 mb-6">
+                        🔬 雷達系統規格比較
+                    </h2>
+                    <div class="table-container overflow-x-auto border border-slate-700 shadow-lg">
+                        <table class="w-full text-left bg-slate-800/50">
+                            <thead class="bg-slate-800 text-slate-400 uppercase text-sm">
+                                <tr>
+                                    <th class="px-6 py-4 font-semibold">特性</th>
+                                    <th class="px-6 py-4 font-semibold">Mm-wave FMCW 雷達 (Soli)</th>
+                                    <th class="px-6 py-4 font-semibold">IR-UWB 雷達 (評估板)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700 text-slate-300">
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="px-6 py-4 font-medium">訊號類型</td>
+                                    <td>連續正弦波（Chirp）</td>
+                                    <td>極短脈衝（Pulses）</td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="px-6 py-4 font-medium">頻率</td>
+                                    <td>60 GHz</td>
+                                    <td>8 GHz</td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="px-6 py-4 font-medium">頻寬</td>
+                                    <td>5.5 GHz</td>
+                                    <td>500 MHz</td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="px-6 py-4 font-medium"><strong>範圍解析度</strong></td>
+                                    <td class="font-bold text-cyan-300">2.7 cm (高)</td>
+                                    <td class="font-bold text-orange-300">30 cm (低)</td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/50">
+                                    <td class="px-6 py-4 font-medium">接收天線</td>
+                                    <td>3</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-4 text-sm text-slate-400"><strong>關鍵差異：</strong>FMCW 的頻寬極高，使其範圍解析度比 IR-UWB 高出 10
+                        倍以上。這是遷移學習需要克服的主要挑戰。</p>
+                </section>
+
+                <!-- 4. 遷移學習流程 (重構與補充) -->
+                <section>
+                    <h2 class="text-3xl font-bold text-cyan-400 border-b-2 border-slate-700 pb-2 mb-6">
+                        🔄 遷移學習：實作流程與核心
+                    </h2>
+                    <div class="space-y-4 text-base text-slate-300 leading-relaxed">
+                        <p class="mb-4"><strong>遷移學習的目的：</strong>明確解決 IR-UWB 資料集過小的問題。如果直接在 37.3 小時的小資料集上訓練，模型效果不佳 (MAE
+                            5.4
+                            bpm)。因此，本研究希望利用 980 小時的 FMCW 資料集來「預先訓練」一個懂雷達心率的通用模型。</p>
+
+                        <p class="text-lg font-semibold text-slate-100 mt-6 mb-3">⚙️ 解決方案：詳細實作流程</p>
+                        <ol class="numbered-list numbered-list--feature">
+                            <li class="feature-card">
+                                <strong class="text-lg text-slate-100">步驟 1：資料「橋接」(Data Bridging) - 關鍵實作</strong>
+                                <p class="text-slate-300">這是最關鍵的實作核心。目標是讓 FMCW 資料「偽裝」成 IR-UWB 的低解析度特性。</p>
+                                <ul class="nested-list">
+                                    <li><strong>根本挑戰：</strong>原始 FMCW 模型輸入的特徵維度極高：<br>
+                                        <strong>(3 個接收天線) x (32 個距離切片) x (2 個特徵 [幅+相]) = 192 個特徵</strong>。<br>
+                                        而目標 IR-UWB 模型最終僅使用：<br>
+                                        <strong>(1 個接收天線) x (1 個距離切片) x (2 個特徵 [幅+相]) = 2 個特徵</strong>。
+                                    </li>
+                                    <li><strong>具體操作：</strong>研究人員<strong>故意「降級」大型 FMCW 資料集</strong>，僅從中選取<strong>「單一」天線
+                                            (1
+                                            antenna)</strong> 和<strong>「單一」距離切片 (1 range
+                                            bin)</strong>，並額外<strong>加入高斯雜訊（σ=0.0005, p=0.7）</strong>，以模擬 UWB
+                                        的低解析度與訊號品質。
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="feature-card">
+                                <strong class="text-lg text-slate-100">步驟 2：模型預訓練 (Pre-training)</strong>
+                                <p class="text-slate-300">使用這個 980 小時、但<strong>經過「降級」</strong>的 FMCW 資料集，來預先訓練 2D + 1D
+                                    ResNet 模型。</p>
+                                <ul class="nested-list">
+                                    <li><strong>訓練目的：</strong>讓模型學會最困難的 95% 任務——如何從一個「低解析度、單點、高雜訊」的雷達訊號中，找出隱藏的心率特徵。</li>
+                                    <li><strong>成果：</strong>得到一個「低解析度雷達心率專家」模型（此模型在 FMCW 測試集上 MAE 為 2.45 bpm）。</li>
+                                </ul>
+                            </li>
+                            <li class="feature-card">
+                                <strong class="text-lg text-slate-100">步驟 3：模型微調 (Fine-tuning)</strong>
+                                <p class="text-slate-300">將這個「低解析度專家」模型（已在 FMCW 資料上訓練完畢），拿來處理 37.3 小時的<strong>「真實
+                                        IR-UWB 資料集」</strong>。</p>
+                                <ul class="nested-list">
+                                    <li><strong>訓練目的：</strong>模型不再需要從頭學起，僅需「微調」參數，以適應 IR-UWB 訊號 5% 的微小特性差異。</li>
+                                    <li><strong>關鍵技巧：</strong>微調時，在 IR-UWB 資料上加入<strong>高斯雜訊 (p=0.6)</strong>
+                                        作為資料增強，並<strong>刻意交換「幅度」與「相位」的特徵順序</strong>，實驗證實這能進一步提升表現。</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <!-- 新增：詳細訓練排程 -->
+                    <div class="mt-8 pt-6 border-t border-slate-700">
+                        <h3 class="text-2xl font-bold text-cyan-300 mb-4">⏱️ 詳細訓練排程 (Training Schedules)</h3>
+                        <div class="table-container overflow-x-auto border border-slate-700 shadow-lg">
+                            <table class="w-full text-left bg-slate-800/50">
+                                <thead class="bg-slate-800 text-slate-400 uppercase text-sm">
+                                    <tr>
+                                        <th class="px-6 py-4 font-semibold">訓練階段</th>
+                                        <th class="px-6 py-4 font-semibold">優化器</th>
+                                        <th class="px-6 py-4 font-semibold">Steps</th>
+                                        <th class="px-6 py-4 font-semibold">Batch Size</th>
+                                        <th class="px-6 py-4 font-semibold">學習率 (LR)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700 text-slate-300">
+                                    <tr class="hover:bg-slate-700/50">
+                                        <td class="px-6 py-4 font-medium">FMCW 預訓練 (降級版)</td>
+                                        <td class="px-6 py-4">AdamW</td>
+                                        <td class="px-6 py-4">140k</td>
+                                        <td class="px-6 py-4">64</td>
+                                        <td class="px-6 py-4">1e-3 (常數)</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-700/50">
+                                        <td class="px-6 py-4 font-medium">UWB 基線 (從零訓練)</td>
+                                        <td class="px-6 py-4">AdamW</td>
+                                        <td class="px-6 py-4">55k</td>
+                                        <td class="px-6 py-4">2048</td>
+                                        <td class="px-6 py-4">1e-3 (常數)</td>
+                                    </tr>
+                                    <tr class="hover:bg-slate-700/50">
+                                        <td class="px-6 py-4 font-medium"><strong>UWB 微調 (遷移)</strong></td>
+                                        <td class="px-6 py-4">AdamW</td>
+                                        <td class="px-6 py-4"><strong>2.7k</strong></td>
+                                        <td class="px-6 py-4">2048</td>
+                                        <td class="px-6 py-4"><strong>3e-4 (初始), 指數衰減 0.1</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. 實驗結果與分析 -->
+                <section>
+                    <h2 class="text-3xl font-bold text-cyan-400 border-b-2 border-slate-700 pb-2 mb-6">
+                        📊 實驗結果與分析
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- FMCW 結果 -->
+                        <div class="bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-slate-100 mb-3">✅ FMCW SOTA 成果</h3>
+                            <p class="text-slate-300">使用 2D+1D ResNet 模型在<strong>完整 FMCW</strong> 資料集上 (3天線 x 32
+                                bin)，達到了
+                                <strong>0.85 bpm</strong> 的 MAE 和 1.42% 的 MAPE。
+                            </p>
+                            <p class="mt-2 text-slate-400">這超越了先前 1.69 bpm MAE 的 SOTA（最新技術水平），驗證了新模型架構與多特徵的優越性。</p>
+                        </div>
+
+                        <!-- IR-UWB 基線 -->
+                        <div class="bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg p-6">
+                            <h3 class="text-xl font-bold text-slate-100 mb-3">📉 IR-UWB 基線模型</h3>
+                            <p class="text-slate-300">僅使用小型 IR-UWB 資料集從頭訓練的模型，最終 MAE 為 <strong>5.4 bpm</strong>。</p>
+                            <p class="mt-2 text-slate-400">這個表現在臨床上處於可接受的邊緣，但準確度不穩定。</p>
+                        </div>
+                    </div>
+
+                    <!-- 遷移學習結果 (重點) -->
+                    <div
+                        class="mt-6 bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border border-cyan-700 rounded-lg shadow-2xl p-6 md:p-8 text-center">
+                        <h3 class="text-2xl font-bold text-cyan-300 mb-4">🚀 遷移學習的勝利</h3>
+                        <p class="text-xl text-slate-100 leading-relaxed">
+                            經過 FMCW 資料預訓練，再於 IR-UWB 資料上微調的模型，最終 MAE 達到了
+                            <strong class="text-5xl font-black text-white block my-4">4.1 bpm</strong>
+                            (MAPE 6.3%)
+                        </p>
+                        <p class="text-lg text-cyan-200">
+                            相較於 5.4 bpm 的基線，MAE <strong>顯著降低了 25%</strong>，並且完全符合 <strong>ANSI/AAMI (<5 bpm)</strong>
+                                    的臨床準確度要求。
+                        </p>
+                    </div>
+
+                    <!-- 新增：子群分析與失效模式 -->
+                    <div class="mt-8 pt-6 border-t border-slate-700">
+                        <h3 class="text-2xl font-bold text-cyan-300 mb-4">🔬 子群分析 & 失效模式</h3>
+                        <div class="grid gap-6 md:grid-cols-3">
+                            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5 h-full">
+                                <h4 class="text-lg font-bold text-slate-100 mb-2">1. 資料量邊際效益</h4>
+                                <p class="text-slate-300">消融實驗顯示，微調時僅使用 <strong>40% 的 IR-UWB
+                                        訓練資料</strong>，就已帶來絕大多數的效能提升。這表明未來在收集新資料時，可以顯著節省成本。</p>
+                            </div>
+                            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5 h-full">
+                                <h4 class="text-lg font-bold text-slate-100 mb-2">2. 失效模式：FMCW (睡眠場景)</h4>
+                                <p class="text-slate-300">FMCW 模型的誤差主要來自「存在偵測 (CFAR)」的失敗。當使用者<strong>距離過近 (<0.5m) 或過遠 (>
+                                            1.5m)</strong>，或在「坐起」時，CFAR 演算法可能選錯 range bin，導致 MAE 瞬間飆高。這表明 CFAR 是系統的瓶頸。
+                                </p>
+                            </div>
+                            <div class="bg-slate-800/50 border border-slate-700 rounded-lg p-5 h-full">
+                                <h4 class="text-lg font-bold text-slate-100 mb-2">3. 場景敏感性：IR-UWB (坐姿場景)</h4>
+                                <p class="text-slate-300">IR-UWB 模型的表現在不同位置（桌上 vs.
+                                    腿上）和不同站點之間基本一致。但由於訓練資料的局限，模型在<strong>高心率區間 (>90 bpm)
+                                        的效能會顯著下降</strong>。此外，在疾病、年齡、性別之間未觀察到顯著差異。</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. 結論 -->
+                <section>
+                    <h2 class="text-3xl font-bold text-cyan-400 border-b-2 border-slate-700 pb-2 mb-6">
+                        🏁 結論與未來展望
+                    </h2>
+                    <div class="space-y-4 text-base text-slate-300 leading-relaxed">
+                        <p>本研究不僅提出了一種創新的 2D + 1D ResNet 模型架構，在 FMCW 雷達上實現了 SOTA 的心率檢測準確性，更重要的是，<strong>首次成功展示了從高解析度 FMCW
+                                雷達到低解析度 IR-UWB 雷達的遷移學習</strong>。</p>
+                        <p>這項成果證實，我們無需為每一種新的雷達硬體都收集龐大的資料集。通過利用現有的大型資料集進行預訓練，可以大幅加速模型在新型或資源受限（如手機 UWB
+                            晶片）硬體上的部署，為非接觸式心率監測技術的普及鋪平了道路。</p>
+
+                        <div class="mt-6 pt-6 border-t border-slate-700">
+                            <h3 class="text-xl font-bold text-orange-400 mb-3">🚧 限制與未來工作</h3>
+                            <ul class="styled-list">
+                                <li><strong>理想化場景：</strong> IR-UWB 資料是在<strong>理想化的實驗室條件</strong>下收集的，缺乏真實世界中常見的干擾。</li>
+                                <li><strong>缺乏動作資料：</strong> 資料均為靜態（睡眠或坐姿），模型在<strong>運動、強動作</strong>下的表現尚未驗證。</li>
+                                <li><strong>高心率樣本不足：</strong> 缺乏高心率樣本（如運動後）是導致模型在高 HR 區間效能下降的主因。</li>
+                                <li><strong>單人場景：</strong> 尚未驗證在<strong>多人環境</strong>中（例如區分父母和孩子）的效能。</li>
+                                <li><strong>硬體整合：</strong> 本研究使用評估板，未來需驗證模型在<strong>真正內建於手機</strong>的 UWB 晶片上的實際表現。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- 固定頁尾 -->
+    <footer
+        class="footer-bar md:fixed md:bottom-0 md:left-0 md:right-0 bg-slate-950/80 backdrop-blur-md border-t border-slate-800 py-3 text-center text-sm text-slate-500 z-50">
+        <span class="mr-4">
+            Generated by
+            <a href="https.wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="text-slate-400 hover:text-cyan-300 transition-colors">
+                wellstsai.com
+            </a>
+        </span>
+        |
+        <span class="ml-4">撰寫日期：2025年11月07日</span>
+    </footer>
+
+</body>
+
+</html>

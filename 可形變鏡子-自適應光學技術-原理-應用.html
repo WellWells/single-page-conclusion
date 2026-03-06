@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E5%8F%AF%E5%BD%A2%E8%AE%8A%E9%8F%A1%E5%AD%90-%E8%87%AA%E9%81%A9%E6%87%89%E5%85%89%E5%AD%B8%E6%8A%80%E8%A1%93-%E5%8E%9F%E7%90%86-%E6%87%89%E7%94%A8.png">
+    <meta name="twitter:description" content="本文介紹可形變鏡子(DM)作為自適應光學(AO)的核心。內容涵蓋壓電、MEMS與電磁致動技術比較，並說明波前感測、控制矩陣與AI演算法的系統整合。最後探討其在天文、醫學與光通訊的應用及未來趨勢。">
+    <meta name="twitter:title" content="可形變鏡子-自適應光學技術-原理-應用">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E5%8F%AF%E5%BD%A2%E8%AE%8A%E9%8F%A1%E5%AD%90-%E8%87%AA%E9%81%A9%E6%87%89%E5%85%89%E5%AD%B8%E6%8A%80%E8%A1%93-%E5%8E%9F%E7%90%86-%E6%87%89%E7%94%A8.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E5%8F%AF%E5%BD%A2%E8%AE%8A%E9%8F%A1%E5%AD%90-%E8%87%AA%E9%81%A9%E6%87%89%E5%85%89%E5%AD%B8%E6%8A%80%E8%A1%93-%E5%8E%9F%E7%90%86-%E6%87%89%E7%94%A8.html">
+    <meta property="og:description" content="本文介紹可形變鏡子(DM)作為自適應光學(AO)的核心。內容涵蓋壓電、MEMS與電磁致動技術比較，並說明波前感測、控制矩陣與AI演算法的系統整合。最後探討其在天文、醫學與光通訊的應用及未來趨勢。">
+    <meta property="og:title" content="可形變鏡子-自適應光學技術-原理-應用">
+    <meta name="description" content="本文介紹可形變鏡子(DM)作為自適應光學(AO)的核心。內容涵蓋壓電、MEMS與電磁致動技術比較，並說明波前感測、控制矩陣與AI演算法的系統整合。最後探討其在天文、醫學與光通訊的應用及未來趨勢。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可形變鏡子：現代自適應光學全解析</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Noto Sans TC -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- KaTeX CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+        xintegrity="sha384-KiWOvVjnN8qwKMvhIqsNOHQGOqDDEhXnwxjsAESSaE/tUimMu2SOhVIdMyoGGCVw" crossorigin="anonymous">
+
+    <!-- KaTeX JS -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+        xintegrity="sha384-hIoBPJpTUs74ddyc4bF1bplECHARM31UYL0VxT5P+MgIdeoJkJNAnLVJ/tNfGzB6"
+        crossorigin="anonymous"></script>
+
+    <!-- KaTeX Auto-render Extension -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+        xintegrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk"
+        crossorigin="anonymous"></script>
+
+    <style>
+        /* 1. 基本樣式與字體 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #111827;
+            /* Dark background */
+            color: #e2e8f0;
+            /* slate-200 */
+        }
+
+        /* 2. 漸層文字 */
+        .text-gradient {
+            background-image: linear-gradient(to bottom, var(--tw-gradient-from), var(--tw-gradient-to));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* 3. 關鍵字樣式 */
+        .keyword {
+            border-bottom: 2px dotted #60a5fa;
+            /* blue-400 */
+            cursor: help;
+            transition: all 0.2s ease-in-out;
+            position: relative;
+        }
+
+        .keyword:hover {
+            background-color: rgba(96, 165, 250, 0.1);
+            border-bottom-style: solid;
+        }
+
+        /* 4. Tooltip 樣式 */
+        #tooltip {
+            position: absolute;
+            display: none;
+            padding: 1rem;
+            max-width: 350px;
+            background-color: rgba(31, 41, 55, 0.95);
+            /* gray-800 with opacity */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid #4b5563;
+            /* gray-600 */
+            border-radius: 0.75rem;
+            /* 12px */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+            pointer-events: none;
+            /* 避免干擾滑鼠事件 */
+            transition: opacity 0.15s ease-out;
+            opacity: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        #tooltip.visible {
+            display: block;
+            opacity: 1;
+        }
+
+        #tooltip h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #d1d5db;
+            /* gray-300 */
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #4b5563;
+            /* gray-600 */
+        }
+
+        #tooltip p {
+            margin-bottom: 0.5rem;
+            color: #9ca3af;
+            /* gray-400 */
+        }
+
+        #tooltip .details {
+            font-size: 0.85rem;
+            color: #6b7280;
+            /* gray-500 */
+            font-style: italic;
+        }
+
+        /* RWD for tooltip on narrow screens */
+        @media (max-width: 640px) {
+            #tooltip {
+                max-width: 90vw;
+                /* 限制最大寬度為 90% 視窗寬度 */
+                font-size: 0.85rem;
+                padding: 0.75rem;
+            }
+
+            #tooltip h3 {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-900 text-slate-300 overflow-x-hidden pb-20">
+
+    <!-- Tooltip 容器 -->
+    <div id="tooltip"></div>
+
+    <!-- Header / Hero 區塊 -->
+    <header class="relative container mx-auto px-6 py-24 md:py-32 text-center overflow-hidden">
+        <!-- 背景漸層輝光 -->
+        <div
+            class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-purple-600/30 blur-[150px] rounded-full opacity-50 z-0">
+        </div>
+
+        <div class="relative z-10">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6">
+                <!-- Emoji 不套用漸層，僅文字套用 -->
+                <span class="text-gradient from-sky-400 to-purple-400">可形變鏡子</span>
+                <span>🛰️</span>
+            </h1>
+            <h2 class="text-xl md:text-2xl font-light text-slate-400 max-w-3xl mx-auto">
+                深入剖析現代「<span class="keyword" data-keyword="AO">自適應光學</span>」中致動、控制與應用的綜合技術
+            </h2>
+        </div>
+    </header>
+
+    <!-- 主體內容 -->
+    <main class="container mx-auto px-4 md:px-6 relative z-10">
+
+        <!-- 文章摘要卡片 -->
+        <section class="mb-16 md:mb-24">
+            <div
+                class="max-w-4xl mx-auto bg-gray-800/60 backdrop-blur-md border border-gray-700 rounded-2xl shadow-2xl p-6 md:p-10 text-center">
+                <h3 class="text-2xl font-bold mb-4 text-gradient from-sky-300 to-sky-500">📑 內容摘要</h3>
+                <p class="text-lg text-slate-300 leading-relaxed">
+                    本篇技術文件深入探討「<span class="keyword" data-keyword="DM">可形變鏡子 (DM)</span>」作為「<span class="keyword"
+                        data-keyword="AO">自適應光學 (AO)</span>」系統的核心元件。內容涵蓋其基礎原理、關鍵的致動技術（如<span class="keyword"
+                        data-keyword="Piezo">壓電</span>、<span class="keyword" data-keyword="MEMS">靜電 MEMS</span>、<span
+                        class="keyword" data-keyword="EM">電磁</span>）、製造工藝、精密的控制系統設計，乃至於整個 <span class="keyword"
+                        data-keyword="AO">AO</span> 生態系（含<span class="keyword" data-keyword="SHWFS">波前感測</span>與<span
+                        class="keyword" data-keyword="SVD">控制矩陣</span>）。最後，我們將分析其在天文學、生物醫學到光通訊的實際應用、市場格局，並展望由 <span
+                        class="keyword" data-keyword="ML">AI 驅動</span>的未來趨勢。
+                </p>
+            </div>
+        </section>
+
+        <!-- 
+          內容分段：
+          我們將原始文件的架構重組為 RWD 卡片式布局。
+          每個 `section` 代表一個主要主題，內部使用 Grid 布局。
+        -->
+
+        <!-- Part I：基礎原理與技術 -->
+        <section class="mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+                <span class="text-gradient from-teal-300 to-cyan-400">第 I 部分：基礎原理與技術</span>
+                <span>🔬</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- 1. 波前校正導論 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-cyan-500/10 hover:border-cyan-700">
+                    <h3 class="text-xl font-semibold mb-4 text-cyan-300">1. 導論：波前校正的必要性 🌊</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        在現實中，光波穿過不均勻介質（如大氣、生物組織）時，其「<span class="keyword"
+                            data-keyword="Wavefront">波前</span>」會發生扭曲，稱為「<span class="keyword"
+                            data-keyword="Aberration">光學像差</span>」。這種<span class="keyword"
+                            data-keyword="Aberration">像差</span>會嚴重降低天文望遠鏡、顯微鏡和光通訊系統的解析度與效能。因此，即時測量並校正這些<span
+                            class="keyword" data-keyword="Aberration">像差</span>至關重要。
+                    </p>
+                </div>
+
+                <!-- 2. DM 的角色 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-cyan-500/10 hover:border-cyan-700">
+                    <h3 class="text-xl font-semibold mb-4 text-cyan-300">2. 核心元件：可形變鏡子 💎</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        <span class="keyword" data-keyword="DM">可形變鏡子 (DM)</span>
+                        是一種動態光學表面，能根據控制訊號精確變形。其原理是「<strong>共軛校正</strong>」：<span class="keyword"
+                            data-keyword="SHWFS">波前感測器</span>測量扭曲，控制系統計算出相反的「共軛」形狀，<span class="keyword"
+                            data-keyword="DM">DM</span> 變形成該形狀。當扭曲的<span class="keyword"
+                            data-keyword="Wavefront">波前</span>反射後，<span class="keyword"
+                            data-keyword="Aberration">像差</span>被抵銷，恢復成完美的<span class="keyword"
+                            data-keyword="Wavefront">波前</span>。
+                    </p>
+                </div>
+
+                <!-- 3. AO 閉迴路 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-cyan-500/10 hover:border-cyan-700">
+                    <h3 class="text-xl font-semibold mb-4 text-cyan-300">3. AO 閉迴路系統 🔄</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        <span class="keyword" data-keyword="DM">DM</span> 在「<span class="keyword"
+                            data-keyword="AO">自適應光學 (AO)</span>」系統中運作。此閉迴路包含三要素：
+                        <br><strong>1. 波前感測器 (WFS)</strong>：系統的「眼睛」，負責測量。
+                        <br><strong>2. 控制系統 (PC)</strong>：系統的「大腦」，負責計算。
+                        <br><strong>3. 可形變鏡子 (DM)</strong>：系統的「手」，負責執行校正。
+                        <br>此過程以極高頻率 (kHz 級) 不斷重複。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第 2 節：致動技術 -->
+        <section class="mb-16 md:mb-24">
+            <h3 class="text-2xl md:text-3xl font-bold text-center mb-12">
+                <span class="text-gradient from-emerald-300 to-green-400">第 2 節：致動技術比較分析</span>
+                <span>⚙️</span>
+            </h3>
+
+            <!-- 表 1：DM 致動技術比較分析 -->
+            <div class="overflow-x-auto bg-gray-800/50 border border-gray-700 rounded-2xl shadow-lg p-4">
+                <table class="w-full min-w-max text-left text-slate-300">
+                    <thead class="border-b border-gray-600 text-slate-200">
+                        <tr>
+                            <th class="p-4">特性</th>
+                            <th class="p-4"><span class="keyword" data-keyword="Piezo">壓電致動</span> (Piezo)</th>
+                            <th class="p-4"><span class="keyword" data-keyword="MEMS">靜電致動</span> (MEMS)</th>
+                            <th class="p-4"><span class="keyword" data-keyword="EM">電磁致動</span> (Voice Coil)</th>
+                            <th class="p-4"><span class="keyword" data-keyword="IPMC">離子聚合物</span> (IPMC)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">驅動原理</td>
+                            <td class="p-4">逆壓電效應</td>
+                            <td class="p-4">庫倫靜電引力</td>
+                            <td class="p-4">勞倫茲力 (音圈)</td>
+                            <td class="p-4">離子遷移</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">典型行程</td>
+                            <td class="p-4">中等 (1-10 µm)</td>
+                            <td class="p-4">較小 (1.5-5.5 µm)</td>
+                            <td class="p-4"><strong>非常大</strong> (可達 90 µm)</td>
+                            <td class="p-4">非常大 (力小)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">響應速度</td>
+                            <td class="p-4">非常快 (kHz)</td>
+                            <td class="p-4">非常快 (kHz)</td>
+                            <td class="p-4">非常快 (< 1 ms)</td>
+                            <td class="p-4"><strong>慢</strong> (Hz)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">致動器密度</td>
+                            <td class="p-4">中等到低</td>
+                            <td class="p-4"><strong>非常高</strong> (>4000)</td>
+                            <td class="p-4">較低</td>
+                            <td class="p-4">連續表面</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">驅動電壓</td>
+                            <td class="p-4">高 (100-1000 V)</td>
+                            <td class="p-4">中等 (100-300 V)</td>
+                            <td class="p-4">低 (需電流)</td>
+                            <td class="p-4"><strong>非常低</strong> (~3 V)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">遲滯效應</td>
+                            <td class="p-4">有 (15-20%)</td>
+                            <td class="p-4"><strong>無遲滯</strong> (但 $F \propto V^2$ 非線性)</td>
+                            <td class="p-4"><strong>極低</strong> (<2%)< /td>
+                            <td class="p-4">有</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">主要應用</td>
+                            <td class="p-4">通用 AO、天文學</td>
+                            <td class="p-4">高對比成像、顯微鏡</td>
+                            <td class="p-4">大行程校正、眼科</td>
+                            <td class="p-4">微型光學</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Part II：從製造到系統整合 -->
+        <section class="mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+                <span class="text-gradient from-yellow-300 to-orange-400">第 II 部分：從製造到系統整合</span>
+                <span>🏭</span>
+            </h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- 3. 製造工藝 -->
+                <div
+                    class="lg:col-span-2 bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-orange-500/10 hover:border-orange-700">
+                    <h3 class="text-xl font-semibold mb-4 text-orange-300">3. 製造工藝與材料科學 🛠️</h3>
+                    <p class="text-slate-400 leading-relaxed mb-4">
+                        <span class="keyword" data-keyword="DM">DM</span> 的製造主要分為兩條路徑：
+                        <br><strong>1. MEMS 製程：</strong> 利用半導體技術（如表面微加工）在矽晶圓上批次製造，致動器密度極高，成本可控，適用於<span class="keyword"
+                            data-keyword="MEMS">靜電 DM</span>。
+                        <br><strong>2. 傳統加工與組裝：</strong> 採用精密機械加工和手工組裝離散的致動器（如<span class="keyword"
+                            data-keyword="Piezo">壓電</span>堆疊或<span class="keyword"
+                            data-keyword="EM">電磁</span>音圈），適用於需大口徑、大行程的 <span class="keyword"
+                            data-keyword="DM">DM</span>，成本高昂。
+                    </p>
+                    <p class="text-slate-400 leading-relaxed">
+                        最終鏡面都需奈米級平滑度，並鍍上保護銀、金或介電質鍍膜以應對不同波長與雷射功率。
+                    </p>
+                </div>
+
+                <!-- Emoji 卡片 -->
+                <div
+                    class="bg-gradient-to-br from-yellow-400/20 to-orange-600/20 border border-orange-700 rounded-2xl shadow-lg flex items-center justify-center p-6 min-h-[200px] lg:min-h-full">
+                    <span class="text-8xl md:text-9xl opacity-80" role="img" aria-label="Microchip">🔬</span>
+                </div>
+
+                <!-- 4. 控制系統 -->
+                <div
+                    class="lg:col-span-3 bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-orange-500/10 hover:border-orange-700">
+                    <h3 class="text-xl font-semibold mb-4 text-orange-300">4. DM 控制系統：電子學深度剖析 ⚡</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        高效能 <span class="keyword" data-keyword="DM">DM</span> 的背後是複雜的電子設計。一個典型的控制系統包含：
+                        <br><strong>1. 微控制器 (uC)：</strong> 解碼 PC 指令，計算電壓。
+                        <br><strong>2. DAC (數位類比轉換器)：</strong> 將數位指令轉為精確的低壓類比訊號（如 16-bit 解析度）。
+                        <br><strong>3. 高壓放大器 (HV Amplifier)：</strong> 將 DAC 訊號放大至驅動 <span class="keyword"
+                            data-keyword="DM">DM</span> 所需的高電壓（如 ±50V）。
+                        <br><strong>4. 精密電源：</strong> 這是實現高精度的關鍵。需使用超低雜訊的線性穩壓器 (LDO) 為 DAC 供電，並使用雙軌調節的開關轉換器為 HV
+                        放大器提供穩定電源，以應對非對稱負載。
+                    </p>
+                </div>
+
+                <!-- 5. 整合與對準 -->
+                <div
+                    class="lg:col-span-3 bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-orange-500/10 hover:border-orange-700">
+                    <h3 class="text-xl font-semibold mb-4 text-orange-300">5. 光學系統中的整合與對準 🎯</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        <span class="keyword" data-keyword="DM">DM</span> 的整合並非即插即用。<strong>關鍵原則</strong>是將 <span
+                            class="keyword" data-keyword="DM">DM</span>
+                        放置在系統的「<strong>共軛瞳面</strong>」上。這能確保相位校正對整個視場均勻施加，並與<span class="keyword"
+                            data-keyword="SHWFS">波前感測器</span>精確對應。任何微小的對準誤差（誤配準）都會引入新的<span class="keyword"
+                            data-keyword="Aberration">像差</span>，抵銷校正效果。在高解析度應用中，整個光學鏈路都必須達到繞射極限（如 <span class="keyword"
+                            data-keyword="KaTeX">$\lambda/14$</span> <span class="keyword" data-keyword="RMS">RMS</span>
+                        波前誤差）。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Part III：運作中的自適應光學生態系統 -->
+        <section class="mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+                <span class="text-gradient from-blue-300 to-indigo-400">第 III 部分：AO 生態系統</span>
+                <span>🧩</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- 6. 波前感測 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-indigo-500/10 hover:border-indigo-700">
+                    <h3 class="text-xl font-semibold mb-4 text-indigo-300">6. 波前感測：AO 系統的眼睛 👁️</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        最廣泛使用的「<span class="keyword" data-keyword="SHWFS">夏克-哈特曼波前感測器 (SHWFS)</span>」核心是一個微透鏡陣列 (MLA)。
+                        <br>1. MLA 將<span class="keyword" data-keyword="Wavefront">波前</span>分割成許多子光束。
+                        <br>2. 探測器測量每個子光束焦點的「<strong>位移</strong>」$(\Delta x, \Delta y)$。
+                        <br>3. 此位移正比於該子孔徑內<span class="keyword"
+                            data-keyword="Wavefront">波前</span>的「<strong>平均斜率</strong>」：$(\frac{\partial \phi}{\partial
+                        x}, \frac{\partial \phi}{\partial y})_{\text{avg}} = \frac{1}{f} (\Delta x, \Delta y)$。
+                        <br>4. 最後，系統從這些離散的斜率資料中「重建」出完整的<span class="keyword" data-keyword="Wavefront">波前</span>。
+                    </p>
+                </div>
+
+                <!-- 7. 波前重建與校準 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-indigo-500/10 hover:border-indigo-700">
+                    <h3 class="text-xl font-semibold mb-4 text-indigo-300">7. 波前重建與校準 📐</h3>
+                    <p class="text-slate-400 leading-relaxed mb-4">
+                        重建<span class="keyword" data-keyword="Wavefront">波前</span>最常用的方法是將其展開為一組「<span class="keyword"
+                            data-keyword="Zernike">澤尼克多項式 (Zernike polynomials)</span>」，因為它們對應於物理上的<span class="keyword"
+                            data-keyword="Aberration">像差</span>（如散焦、像散）。
+                    </p>
+                    <p class="text-slate-400 leading-relaxed">
+                        重建的<span class="keyword" data-keyword="Wavefront">波前</span> $\phi_{\text{recon}}$ 是<span
+                            class="keyword" data-keyword="Zernike">澤尼克</span>模式 $Z_j$ 的線性組合：
+                        <span class="keyword" data-keyword="KaTeX">$$\phi_{\text{recon}}(x, y) = \sum_j a_j Z_j(x,
+                            y)$$</span>
+                    </p>
+                </div>
+
+                <!-- 8. 控制矩陣 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-indigo-500/10 hover:border-indigo-700">
+                    <h3 class="text-xl font-semibold mb-4 text-indigo-300">8. 控制矩陣與 SVD 🧮</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        系統如何知道施加多少電壓 $v$ 來校正測得的斜率 $s$？答案是「<span class="keyword" data-keyword="CM">控制矩陣 (Control
+                            Matrix)</span>」。
+                        <br>1. 首先測量每個致動器的「<span class="keyword" data-keyword="IF">影響函數 (IF)</span>」，建立「響應矩陣」
+                        $M_{resp}$，它定義了 $s = M_{resp} \cdot v$。
+                        <br>2. <span class="keyword" data-keyword="CM">控制矩陣</span> $M_{contr}$ 則是 $M_{resp}$ 的逆。
+                        <br>3. 由於 $M_{resp}$ 通常是病態的，實務上使用「<span class="keyword" data-keyword="SVD">奇異值分解
+                            (SVD)</span>」來計算其「<strong>偽逆</strong>」，並可濾除雜訊敏感的不穩定模式。
+                    </p>
+                </div>
+
+                <!-- 9. 控制演算法 -->
+                <div
+                    class="md:col-span-2 lg:col-span-3 bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-indigo-500/10 hover:border-indigo-700">
+                    <h3 class="text-xl font-semibold mb-4 text-indigo-300">9. 控制演算法：從 PID 到 AI 🧠</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        <strong>傳統 PID 控制：</strong> 最常用的是簡化的「積分控制器」，它根據過去的累積誤差來調整電壓：
+                        <span class="keyword" data-keyword="KaTeX">$$v_k = v_{k-1} + g \cdot M_{contr} \cdot
+                            s_k$$</span>
+                        其中 $g$ 是迴路增益。PID 優點是簡單穩健，但缺點是「<strong>反應式</strong>」的，對動態<span class="keyword"
+                            data-keyword="Aberration">像差</span>存在時間延遲誤差。
+                        <br><br>
+                        <strong>機器學習 (ML) 前沿：</strong> <span class="keyword" data-keyword="ML">ML</span> 和 <span
+                            class="keyword" data-keyword="AI">AI</span> 正在改變 <span class="keyword"
+                            data-keyword="AO">AO</span> 領域。
+                        <br>• <strong>CNN (摺積神經網路)</strong>：可「端到端」直接從 <span class="keyword"
+                            data-keyword="SHWFS">WFS</span> 原始圖像預測<span class="keyword"
+                            data-keyword="Aberration">像差</span>，速度快且穩健。
+                        <br>• <strong>RL (強化學習)</strong>：可實現「<strong>預測性控制</strong>」。<span class="keyword"
+                            data-keyword="RL">RL</span> 代理 (Agent) 透過與環境互動學習最佳策略，克服 PID 的時間延遲，主動適應變化的湍流。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 表 2：AO 控制演算法摘要 -->
+        <section class="mb-16 md:mb-24">
+            <h3 class="text-2xl md:text-3xl font-bold text-center mb-12">
+                <span class="text-gradient from-fuchsia-300 to-purple-400">控制演算法摘要</span>
+                <span>🤖</span>
+            </h3>
+            <div class="overflow-x-auto bg-gray-800/50 border border-gray-700 rounded-2xl shadow-lg p-4">
+                <table class="w-full min-w-max text-left text-slate-300">
+                    <thead class="border-b border-gray-600 text-slate-200">
+                        <tr>
+                            <th class="p-4">特性</th>
+                            <th class="p-4"><span class="keyword" data-keyword="PID">PID 控制器 (積分器)</span></th>
+                            <th class="p-4"><span class="keyword" data-keyword="ML">機器學習 (ML) / AI</span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">演算法類型</td>
+                            <td class="p-4">回饋控制</td>
+                            <td class="p-4">資料驅動學習 (監督/強化)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">原理</td>
+                            <td class="p-4">根據目前誤差的累積來調整輸出</td>
+                            <td class="p-4">學習輸入到輸出之間的複雜、非線性映射</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">預測能力</td>
+                            <td class="p-4"><strong>無 (純反應式)</strong>，受時間延遲限制</td>
+                            <td class="p-4"><strong>可 (預測性)</strong>，可補償時間延遲</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">處理非線性</td>
+                            <td class="p-4">假設系統為線性</td>
+                            <td class="p-4"><strong>核心優勢</strong>，能有效建模非線性</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">優點</td>
+                            <td class="p-4">簡單、穩健、易於實現</td>
+                            <td class="p-4">適應性強、效能潛力高、可端到端優化</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">缺點</td>
+                            <td class="p-4">效能非最優、校正不佳 (動態)</td>
+                            <td class="p-4">需大量資料、計算密集、模型可能為「黑盒子」</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Part IV：應用、市場格局與未來展望 -->
+        <section class="mb-16 md:mb-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">
+                <span class="text-gradient from-red-300 to-rose-400">第 IV 部分：應用、市場與未來</span>
+                <span>🌍</span>
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- 9. 應用案例 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-rose-500/10 hover:border-rose-700">
+                    <h3 class="text-xl font-semibold mb-4 text-rose-300">10. 深度應用案例研究 🔭</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        <strong>天文學：</strong> 地面望遠鏡使用 <span class="keyword" data-keyword="AO">AO</span>
+                        校正大氣湍流，解析度超越太空望遠鏡；太空望遠鏡用 <span class="keyword" data-keyword="AO">AO</span> 進行高對比成像，直接探測系外行星。
+                        <br><strong>光通訊：</strong> 在衛星地面站校正大氣擾動，大幅提高光纖耦合效率，實現穩定高速的雷射通訊。
+                        <br><strong>生物醫學：</strong> 在顯微鏡和眼底鏡中校正生物組織<span class="keyword"
+                            data-keyword="Aberration">像差</span>，實現更深層的細胞級高解析成像。
+                    </p>
+                </div>
+
+                <!-- 10. 商業格局 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-rose-500/10 hover:border-rose-700">
+                    <h3 class="text-xl font-semibold mb-4 text-rose-300">11. 商業格局與創新者 🏢</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        全球 <span class="keyword" data-keyword="DM">DM</span> 市場穩健增長，但受高成本限制。主要參與者技術分歧：
+                        <br>• <strong>ALPAO：</strong> <span class="keyword"
+                            data-keyword="EM">電磁</span>技術領導者，特點是<strong>行程巨大</strong>。
+                        <br>• <strong>Boston Micromachines (BMC)：</strong> <span class="keyword" data-keyword="MEMS">靜電
+                            MEMS</span> 領導者，特點是<strong>致動器密度極高</strong>。
+                        <br>• <strong>Thorlabs：</strong> 系統整合者，提供 <span class="keyword" data-keyword="Piezo">壓電</span>
+                        DM 和 BMC 的 <span class="keyword" data-keyword="MEMS">MEMS</span> DM。
+                    </p>
+                </div>
+
+                <!-- 11. 未來展望 -->
+                <div
+                    class="bg-gray-800/50 border border-gray-700 rounded-2xl p-6 shadow-lg transition-all duration-300 hover:shadow-rose-500/10 hover:border-rose-700">
+                    <h3 class="text-xl font-semibold mb-4 text-rose-300">12. 未來展望與新興研究 🚀</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        未來 <span class="keyword" data-keyword="DM">DM</span> 將朝更高致動器密度、更大行程發展，同時降低成本。
+                        <br><strong><span class="keyword" data-keyword="AI">AI</span> 的影響：</strong> <span
+                            class="keyword" data-keyword="AI">AI</span> 驅動的波前感測和<span class="keyword"
+                            data-keyword="RL">預測性控制</span>演算法將是革命性的，有望實現「自我校準」的 <span class="keyword"
+                            data-keyword="AO">AO</span> 系統。
+                        <br><strong>新領域：</strong> 應用將擴展至量子光學、先進製造 (3D 列印) 和下一代醫療診斷。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 表 3：商用 DM 規格概覽 -->
+        <section class="mb-16 md:mb-24">
+            <h3 class="text-2xl md:text-3xl font-bold text-center mb-12">
+                <span class="text-gradient from-sky-300 to-blue-400">商用 DM 規格概覽</span>
+                <span>📊</span>
+            </h3>
+            <div class="overflow-x-auto bg-gray-800/50 border border-gray-700 rounded-2xl shadow-lg p-4">
+                <table class="w-full min-w-max text-left text-slate-300">
+                    <thead class="border-b border-gray-600 text-slate-200">
+                        <tr>
+                            <th class="p-4">製造商</th>
+                            <th class="p-4">型號/系列</th>
+                            <th class="p-4">致動技術</th>
+                            <th class="p-4">致動器數量</th>
+                            <th class="p-4">最大行程 (PV, 光學)</th>
+                            <th class="p-4">響應速度/穩定時間</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">ALPAO</td>
+                            <td class="p-4">DM97-15</td>
+                            <td class="p-4"><span class="keyword" data-keyword="EM">電磁</span></td>
+                            <td class="p-4">97</td>
+                            <td class="p-4">> 60 µm (傾斜)</td>
+                            <td class="p-4">
+                                < 0.8 ms</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">Boston Micromachines</td>
+                            <td class="p-4">Kilo-DM</td>
+                            <td class="p-4"><span class="keyword" data-keyword="MEMS">靜電 MEMS</span></td>
+                            <td class="p-4">952</td>
+                            <td class="p-4">7.0 µm (波前)</td>
+                            <td class="p-4">
+                                < 100 µs (機械)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">Boston Micromachines</td>
+                            <td class="p-4">Multi-3.5</td>
+                            <td class="p-4"><span class="keyword" data-keyword="MEMS">靜電 MEMS</span></td>
+                            <td class="p-4">140</td>
+                            <td class="p-4">7.0 µm (波前)</td>
+                            <td class="p-4">
+                                < 100 µs (機械)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">Thorlabs</td>
+                            <td class="p-4">DM140A-35</td>
+                            <td class="p-4"><span class="keyword" data-keyword="MEMS">靜電 MEMS</span> (源自 BMC)</td>
+                            <td class="p-4">140</td>
+                            <td class="p-4">7.0 µm (波前)</td>
+                            <td class="p-4">
+                                < 75 µs (機械)</td>
+                        </tr>
+                        <tr class="hover:bg-gray-700/50 transition-colors">
+                            <td class="p-4 font-semibold">Thorlabs</td>
+                            <td class="p-4">DMH40</td>
+                            <td class="p-4"><span class="keyword" data-keyword="Piezo">壓電</span> (雙壓電晶片)</td>
+                            <td class="p-4">40</td>
+                            <td class="p-4">±17.6 µm (散焦)</td>
+                            <td class="p-4">0.5 ms (全行程)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 結論 -->
+        <section class="mb-16 md:mb-24">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-8">
+                    <span class="text-gradient from-purple-300 to-pink-400">總結：雕刻光線的未來</span>
+                    <span>🏆</span>
+                </h2>
+                <p class="text-lg text-slate-300 leading-relaxed">
+                    <span class="keyword" data-keyword="DM">可形變鏡子</span>
+                    已從專業的天文學工具，演變為推動多領域發展的關鍵技術。其成功關鍵在於<strong>因地制宜的技術選型</strong>（<span class="keyword"
+                        data-keyword="EM">電磁</span>的大行程 vs <span class="keyword" data-keyword="MEMS">MEMS</span>
+                    的高密度）與<strong>系統級思維</strong>（對準、電源、控制缺一不可）。未來，隨著 <span class="keyword" data-keyword="AI">AI</span>
+                    演算法的賦能與製造成本的降低，這種能「雕刻光線」的鏡子，將在我們探索未知、革新技術的征程中扮演不可或缺的角色。
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="fixed bottom-0 left-0 w-full bg-gray-900/80 backdrop-blur-md border-t border-gray-700 z-50">
+        <div class="container mx-auto px-6 py-4 text-center text-gray-500 text-sm">
+            <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+                class="hover:text-sky-400 transition-colors">
+                Generated by wellstsai.com
+            </a>
+            <span class="mx-2">|</span>
+            <span>撰寫日期：2025年11月01日</span>
+        </div>
+    </footer>
+
+    <script>
+        // ----------------------------------------
+        // KaTeX 自動渲染初始化
+        // ----------------------------------------
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                // 選項配置
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false },
+                    { left: "\\(", right: "\\)", display: false },
+                    { left: "\\[", right: "\\]", display: true }
+                ],
+                throwOnError: false
+            });
+        });
+
+        // ----------------------------------------
+        // 關鍵字 Tooltip 系統
+        // ----------------------------------------
+
+        // 1. 關鍵字資料庫
+        const keywordData = {
+            "DM": {
+                title: "可形變鏡子 (Deformable Mirror)",
+                desc: "一種能動態改變其反射面形狀的光學元件。",
+                details: "主要用於校正光波前的像差，是自適應光學系統的核心。"
+            },
+            "AO": {
+                title: "自適應光學 (Adaptive Optics)",
+                desc: "一種即時補償光學像差的技術。",
+                details: "系統通常包含波前感測器、控制系統與可形變鏡子。"
+            },
+            "Wavefront": {
+                title: "波前 (Wavefront)",
+                desc: "光波在傳播過程中具有相同相位的點所連成的曲面。",
+                details: "理想的波前是平面或球面，像差會使其扭曲。"
+            },
+            "Aberration": {
+                title: "光學像差 (Optical Aberration)",
+                desc: "實際光學系統成像與理想成像之間的偏差。",
+                details: "來源包括大氣湍流、生物組織、鏡片缺陷等。"
+            },
+            "Piezo": {
+                title: "壓電致動 (Piezoelectric)",
+                desc: "利用壓電材料的「逆壓電效應」來產生位移。",
+                details: "施加電壓使材料變形。優點是高響應速度與高力量，缺點是高電壓與遲滯效應。"
+            },
+            "MEMS": {
+                title: "靜電致動 (Electrostatic MEMS)",
+                desc: "利用微機電系統(MEMS)技術製造的靜電致動器。",
+                details: "透過庫倫引力拉動鏡面膜。優點是極高密度、無遲滯，缺點是行程受「吸合效應」限制。"
+            },
+            "EM": {
+                title: "電磁致動 (Electromagnetic)",
+                desc: "利用音圈馬達 (Voice Coil) 的勞倫茲力來推拉鏡面。",
+                details: "優點是行程巨大、線性度極高、遲滯極低，適合校正大幅度像差。"
+            },
+            "IPMC": {
+                title: "離子聚合物-金屬複合材料 (IPMC)",
+                desc: "一種電活性聚合物 (EAP)。",
+                details: "優點是驅動電壓極低 (約 3V)，缺點是響應速度慢、力量小。"
+            },
+            "RMS": {
+                title: "RMS (Root Mean Square)",
+                desc: "均方根值，一種統計量。",
+                details: "在光學中常用 $\\lambda/14$ RMS 波前誤差作為「繞射極限」的標準 (馬雷夏爾判據)。"
+            },
+            "SHWFS": {
+                title: "夏克-哈特曼波前感測器 (SHWFS)",
+                desc: "最主流的波前感測器。",
+                details: "利用微透鏡陣列 (MLA) 測量波前的局部平均斜率。"
+            },
+            "Zernike": {
+                title: "澤尼克多項式 (Zernike Polynomials)",
+                desc: "一組在圓形孔徑上正交的多項式。",
+                details: "常用於描述光學像差，如散焦 (Defocus)、像散 (Astigmatism) 等。"
+            },
+            "IF": {
+                title: "影響函數 (Influence Function)",
+                desc: "對單一致動器施加單位電壓時，整個鏡面產生的 3D 表面形狀。",
+                details: "是建立控制矩陣的基礎。"
+            },
+            "CM": {
+                title: "控制矩陣 (Control Matrix)",
+                desc: "連接「WFS 測量值」與「DM 指令」的關鍵矩陣。",
+                details: "它告訴系統需要施加多少電壓 (v) 來校正測得的斜率 (s)。"
+            },
+            "SVD": {
+                title: "奇異值分解 (SVD)",
+                desc: "一種矩陣分解的數學技術。",
+                details: "在 AO 中用於計算控制矩陣的「偽逆」，並可濾除不穩定的控制模式。"
+            },
+            "PID": {
+                title: "PID 控制器 (Proportional-Integral-Derivative)",
+                desc: "一種經典的回饋控制演算法。",
+                details: "AO 系統常用其簡化版 (積分控制器) $v_k = v_{k-1} + g \cdot M_{contr} \cdot s_k$，但有時間延遲。"
+            },
+            "ML": {
+                title: "機器學習 (Machine Learning)",
+                desc: "人工智慧的一個分支，讓電腦從資料中學習。",
+                details: "在 AO 中用於波前感測 (CNN) 和預測性控制 (RL)。"
+            },
+            "AI": {
+                title: "人工智慧 (Artificial Intelligence)",
+                desc: "模擬人類智慧的電腦科學領域。",
+                details: "AI 演算法有望讓 AO 系統更自主、更穩健、效能更高。"
+            },
+            "RL": {
+                title: "強化學習 (Reinforcement Learning)",
+                desc: "一種機器學習技術，代理 (Agent) 透過與環境互動學習。",
+                details: "用於 AO 可實現「預測性控制」，克服 PID 的時間延遲。"
+            },
+            "KaTeX": {
+                title: "KaTeX 數學渲染",
+                desc: "一個快速、易用的 JavaScript 函式庫，用於在網頁上顯示 TeX 數學公式。",
+                details: "本頁使用 KaTeX 來渲染所有 $...$ (行內) 與 $$...$$ (區塊) 公式。"
+            }
+        };
+
+        // 2. Tooltip 元素與事件監聽
+        const tooltip = document.getElementById('tooltip');
+        const keywords = document.querySelectorAll('.keyword');
+        const padding = 15; // 邊界留白
+
+        keywords.forEach(keyword => {
+            keyword.addEventListener('mouseover', showTooltip);
+            keyword.addEventListener('mousemove', moveTooltip);
+            keyword.addEventListener('mouseout', hideTooltip);
+        });
+
+        function showTooltip(e) {
+            const key = e.target.dataset.keyword;
+            const data = keywordData[key];
+
+            if (data) {
+                // 構建 Tooltip 內容
+                tooltip.innerHTML = `
+                    <h3>${data.title}</h3>
+                    <p>${data.desc}</p>
+                    <div class="details">${data.details}</div>
+                `;
+
+                // ** 關鍵步驟：動態渲染 Tooltip 中的 KaTeX 公式 **
+                try {
+                    renderMathInElement(tooltip, {
+                        delimiters: [
+                            { left: "$$", right: "$$", display: true },
+                            { left: "$", right: "$", display: false },
+                            { left: "\\(", right: "\\)", display: false },
+                            { left: "\\[", right: "\\]", display: true }
+                        ],
+                        throwOnError: false
+                    });
+                } catch (error) {
+                    console.warn("KaTeX render error in tooltip:", error);
+                }
+
+                tooltip.classList.add('visible');
+                moveTooltip(e); // 立即定位
+            }
+        }
+
+        function hideTooltip() {
+            tooltip.classList.remove('visible');
+        }
+
+        // 3. Tooltip 定位演算法 (核心)
+        function moveTooltip(e) {
+            if (!tooltip.classList.contains('visible')) return;
+
+            // 取得視窗尺寸與滾動位置
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const scrollY = window.scrollY;
+
+            // 取得 Tooltip 尺寸
+            // 需先設為 display: block 才能取得正確尺寸，但 visible class 已處理
+            const tooltipWidth = tooltip.offsetWidth;
+            const tooltipHeight = tooltip.offsetHeight;
+
+            // 1. 計算 X 軸位置
+            let x = e.pageX + padding;
+            // 檢查右側邊界
+            if (x + tooltipWidth > viewportWidth - padding) {
+                // 超出右側，切換到左側
+                x = e.pageX - tooltipWidth - padding;
+            }
+            // 檢查左側邊界 (切換後)
+            if (x < padding) {
+                x = padding;
+            }
+            // RWD 窄螢幕特殊處理：如果左右都放不下，就置中
+            if (viewportWidth < 640 && tooltipWidth > viewportWidth - 2 * padding) {
+                x = (viewportWidth - tooltipWidth) / 2;
+            }
+
+
+            // 2. 計算 Y 軸位置
+            // e.pageY 包含滾動，所以要加上 scrollY
+            let y = e.pageY + padding;
+
+            // 檢查底部邊界 (e.pageY - scrollY 是相對於視窗的位置)
+            if ((e.pageY - scrollY) + tooltipHeight > viewportHeight - padding) {
+                // 超出底部，切換到上方
+                y = e.pageY - tooltipHeight - padding;
+            }
+            // 檢查頂部邊界 (切換後)
+            if (y - scrollY < padding) {
+                y = scrollY + padding;
+            }
+
+            // 3. 套用位置
+            tooltip.style.left = `${x}px`;
+            tooltip.style.top = `${y}px`;
+        }
+
+    </script>
+</body>
+
+</html>

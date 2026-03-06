@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/GNU-Linux-%E7%B3%BB%E7%B5%B1%E7%B5%84%E4%BB%B6-%E6%A0%B8%E5%BF%83-%E5%95%9F%E5%8B%95%E8%88%87%E8%A1%8C%E7%A8%8B%E7%AE%A1%E7%90%86.png">
+    <meta name="twitter:description" content="GNU/Linux 運作的技術概覽。從 Bootloader 啟動載入器、Kernel 核心、PID 1 初始進程，到行程管理、I/O 與檔案系統 (FHS) 的結構。">
+    <meta name="twitter:title" content="GNU/Linux 系統組件-核心、啟動與行程管理">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/GNU-Linux-%E7%B3%BB%E7%B5%B1%E7%B5%84%E4%BB%B6-%E6%A0%B8%E5%BF%83-%E5%95%9F%E5%8B%95%E8%88%87%E8%A1%8C%E7%A8%8B%E7%AE%A1%E7%90%86.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/GNU-Linux-%E7%B3%BB%E7%B5%B1%E7%B5%84%E4%BB%B6-%E6%A0%B8%E5%BF%83-%E5%95%9F%E5%8B%95%E8%88%87%E8%A1%8C%E7%A8%8B%E7%AE%A1%E7%90%86.html">
+    <meta property="og:description" content="GNU/Linux 運作的技術概覽。從 Bootloader 啟動載入器、Kernel 核心、PID 1 初始進程，到行程管理、I/O 與檔案系統 (FHS) 的結構。">
+    <meta property="og:title" content="GNU/Linux 系統組件-核心、啟動與行程管理">
+    <meta name="description" content="GNU/Linux 運作的技術概覽。從 Bootloader 啟動載入器、Kernel 核心、PID 1 初始進程，到行程管理、I/O 與檔案系統 (FHS) 的結構。">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNU/Linux 系統核心元件</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Highlight.js CSS (Atom One Dark) -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <style>
+        /* 應用 Inter 字體 */
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            padding-bottom: 60px;
+            background-image: radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.12), transparent 45%),
+                radial-gradient(circle at 100% 0%, rgba(244, 114, 182, 0.1), transparent 40%),
+                linear-gradient(to bottom, #1e293b, #0f172a 60%, #020617 100%);
+            color: #cbd5f5;
+        }
+
+        /* 統一容器寬度與間距 */
+        .content-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        header h1 {
+            letter-spacing: 0.04em;
+            text-shadow: 0 10px 30px rgba(15, 23, 42, 0.6);
+        }
+
+        header p {
+            color: rgba(203, 213, 225, 0.85);
+        }
+
+        /* 卡片/表格統一樣式 */
+        .card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.74));
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(14px);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 30px 60px -18px rgba(14, 116, 144, 0.45);
+        }
+
+        /* 表格樣式優化 */
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .styled-table th,
+        .styled-table td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .styled-table thead th {
+            background: rgba(15, 23, 42, 0.9);
+            color: #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .styled-table tbody tr {
+            background: rgba(30, 41, 59, 0.64);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+            transition: background 0.3s ease;
+        }
+
+        .styled-table tbody tr:nth-child(even) {
+            background: rgba(30, 41, 59, 0.48);
+        }
+
+        .styled-table tbody tr:hover {
+            background: rgba(14, 116, 144, 0.35);
+        }
+
+        .styled-table code {
+            display: inline-block;
+            padding: 0.15rem 0.35rem;
+            border-radius: 0.5rem;
+            background: rgba(15, 118, 110, 0.4);
+            color: #f1f5f9;
+            font-size: 0.85rem;
+        }
+
+        /* 程式碼區塊樣式 */
+        .code-block {
+            background: rgba(2, 6, 23, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            border-radius: 18px;
+            padding: 1.25rem;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            overflow-x: auto;
+            box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.35);
+        }
+
+        .code-block code {
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.02em;
+        }
+
+        /* 區段標題優化 */
+        .card h2 {
+            color: #f8fafc;
+            letter-spacing: 0.02em;
+        }
+
+        footer {
+            backdrop-filter: blur(14px);
+            background: rgba(2, 6, 23, 0.92);
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: 0 -15px 40px rgba(2, 6, 23, 0.55);
+        }
+
+        footer a {
+            color: rgba(125, 211, 252, 0.8);
+        }
+
+        footer a:hover {
+            color: rgba(244, 114, 182, 0.9);
+        }
+
+        .highlight-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(14, 116, 144, 0.4), rgba(59, 130, 246, 0.3));
+            border: 1px solid rgba(125, 211, 252, 0.35);
+            font-size: 0.85rem;
+            color: #e0f2fe;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-dot {
+            display: inline-block;
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.85);
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-900 text-slate-300 antialiased min-h-screen">
+
+    <!-- Header -->
+    <header class="content-shell py-12 text-center">
+        <span class="highlight-badge"><span class="badge-dot"></span>GNU/Linux Architecture</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            解構 GNU/Linux 系統元件
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto">
+            深入剖析 GNU/Linux 運作的核心：從啟動載入器、核心、初始程序到程序管理的技術概覽。
+        </p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-shell pb-20">
+
+        <!-- 文章摘要卡片 -->
+        <section class="card max-w-4xl mx-auto p-6 md:p-8 my-8">
+            <h2 class="text-2xl font-bold text-white mb-4 text-center">📌 核心元件摘要</h2>
+            <p class="text-slate-300 text-center leading-relaxed">
+                一個 GNU/Linux
+                作業系統軟體主要由四個元件構成：<strong>Bootloader</strong>（啟動載入器）、<strong>Kernel</strong>（核心）、<strong>Shared
+                    Libraries</strong>（共享函式庫）以及 <strong>System
+                    Commands/Utilities</strong>（系統指令與工具）。本頁將詳細探討這些奠定系統運作基礎的元件，深入它們各自的角色與協同運作機制。
+            </p>
+        </section>
+
+        <!-- 內容分段 Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-10">
+
+            <!-- 1. Bootloader -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">🚀 啟動載入器 (Bootloader)</h2>
+                <p class="mb-4">
+                    電腦開機後，在韌體（BIOS）完成開機自檢（POST）後，<strong>啟動載入器是第一個執行的軟體</strong>。其主要職責是將作業系統核心載入到記憶體中。
+                </p>
+                <p class="mb-4">
+                    由於啟動磁區（如 MBR）的空間限制（僅 440 bytes），啟動載入器通常採<strong>多階段</strong>設計。第一階段載入器位於
+                    MBR，它的唯一任務就是載入位於檔案系統中的第二階段載入器，第二階段載入器再負責載入核心。
+                </p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>MBR (Master Boot Record):</strong> 位於已分割磁碟的啟動磁區。</li>
+                    <li><strong>VBR (Volume Boot Record):</strong> 位於未分割磁碟或特定分割區的啟動磁區。</li>
+                </ul>
+            </article>
+
+            <!-- 2. Kernel -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">🧠 系統核心 (Kernel)</h2>
+                <p class="mb-4">
+                    核心運作於硬體與使用者空間（User-space）應用程式之間，是系統的核心。它負責管理所有硬體（CPU、記憶體、裝置）、執行使用者程式，並<strong>強制執行系統安全與完整性</strong>。
+                </p>
+                <p class="mb-4">
+                    核心映像檔（如 <code>zImage</code> 或
+                    <code>bzImage</code>）被載入後，其未壓縮的標頭部分首先在「真實模式」下執行，完成初步初始化後切換到「保護模式」，接著解壓縮核心主體並將控制權轉交過去。
+                </p>
+                <p>
+                    核心最終會建立第一個使用者程序（PID 1），即 <strong>init 程序</strong>。核心功能可透過<strong>可載入模組 (Loadable Modules)</strong>
+                    動態擴展，這在嵌入式系統中特別有用，可將驅動程式建置於核心內以節省記憶體。
+                </p>
+            </article>
+
+            <!-- 3. Shared Libraries -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">📚 共享函式庫 (Shared Libraries)</h2>
+                <p class="mb-4">
+                    共享函式庫是物件碼的集合，可在編譯時（靜態函式庫）或執行時（動態函式庫）連結到程式中。
+                </p>
+                <p class="font-bold text-white mb-2">使用共享函式庫的好處：</p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>可修改函式庫程式碼而無需重新編譯使用它的應用程式。</li>
+                    <li><strong>減少記憶體使用</strong>：對於動態函式庫，記憶體中僅需保留一份副本，即可供多個執行中的程式共同使用。</li>
+                </ul>
+            </article>
+
+            <!-- 4. Init Process -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">🚦 初始程序 (Init Process)</h2>
+                <p class="mb-4">
+                    <strong>PID 1</strong>，它是系統上所有其他程序的<strong>祖先程序</strong>。由核心啟動後，init 程序會接手啟動系統的各種背景服務（Daemons）。
+                </p>
+                <p class="mb-4">
+                    傳統的 <strong>Sysvinit</strong> 使用「Runlevels」（執行等級）來定義系統狀態（如單使用者、多使用者、關機等）。不同的 Runlevel 會啟動或終止不同的服務。
+                </p>
+                <p>
+                    現代系統多改用 <strong>systemd</strong>，它提供更強大但也更複雜的服務管理功能。但對於嵌入式系統，Sysvinit 的簡潔性仍有其優勢。
+                </p>
+            </article>
+
+            <!-- 5. Root Filesystem -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">🗂️ 根檔案系統 (Root Filesystem)</h2>
+                <p class="mb-4">
+                    GNU/Linux 系統至少需要一個掛載於 <code>/</code>（根目錄）的檔案系統。它包含了支援系統運作所需的大部分檔案。
+                </p>
+                <p class="mb-4">
+                    <strong>檔案系統階層標準 (FHS)</strong> 定義了目錄結構的規範，使軟體和使用者能預測檔案位置。
+                </p>
+                <!-- 強化內容：新增檔案系統類型 -->
+                <p class="mb-2 font-semibold text-white">常見檔案系統類型：</p>
+                <ul class="list-disc list-inside space-y-2 text-sm mb-4">
+                    <li><code>ext2/3/4</code>: Linux 的標準檔案系統（Extent filesystem）。</li>
+                    <li><code>SquashFS</code>: 一種壓縮的唯讀檔案系統，常用於嵌入式系統。</li>
+                    <li><code>XFS</code>: 一種高效能的日誌型檔案系統。</li>
+                    <li><code>NFS</code>: 網路檔案系統（Network File System）。</li>
+                </ul>
+
+                <p class="mb-2 font-semibold text-white">FHS 主要目錄：</p>
+                <ul class="list-disc list-inside space-y-2 text-sm">
+                    <li><code>/bin</code>: 供所有使用者使用的必要指令。</li>
+                    <li><code>/boot</code>: 啟動載入器檔案與核心。</li>
+                    <li><code>/dev</code>: 裝置檔案。</li>
+                    <li><code>/etc</code>: 系統主機特定的設定檔。</li>
+                    <li><code>/lib</code>: 共享函式庫與核心模組。</li>
+                    <li><code>/sbin</code>: 僅供系統管理員使用的必要系統二進位檔。</li>
+                    <li><code>/proc</code>: 虛擬檔案系統，提供行程與核心資訊。</li>
+                </ul>
+            </article>
+
+            <!-- 6. Process Management -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">⚙️ 行程管理 (Process Management)</h2>
+                <p class="mb-4">
+                    行程是「執行中的程式」。系統使用 <code>fork()</code> 系統呼叫建立一個<strong>目前行程的複製品</strong>，然後使用 <code>exec()</code>
+                    家族的系統呼叫將新建立的行程替換為新的程式映像。
+                </p>
+                <p class="font-bold text-white mb-2">Signals (訊號):</p>
+                <p>
+                    訊號是軟體中斷，用於通知行程發生特定事件（如 <code>SIGINT</code>, <code>SIGKILL</code>）。行程可選擇三種回應：
+                </p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>執行預設動作（通常是終止）。</li>
+                    <li>忽略訊號。</li>
+                    <li>捕捉訊號並執行特定函式。</li>
+                </ul>
+                <p class="mt-2">
+                    可使用 <code>kill -l</code> 查詢所有訊號，或使用 <code>kill -[SIGNAL] [PID]</code> 傳送訊號。
+                </p>
+            </article>
+
+            <!-- 7. Job Control -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">🕹️ 工作控制 (Job Control)</h2>
+                <p class="mb-4">
+                    Shell 提供了工作控制功能，允許行程在前景或背景執行。
+                </p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>
+                        <strong>前景 (Foreground):</strong>
+                        行程會佔據終端機控制權，Shell 會等待它執行完畢。
+                    </li>
+                    <li>
+                        <strong>背景 (Background):</strong>
+                        使用 <code>&</code> 運算子，行程會在背景執行，Shell 會立即返還提示符。
+                    </li>
+                    <li>
+                        <strong>暫停 (Suspend):</strong>
+                        按下 <code>Ctrl-Z</code> 會傳送 <code>SIGSTOP</code> (或 <code>SIGTSTP</code>) 訊號，暫停前景行程。
+                    </li>
+                </ul>
+            </article>
+
+            <!-- 8. Process I/O -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">↔️ 行程 I/O (Process I/O)</h2>
+                <p class="mb-4">
+                    每個行程預設開啟三個 I/O 串流，並有對應的檔案描述符 (File Descriptor)：
+                </p>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li><strong>Standard Input (stdin, 0):</strong> 預設為鍵盤。</li>
+                    <li><strong>Standard Output (stdout, 1):</strong> 預設為螢幕。</li>
+                    <li><strong>Standard Error (stderr, 2):</strong> 預設為螢幕。</li>
+                </ul>
+                <p class="mb-4">
+                    <strong>I/O Redirection (重導向):</strong>
+                    可使用 <code>&gt;</code> (stdout), <code>&lt;</code> (stdin), <code>2&gt;</code> (stderr),
+                    <code>&gt;&gt;</code> (附加) 將串流重導向至檔案。
+                </p>
+                <p>
+                    <strong>Pipe (<code>|</code>):</strong>
+                    一種 IPC 機制，可將一個行程的 stdout 連接到另一個行程的 stdin。
+                </p>
+            </article>
+
+            <!-- 9. Process Environment -->
+            <article class="card p-6 space-y-4">
+                <h2 class="text-2xl font-bold text-white mb-0">🌳 行程環境與 Shell 參數</h2>
+
+                <!-- 強化內容：區分 Shell 參數和 C 語言的環境變數 -->
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-2">Shell 層級</h3>
+                    <p>
+                        每個 Shell 行程都有一組 <code>name=value</code> 形式的變數。子行程<strong>只會繼承父行程中已匯出 (export) 的變數</strong>。
+                    </p>
+                    <p class="mt-2">
+                        <strong>Quoting (引號):</strong>
+                        <code>"雙引號"</code> 允許變數擴展，<code>'單引號'</code> 則會阻止擴展，顯示字面內容。
+                    </p>
+                    <p class="font-bold text-white mt-3 mb-2">Shell 特殊參數:</p>
+                    <ul class="list-disc list-inside space-y-2 text-sm">
+                        <li><code>$1</code>, <code>$2</code>...: 位置參數 (存取腳本參數)。</li>
+                        <li><code>$#</code>: 已分配的位置參數數量。</li>
+                        <li><code>$?</code>: 上一個指令的<strong>回傳碼</strong> (0 代表成功)。</li>
+                        <li><code>$$</code>: 目前 Shell 的 PID。</li>
+                        <li><code>$!</code>: 最後一個背景行程的 PID。</li>
+                    </ul>
+                </div>
+
+                <div class="border-t border-slate-700 pt-4">
+                    <h3 class="text-lg font-semibold text-white mb-2">C 語言層級 (Process Environment)</h3>
+                    <p>
+                        在程式碼層級，行程環境是可供存取的。可使用 C 函式庫中的 <code>getenv()</code> 來讀取，或使用
+                        <code>setenv()</code>、<code>putenv()</code> 來設定。
+                    </p>
+
+                    <p class="mt-3 mb-2 text-slate-200">範例 (<code>getenv.c</code>):</p>
+                    <div class="code-block">
+                        <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(int argc, char **argv)
+{
+    char *value;
+
+    if (argc < 2) {
+        printf("用法: %s &lt;變數名稱&gt;\n", argv[0]);
+        exit(-1);
+    }
+
+    value = getenv(argv[1]);
+
+    if (value != NULL) {
+        printf("變數 %s 的值是: %s\n", argv[1], value);
+    } else {
+        printf("找不到變數 %s\n", argv[1]);
+    }
+    return 0;
+}
+</code></pre>
+                    </div>
+                </div>
+            </article>
+
+            <!-- 10. Virtualization -->
+            <article class="card p-6">
+                <h2 class="text-2xl font-bold text-white mb-3">🖥️ 虛擬化技術 (Virtualization)</h2>
+                <p class="mb-4">
+                    虛擬化技術允許在單台實體機上執行多個作業系統實例。<strong>Hypervisor</strong>（虛擬機監視器）是建立虛擬環境的軟體。
+                </p>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li><strong>Type 1:</strong> 原生 (Native)，直接在硬體上執行 (如 VMware ESX)。</li>
+                    <li><strong>Type 2:</strong> 託管 (Hosted)，在一個宿主作業系統上執行 (如 <strong>VirtualBox</strong>, Qemu)。</li>
+                </ul>
+                <p class="mb-4">
+                    <strong>User Mode Linux (UML)</strong> 是一種特殊的虛擬化，它將 Linux 核心編譯為一個標準的使用者行程，使其能在另一個 Linux
+                    核心之上執行，無需硬體虛擬化支援。
+                </p>
+                <!-- 強化內容：新增 Vagrant -->
+                <p>
+                    <strong>Vagrant</strong> 是一種用於建立和管理虛擬機環境的工具，常與 Type 2 虛擬化軟體（如 VirtualBox）協同作業，以自動化設定和部署流程。
+                </p>
+            </article>
+
+        </div> <!-- end grid -->
+
+        <!-- 比較資訊：Runlevels 表格 -->
+        <section class="max-w-4xl mx-auto mt-12">
+            <h2 class="text-2xl font-bold text-white mb-4 text-center">📋 Unix System V Runlevels (LSB)</h2>
+            <div class="card overflow-hidden">
+                <table class="w-full styled-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>名稱</th>
+                            <th>描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>0</code></td>
+                            <td>Halt</td>
+                            <td>系統關機。</td>
+                        </tr>
+                        <tr>
+                            <td><code>1</code></td>
+                            <td>Single-user mode</td>
+                            <td>單使用者模式，用於管理任務。</td>
+                        </tr>
+                        <tr>
+                            <td><code>2</code></td>
+                            <td>Multi-user mode</td>
+                            <td>多使用者模式，無網路。</td>
+                        </tr>
+                        <tr>
+                            <td><code>3</code></td>
+                            <td>Multi-user mode with networking</td>
+                            <td>啟動系統（含網路）。</td>
+                        </tr>
+                        <tr>
+                            <td><code>4</code></td>
+                            <td>Not used/User-definable</td>
+                            <td>使用者自定義。</td>
+                        </tr>
+                        <tr>
+                            <td><code>5</code></td>
+                            <td>Multi-user mode with GUI</td>
+                            <td>同 Runlevel 3，但包含圖形介面管理器。</td>
+                        </tr>
+                        <tr>
+                            <td><code>6</code></td>
+                            <td>Reboot</td>
+                            <td>重啟系統。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 比較資訊：Bootloader 表格 -->
+        <section class="max-w-4xl mx-auto mt-12">
+            <h2 class="text-2xl font-bold text-white mb-4 text-center">📊 常見 Bootloader 比較</h2>
+            <div class="card overflow-hidden">
+                <table class="w-full styled-table">
+                    <thead>
+                        <tr>
+                            <th>名稱</th>
+                            <th>特色</th>
+                            <th>主要用途</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>LILO</td>
+                            <td>早期預設載入器，現已被 GRUB 取代。</td>
+                            <td>歷史系統</td>
+                        </tr>
+                        <tr>
+                            <td>GNU GRUB</td>
+                            <td>功能強大且複雜，是目前主流的預設載入器。</td>
+                            <td>大多數 GNU/Linux 發行版</td>
+                        </tr>
+                        <tr>
+                            <td>SYSLINUX</td>
+                            <td>輕量級，支援多種檔案系統（FAT/NTFS, ext2/3/4）。</td>
+                            <td>嵌入式系統、Live CD (ISOLINUX)</td>
+                        </tr>
+                        <tr>
+                            <td>Das U-Boot</td>
+                            <td>開源，專為嵌入式裝置設計，支援多種架構。</td>
+                            <td>嵌入式裝置 (ARM, MIPS, PPC 等)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 結論 -->
+        <section class="card max-w-4xl mx-auto p-6 md:p-8 mt-12">
+            <h2 class="text-2xl font-bold text-white mb-4 text-center">🏁 總結</h2>
+            <p class="text-slate-300 text-center leading-relaxed">
+                GNU/Linux 是一個由多個精密元件構成的 layered system。從 Bootloader 喚醒硬體、Kernel 建立作業系統基礎，到 Init Process
+                啟動服務，再由檔案系統提供組織結構，最後透過強大的行程管理與 I/O 機制執行應用程式。理解這些核心元件的職責與互動，是掌握 Linux 系統運作的基石。
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer
+        class="fixed bottom-0 left-0 right-0 bg-slate-950 text-slate-400 text-xs text-center p-4 border-t border-slate-800 shadow-inner z-10">
+        Generated by <a href="https://wellstsai.com" target="_blank" rel="noopener noreferrer"
+            class="hover:text-slate-200 underline transition-colors">wellstsai.com</a>
+        <span class="mx-2">|</span>
+        撰寫日期：2025-11-07
+    </footer>
+
+    <!-- Highlight.js JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+</body>
+
+</html>
