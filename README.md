@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-03-17 17:39:35Z
+更新日期：2026-03-23 05:28:08Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -37,6 +37,7 @@
 - [Adobe-Animate停止開發-AI轉型影響與替代方案](https://wellstsai.com/single-page-conclusion/Adobe-Animate%E5%81%9C%E6%AD%A2%E9%96%8B%E7%99%BC-AI%E8%BD%89%E5%9E%8B%E5%BD%B1%E9%9F%BF%E8%88%87%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88.html)
 - [Affinity-全面革新-整合三大工作室-永久免費](https://wellstsai.com/single-page-conclusion/Affinity-%E5%85%A8%E9%9D%A2%E9%9D%A9%E6%96%B0-%E6%95%B4%E5%90%88%E4%B8%89%E5%A4%A7%E5%B7%A5%E4%BD%9C%E5%AE%A4-%E6%B0%B8%E4%B9%85%E5%85%8D%E8%B2%BB.html)
 - [Agent-Skills-三層架構與漸進式揭露提示詞規範](https://wellstsai.com/single-page-conclusion/Agent-Skills-%E4%B8%89%E5%B1%A4%E6%9E%B6%E6%A7%8B%E8%88%87%E6%BC%B8%E9%80%B2%E5%BC%8F%E6%8F%AD%E9%9C%B2%E6%8F%90%E7%A4%BA%E8%A9%9E%E8%A6%8F%E7%AF%84.html)
+- [Agentic-AI-自主代理人-技術演進與實作指南](https://wellstsai.com/single-page-conclusion/Agentic-AI-%E8%87%AA%E4%B8%BB%E4%BB%A3%E7%90%86%E4%BA%BA-%E6%8A%80%E8%A1%93%E6%BC%94%E9%80%B2%E8%88%87%E5%AF%A6%E4%BD%9C%E6%8C%87%E5%8D%97.html)
 - [Agile與Fragile發音解析](https://wellstsai.com/single-page-conclusion/Agile%E8%88%87Fragile%E7%99%BC%E9%9F%B3%E8%A7%A3%E6%9E%90.html)
 - [Aliro-1.0-智慧存取標準-技術規格與應用](https://wellstsai.com/single-page-conclusion/Aliro-1.0-%E6%99%BA%E6%85%A7%E5%AD%98%E5%8F%96%E6%A8%99%E6%BA%96-%E6%8A%80%E8%A1%93%E8%A6%8F%E6%A0%BC%E8%88%87%E6%87%89%E7%94%A8.html)
 - [Android-XR-生態系-Samsung-Galaxy-XR-技術分析](https://wellstsai.com/single-page-conclusion/Android-XR-%E7%94%9F%E6%85%8B%E7%B3%BB-Samsung-Galaxy-XR-%E6%8A%80%E8%A1%93%E5%88%86%E6%9E%90.html)
