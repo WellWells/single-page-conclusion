@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-03-23 06:30:56Z
+更新日期：2026-03-24 09:27:56Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -15,6 +15,7 @@
 - [2025年AI模型實測評比-Gemini-Claude-GPT](https://wellstsai.com/single-page-conclusion/2025%E5%B9%B4AI%E6%A8%A1%E5%9E%8B%E5%AF%A6%E6%B8%AC%E8%A9%95%E6%AF%94-Gemini-Claude-GPT.html)
 - [2025年智慧掃地機器人產業深度技術與市場分析](https://wellstsai.com/single-page-conclusion/2025%E5%B9%B4%E6%99%BA%E6%85%A7%E6%8E%83%E5%9C%B0%E6%A9%9F%E5%99%A8%E4%BA%BA%E7%94%A2%E6%A5%AD%E6%B7%B1%E5%BA%A6%E6%8A%80%E8%A1%93%E8%88%87%E5%B8%82%E5%A0%B4%E5%88%86%E6%9E%90.html)
 - [2025藍牙耳機託運禁令-台灣航空最新規定](https://wellstsai.com/single-page-conclusion/2025%E8%97%8D%E7%89%99%E8%80%B3%E6%A9%9F%E8%A8%97%E9%81%8B%E7%A6%81%E4%BB%A4-%E5%8F%B0%E7%81%A3%E8%88%AA%E7%A9%BA%E6%9C%80%E6%96%B0%E8%A6%8F%E5%AE%9A.html)
+- [2026-AI-GPU硬體選購指南-顯示卡與資料中心比較](https://wellstsai.com/single-page-conclusion/2026-AI-GPU%E7%A1%AC%E9%AB%94%E9%81%B8%E8%B3%BC%E6%8C%87%E5%8D%97-%E9%A1%AF%E7%A4%BA%E5%8D%A1%E8%88%87%E8%B3%87%E6%96%99%E4%B8%AD%E5%BF%83%E6%AF%94%E8%BC%83.html)
 - [2026-AI推論技術趨勢-量化優化與主權AI發展](https://wellstsai.com/single-page-conclusion/2026-AI%E6%8E%A8%E8%AB%96%E6%8A%80%E8%A1%93%E8%B6%A8%E5%8B%A2-%E9%87%8F%E5%8C%96%E5%84%AA%E5%8C%96%E8%88%87%E4%B8%BB%E6%AC%8AAI%E7%99%BC%E5%B1%95.html)
 - [2026年記憶體與儲存裝置漲價趨勢-AI伺服器需求衝擊](https://wellstsai.com/single-page-conclusion/2026%E5%B9%B4%E8%A8%98%E6%86%B6%E9%AB%94%E8%88%87%E5%84%B2%E5%AD%98%E8%A3%9D%E7%BD%AE%E6%BC%B2%E5%83%B9%E8%B6%A8%E5%8B%A2-AI%E4%BC%BA%E6%9C%8D%E5%99%A8%E9%9C%80%E6%B1%82%E8%A1%9D%E6%93%8A.html)
 - [2026軟體開發目標-AI工業化與工程師生存指南](https://wellstsai.com/single-page-conclusion/2026%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC%E7%9B%AE%E6%A8%99-AI%E5%B7%A5%E6%A5%AD%E5%8C%96%E8%88%87%E5%B7%A5%E7%A8%8B%E5%B8%AB%E7%94%9F%E5%AD%98%E6%8C%87%E5%8D%97.html)
@@ -96,6 +97,7 @@
 - [Intel-Arc-Pro-B60-專業GPU採購與整合指南](https://wellstsai.com/single-page-conclusion/Intel-Arc-Pro-B60-%E5%B0%88%E6%A5%ADGPU%E6%8E%A1%E8%B3%BC%E8%88%87%E6%95%B4%E5%90%88%E6%8C%87%E5%8D%97.html)
 - [J-Link選擇指南-型號比較與功能差異說明](https://wellstsai.com/single-page-conclusion/J-Link%E9%81%B8%E6%93%87%E6%8C%87%E5%8D%97-%E5%9E%8B%E8%99%9F%E6%AF%94%E8%BC%83%E8%88%87%E5%8A%9F%E8%83%BD%E5%B7%AE%E7%95%B0%E8%AA%AA%E6%98%8E.html)
 - [Jenkins-CICD-自動化部署實戰攻略](https://wellstsai.com/single-page-conclusion/Jenkins-CICD-%E8%87%AA%E5%8B%95%E5%8C%96%E9%83%A8%E7%BD%B2%E5%AF%A6%E6%88%B0%E6%94%BB%E7%95%A5.html)
+- [Kimi-K2.5-Scaling-核心技術與縮放策略](https://wellstsai.com/single-page-conclusion/Kimi-K2.5-Scaling-%E6%A0%B8%E5%BF%83%E6%8A%80%E8%A1%93%E8%88%87%E7%B8%AE%E6%94%BE%E7%AD%96%E7%95%A5.html)
 - [Let-Them-理論-將嫉妒轉為行動](https://wellstsai.com/single-page-conclusion/Let-Them-%E7%90%86%E8%AB%96-%E5%B0%87%E5%AB%89%E5%A6%92%E8%BD%89%E7%82%BA%E8%A1%8C%E5%8B%95.html)
 - [M1-門禁卡安全性-技術漏洞與風險評估](https://wellstsai.com/single-page-conclusion/M1-%E9%96%80%E7%A6%81%E5%8D%A1%E5%AE%89%E5%85%A8%E6%80%A7-%E6%8A%80%E8%A1%93%E6%BC%8F%E6%B4%9E%E8%88%87%E9%A2%A8%E9%9A%AA%E8%A9%95%E4%BC%B0.html)
 - [MCU Bootloader 完整解析](https://wellstsai.com/single-page-conclusion/MCU%20Bootloader%20%E5%AE%8C%E6%95%B4%E8%A7%A3%E6%9E%90.html)
