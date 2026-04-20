@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-04-14 03:06:12Z
+更新日期：2026-04-20 14:17:18Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -37,6 +37,7 @@
 - [AI音樂-Breaking-Rust-事件-真實性-版權與產業挑戰](https://wellstsai.com/single-page-conclusion/AI%E9%9F%B3%E6%A8%82-Breaking-Rust-%E4%BA%8B%E4%BB%B6-%E7%9C%9F%E5%AF%A6%E6%80%A7-%E7%89%88%E6%AC%8A%E8%88%87%E7%94%A2%E6%A5%AD%E6%8C%91%E6%88%B0.html)
 - [APT36-Vibeware-AI惡意軟體威脅報告](https://wellstsai.com/single-page-conclusion/APT36-Vibeware-AI%E6%83%A1%E6%84%8F%E8%BB%9F%E9%AB%94%E5%A8%81%E8%84%85%E5%A0%B1%E5%91%8A.html)
 - [ARM-Cortex-架構-A-R-M系列與車用晶片選型](https://wellstsai.com/single-page-conclusion/ARM-Cortex-%E6%9E%B6%E6%A7%8B-A-R-M%E7%B3%BB%E5%88%97%E8%88%87%E8%BB%8A%E7%94%A8%E6%99%B6%E7%89%87%E9%81%B8%E5%9E%8B.html)
+- [ARM-自主研發-AGI-CPU-戰略轉型](https://wellstsai.com/single-page-conclusion/ARM-%E8%87%AA%E4%B8%BB%E7%A0%94%E7%99%BC-AGI-CPU-%E6%88%B0%E7%95%A5%E8%BD%89%E5%9E%8B.html)
 - [Adobe-Animate停止開發-AI轉型影響與替代方案](https://wellstsai.com/single-page-conclusion/Adobe-Animate%E5%81%9C%E6%AD%A2%E9%96%8B%E7%99%BC-AI%E8%BD%89%E5%9E%8B%E5%BD%B1%E9%9F%BF%E8%88%87%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%A1%88.html)
 - [Affinity-全面革新-整合三大工作室-永久免費](https://wellstsai.com/single-page-conclusion/Affinity-%E5%85%A8%E9%9D%A2%E9%9D%A9%E6%96%B0-%E6%95%B4%E5%90%88%E4%B8%89%E5%A4%A7%E5%B7%A5%E4%BD%9C%E5%AE%A4-%E6%B0%B8%E4%B9%85%E5%85%8D%E8%B2%BB.html)
 - [Agent-Skills-三層架構與漸進式揭露提示詞規範](https://wellstsai.com/single-page-conclusion/Agent-Skills-%E4%B8%89%E5%B1%A4%E6%9E%B6%E6%A7%8B%E8%88%87%E6%BC%B8%E9%80%B2%E5%BC%8F%E6%8F%AD%E9%9C%B2%E6%8F%90%E7%A4%BA%E8%A9%9E%E8%A6%8F%E7%AF%84.html)
