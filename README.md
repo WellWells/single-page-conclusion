@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-04-20 14:17:18Z
+更新日期：2026-04-28 16:47:55Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -178,6 +178,7 @@
 - [index](https://wellstsai.com/single-page-conclusion/index.html)
 - [kiwi-industry-strategic-analysis](https://wellstsai.com/single-page-conclusion/kiwi-industry-strategic-analysis.html)
 - [npm供應鏈安全計畫-受信任發布與2FA](https://wellstsai.com/single-page-conclusion/npm%E4%BE%9B%E6%87%89%E9%8F%88%E5%AE%89%E5%85%A8%E8%A8%88%E7%95%AB-%E5%8F%97%E4%BF%A1%E4%BB%BB%E7%99%BC%E5%B8%83%E8%88%872FA.html)
+- [nvidia-nemotron-3-nano-omni](https://wellstsai.com/single-page-conclusion/nvidia-nemotron-3-nano-omni.html)
 - [uri-與-url-深入解析](https://wellstsai.com/single-page-conclusion/uri-%E8%88%87-url-%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90.html)
 - [uv全攻略-Python高速套件與版本管理器](https://wellstsai.com/single-page-conclusion/uv%E5%85%A8%E6%94%BB%E7%95%A5-Python%E9%AB%98%E9%80%9F%E5%A5%97%E4%BB%B6%E8%88%87%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86%E5%99%A8.html)
 - [一次看懂交保是什麼](https://wellstsai.com/single-page-conclusion/%E4%B8%80%E6%AC%A1%E7%9C%8B%E6%87%82%E4%BA%A4%E4%BF%9D%E6%98%AF%E4%BB%80%E9%BA%BC.html)
