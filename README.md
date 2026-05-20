@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-05-19 16:03:52Z
+更新日期：2026-05-20 09:56:45Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -170,6 +170,7 @@
 - [WireGuard與TrustTunnel技術對比及架設教學](https://wellstsai.com/single-page-conclusion/WireGuard%E8%88%87TrustTunnel%E6%8A%80%E8%A1%93%E5%B0%8D%E6%AF%94%E5%8F%8A%E6%9E%B6%E8%A8%AD%E6%95%99%E5%AD%B8.html)
 - [Zigbee-vs-WiFi-比較-功耗-距離-本地控制優勢分析](https://wellstsai.com/single-page-conclusion/Zigbee-vs-WiFi-%E6%AF%94%E8%BC%83-%E5%8A%9F%E8%80%97-%E8%B7%9D%E9%9B%A2-%E6%9C%AC%E5%9C%B0%E6%8E%A7%E5%88%B6%E5%84%AA%E5%8B%A2%E5%88%86%E6%9E%90.html)
 - [Zoox自駕革命](https://wellstsai.com/single-page-conclusion/Zoox%E8%87%AA%E9%A7%95%E9%9D%A9%E5%91%BD.html)
+- [bluetooth-tutorial-classic-vs-ble-principles](https://wellstsai.com/single-page-conclusion/bluetooth-tutorial-classic-vs-ble-principles.html)
 - [eSIM優點與缺點.消費者與產業視角分析](https://wellstsai.com/single-page-conclusion/eSIM%E5%84%AA%E9%BB%9E%E8%88%87%E7%BC%BA%E9%BB%9E.%E6%B6%88%E8%B2%BB%E8%80%85%E8%88%87%E7%94%A2%E6%A5%AD%E8%A6%96%E8%A7%92%E5%88%86%E6%9E%90.html)
 - [eSIM安全性與隱私風險分析](https://wellstsai.com/single-page-conclusion/eSIM%E5%AE%89%E5%85%A8%E6%80%A7%E8%88%87%E9%9A%B1%E7%A7%81%E9%A2%A8%E9%9A%AA%E5%88%86%E6%9E%90.html)
 - [git-filter-repo 教學指南](https://wellstsai.com/single-page-conclusion/git-filter-repo%20%E6%95%99%E5%AD%B8%E6%8C%87%E5%8D%97.html)
