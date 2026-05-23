@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-05-20 09:56:45Z
+更新日期：2026-05-23 06:20:11Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -22,6 +22,7 @@
 - [2026軟體開發目標-AI工業化與工程師生存指南](https://wellstsai.com/single-page-conclusion/2026%E8%BB%9F%E9%AB%94%E9%96%8B%E7%99%BC%E7%9B%AE%E6%A8%99-AI%E5%B7%A5%E6%A5%AD%E5%8C%96%E8%88%87%E5%B7%A5%E7%A8%8B%E5%B8%AB%E7%94%9F%E5%AD%98%E6%8C%87%E5%8D%97.html)
 - [3D-NAND技術-2D瓶頸與垂直堆疊革命](https://wellstsai.com/single-page-conclusion/3D-NAND%E6%8A%80%E8%A1%93-2D%E7%93%B6%E9%A0%B8%E8%88%87%E5%9E%82%E7%9B%B4%E5%A0%86%E7%96%8A%E9%9D%A9%E5%91%BD.html)
 - [4KB分頁-歷史-權衡與未來](https://wellstsai.com/single-page-conclusion/4KB%E5%88%86%E9%A0%81-%E6%AD%B7%E5%8F%B2-%E6%AC%8A%E8%A1%A1%E8%88%87%E6%9C%AA%E4%BE%86.html)
+- [5G行銷話術與物理限制-NSA非獨立組網與基地台真相](https://wellstsai.com/single-page-conclusion/5G%E8%A1%8C%E9%8A%B7%E8%A9%B1%E8%A1%93%E8%88%87%E7%89%A9%E7%90%86%E9%99%90%E5%88%B6-NSA%E9%9D%9E%E7%8D%A8%E7%AB%8B%E7%B5%84%E7%B6%B2%E8%88%87%E5%9F%BA%E5%9C%B0%E5%8F%B0%E7%9C%9F%E7%9B%B8.html)
 - [8K-360相機評測-GoPro-Max-2-vs-DJI-Osmo-360-vs-Insta360-X5](https://wellstsai.com/single-page-conclusion/8K-360%E7%9B%B8%E6%A9%9F%E8%A9%95%E6%B8%AC-GoPro-Max-2-vs-DJI-Osmo-360-vs-Insta360-X5.html)
 - [AI 溝通術：從提示詞到上下文工程](https://wellstsai.com/single-page-conclusion/AI%20%E6%BA%9D%E9%80%9A%E8%A1%93%EF%BC%9A%E5%BE%9E%E6%8F%90%E7%A4%BA%E8%A9%9E%E5%88%B0%E4%B8%8A%E4%B8%8B%E6%96%87%E5%B7%A5%E7%A8%8B.html)
 - [AI-Agent-Design-Patterns-單一-循序與平行模式](https://wellstsai.com/single-page-conclusion/AI-Agent-Design-Patterns-%E5%96%AE%E4%B8%80-%E5%BE%AA%E5%BA%8F%E8%88%87%E5%B9%B3%E8%A1%8C%E6%A8%A1%E5%BC%8F.html)
