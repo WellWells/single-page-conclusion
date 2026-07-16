@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-07-16 02:38:13Z
+更新日期：2026-07-16 03:07:24Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -71,6 +71,7 @@
 - [DOA到達方向估測-演算法原理與比較](https://wellstsai.com/single-page-conclusion/DOA%E5%88%B0%E9%81%94%E6%96%B9%E5%90%91%E4%BC%B0%E6%B8%AC-%E6%BC%94%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86%E8%88%87%E6%AF%94%E8%BC%83.html)
 - [DRAM價格飆漲-AI衝擊與DDR4成本反超DDR5](https://wellstsai.com/single-page-conclusion/DRAM%E5%83%B9%E6%A0%BC%E9%A3%86%E6%BC%B2-AI%E8%A1%9D%E6%93%8A%E8%88%87DDR4%E6%88%90%E6%9C%AC%E5%8F%8D%E8%B6%85DDR5.html)
 - [DeFi-踩坑事件分析-三大核心教訓](https://wellstsai.com/single-page-conclusion/DeFi-%E8%B8%A9%E5%9D%91%E4%BA%8B%E4%BB%B6%E5%88%86%E6%9E%90-%E4%B8%89%E5%A4%A7%E6%A0%B8%E5%BF%83%E6%95%99%E8%A8%93.html)
+- [DiffusionGemma-文字擴散生成原理與自迴歸模型的根本差異](https://wellstsai.com/single-page-conclusion/DiffusionGemma-%E6%96%87%E5%AD%97%E6%93%B4%E6%95%A3%E7%94%9F%E6%88%90%E5%8E%9F%E7%90%86%E8%88%87%E8%87%AA%E8%BF%B4%E6%AD%B8%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%A0%B9%E6%9C%AC%E5%B7%AE%E7%95%B0.html)
 - [Docker-Podman-Kubernetes-容器架構比較與實務評估](https://wellstsai.com/single-page-conclusion/Docker-Podman-Kubernetes-%E5%AE%B9%E5%99%A8%E6%9E%B6%E6%A7%8B%E6%AF%94%E8%BC%83%E8%88%87%E5%AF%A6%E5%8B%99%E8%A9%95%E4%BC%B0.html)
 - [Docker容器技術-解決相依性地獄與虛擬化對比](https://wellstsai.com/single-page-conclusion/Docker%E5%AE%B9%E5%99%A8%E6%8A%80%E8%A1%93-%E8%A7%A3%E6%B1%BA%E7%9B%B8%E4%BE%9D%E6%80%A7%E5%9C%B0%E7%8D%84%E8%88%87%E8%99%9B%E6%93%AC%E5%8C%96%E5%B0%8D%E6%AF%94.html)
 - [Dolby Vision 2 與 HDR 完整指南](https://wellstsai.com/single-page-conclusion/Dolby%20Vision%202%20%E8%88%87%20HDR%20%E5%AE%8C%E6%95%B4%E6%8C%87%E5%8D%97.html)
