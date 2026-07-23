@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-07-16 03:07:24Z
+更新日期：2026-07-23 16:35:56Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -323,6 +323,7 @@
 - [演化的真正主角-自私的基因理論](https://wellstsai.com/single-page-conclusion/%E6%BC%94%E5%8C%96%E7%9A%84%E7%9C%9F%E6%AD%A3%E4%B8%BB%E8%A7%92-%E8%87%AA%E7%A7%81%E7%9A%84%E5%9F%BA%E5%9B%A0%E7%90%86%E8%AB%96.html)
 - [澱粉物理特性-勾芡工藝科學](https://wellstsai.com/single-page-conclusion/%E6%BE%B1%E7%B2%89%E7%89%A9%E7%90%86%E7%89%B9%E6%80%A7-%E5%8B%BE%E8%8A%A1%E5%B7%A5%E8%97%9D%E7%A7%91%E5%AD%B8.html)
 - [瀏覽器任務排程深度解析](https://wellstsai.com/single-page-conclusion/%E7%80%8F%E8%A6%BD%E5%99%A8%E4%BB%BB%E5%8B%99%E6%8E%92%E7%A8%8B%E6%B7%B1%E5%BA%A6%E8%A7%A3%E6%9E%90.html)
+- [為什麼AI離不開加速卡-輝達的真正護城河不是晶片而是時間](https://wellstsai.com/single-page-conclusion/%E7%82%BA%E4%BB%80%E9%BA%BCAI%E9%9B%A2%E4%B8%8D%E9%96%8B%E5%8A%A0%E9%80%9F%E5%8D%A1-%E8%BC%9D%E9%81%94%E7%9A%84%E7%9C%9F%E6%AD%A3%E8%AD%B7%E5%9F%8E%E6%B2%B3%E4%B8%8D%E6%98%AF%E6%99%B6%E7%89%87%E8%80%8C%E6%98%AF%E6%99%82%E9%96%93.html)
 - [為何一切都變賭博-體育博弈-App-金融真相](https://wellstsai.com/single-page-conclusion/%E7%82%BA%E4%BD%95%E4%B8%80%E5%88%87%E9%83%BD%E8%AE%8A%E8%B3%AD%E5%8D%9A-%E9%AB%94%E8%82%B2%E5%8D%9A%E5%BC%88-App-%E9%87%91%E8%9E%8D%E7%9C%9F%E7%9B%B8.html)
 - [為何手機攝影走向多鏡頭時代](https://wellstsai.com/single-page-conclusion/%E7%82%BA%E4%BD%95%E6%89%8B%E6%A9%9F%E6%94%9D%E5%BD%B1%E8%B5%B0%E5%90%91%E5%A4%9A%E9%8F%A1%E9%A0%AD%E6%99%82%E4%BB%A3.html)
 - [熱顯像模組開發-硬體整合與輻射測溫校正實務](https://wellstsai.com/single-page-conclusion/%E7%86%B1%E9%A1%AF%E5%83%8F%E6%A8%A1%E7%B5%84%E9%96%8B%E7%99%BC-%E7%A1%AC%E9%AB%94%E6%95%B4%E5%90%88%E8%88%87%E8%BC%BB%E5%B0%84%E6%B8%AC%E6%BA%AB%E6%A0%A1%E6%AD%A3%E5%AF%A6%E5%8B%99.html)
