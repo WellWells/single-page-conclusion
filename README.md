@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-08-07 18:02:29Z
+更新日期：2026-08-13 09:54:07Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -59,6 +59,7 @@
 - [BlueHammer零時差漏洞-Windows-Defender權限提升手法](https://wellstsai.com/single-page-conclusion/BlueHammer%E9%9B%B6%E6%99%82%E5%B7%AE%E6%BC%8F%E6%B4%9E-Windows-Defender%E6%AC%8A%E9%99%90%E6%8F%90%E5%8D%87%E6%89%8B%E6%B3%95.html)
 - [Body-Tea意思-起源與用法](https://wellstsai.com/single-page-conclusion/Body-Tea%E6%84%8F%E6%80%9D-%E8%B5%B7%E6%BA%90%E8%88%87%E7%94%A8%E6%B3%95.html)
 - [C-CPP-指標全攻略-記憶體底層原理](https://wellstsai.com/single-page-conclusion/C-CPP-%E6%8C%87%E6%A8%99%E5%85%A8%E6%94%BB%E7%95%A5-%E8%A8%98%E6%86%B6%E9%AB%94%E5%BA%95%E5%B1%A4%E5%8E%9F%E7%90%86.html)
+- [CLAUDE.md怎麼寫-12條讓AI編碼代理少犯錯的規則](https://wellstsai.com/single-page-conclusion/CLAUDE.md%E6%80%8E%E9%BA%BC%E5%AF%AB-12%E6%A2%9D%E8%AE%93AI%E7%B7%A8%E7%A2%BC%E4%BB%A3%E7%90%86%E5%B0%91%E7%8A%AF%E9%8C%AF%E7%9A%84%E8%A6%8F%E5%89%87.html)
 - [CPU 五次重生史](https://wellstsai.com/single-page-conclusion/CPU%20%E4%BA%94%E6%AC%A1%E9%87%8D%E7%94%9F%E5%8F%B2.html)
 - [Caseys成功秘訣-鄉村市場的商業王國](https://wellstsai.com/single-page-conclusion/Caseys%E6%88%90%E5%8A%9F%E7%A7%98%E8%A8%A3-%E9%84%89%E6%9D%91%E5%B8%82%E5%A0%B4%E7%9A%84%E5%95%86%E6%A5%AD%E7%8E%8B%E5%9C%8B.html)
 - [Claude-Code-Context-Window-管理機制](https://wellstsai.com/single-page-conclusion/Claude-Code-Context-Window-%E7%AE%A1%E7%90%86%E6%A9%9F%E5%88%B6.html)
