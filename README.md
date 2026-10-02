@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-10-02 06:33:39Z
+更新日期：2026-10-02 14:06:38Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -347,6 +347,7 @@
 - [硬碟容量縮水之謎](https://wellstsai.com/single-page-conclusion/%E7%A1%AC%E7%A2%9F%E5%AE%B9%E9%87%8F%E7%B8%AE%E6%B0%B4%E4%B9%8B%E8%AC%8E.html)
 - [福爾摩沙流感-台灣經濟繁榮代價](https://wellstsai.com/single-page-conclusion/%E7%A6%8F%E7%88%BE%E6%91%A9%E6%B2%99%E6%B5%81%E6%84%9F-%E5%8F%B0%E7%81%A3%E7%B6%93%E6%BF%9F%E7%B9%81%E6%A6%AE%E4%BB%A3%E5%83%B9.html)
 - [科技海綿毒性真相-甲醛風險與正確用法](https://wellstsai.com/single-page-conclusion/%E7%A7%91%E6%8A%80%E6%B5%B7%E7%B6%BF%E6%AF%92%E6%80%A7%E7%9C%9F%E7%9B%B8-%E7%94%B2%E9%86%9B%E9%A2%A8%E9%9A%AA%E8%88%87%E6%AD%A3%E7%A2%BA%E7%94%A8%E6%B3%95.html)
+- [第一次送TFDA-國產醫療器材上市全流程-醫療器材商-QMS-查驗登記的規費與分工](https://wellstsai.com/single-page-conclusion/%E7%AC%AC%E4%B8%80%E6%AC%A1%E9%80%81TFDA-%E5%9C%8B%E7%94%A2%E9%86%AB%E7%99%82%E5%99%A8%E6%9D%90%E4%B8%8A%E5%B8%82%E5%85%A8%E6%B5%81%E7%A8%8B-%E9%86%AB%E7%99%82%E5%99%A8%E6%9D%90%E5%95%86-QMS-%E6%9F%A5%E9%A9%97%E7%99%BB%E8%A8%98%E7%9A%84%E8%A6%8F%E8%B2%BB%E8%88%87%E5%88%86%E5%B7%A5.html)
 - [第三次世界大戰前兆-歷史維度與局勢警訊](https://wellstsai.com/single-page-conclusion/%E7%AC%AC%E4%B8%89%E6%AC%A1%E4%B8%96%E7%95%8C%E5%A4%A7%E6%88%B0%E5%89%8D%E5%85%86-%E6%AD%B7%E5%8F%B2%E7%B6%AD%E5%BA%A6%E8%88%87%E5%B1%80%E5%8B%A2%E8%AD%A6%E8%A8%8A.html)
 - [筆電記憶體市場趨勢與技術分析](https://wellstsai.com/single-page-conclusion/%E7%AD%86%E9%9B%BB%E8%A8%98%E6%86%B6%E9%AB%94%E5%B8%82%E5%A0%B4%E8%B6%A8%E5%8B%A2%E8%88%87%E6%8A%80%E8%A1%93%E5%88%86%E6%9E%90.html)
 - [管水母-超級生物體-葡萄牙戰艦](https://wellstsai.com/single-page-conclusion/%E7%AE%A1%E6%B0%B4%E6%AF%8D-%E8%B6%85%E7%B4%9A%E7%94%9F%E7%89%A9%E9%AB%94-%E8%91%A1%E8%90%84%E7%89%99%E6%88%B0%E8%89%A6.html)
