@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-09-21 19:58:39Z
+更新日期：2026-10-02 06:33:39Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -204,6 +204,7 @@
 - [中國嵌入式系統人才與薪酬格局的戰略分析](https://wellstsai.com/single-page-conclusion/%E4%B8%AD%E5%9C%8B%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%B5%B1%E4%BA%BA%E6%89%8D%E8%88%87%E8%96%AA%E9%85%AC%E6%A0%BC%E5%B1%80%E7%9A%84%E6%88%B0%E7%95%A5%E5%88%86%E6%9E%90.html)
 - [中國智慧型投影儀市場洞察](https://wellstsai.com/single-page-conclusion/%E4%B8%AD%E5%9C%8B%E6%99%BA%E6%85%A7%E5%9E%8B%E6%8A%95%E5%BD%B1%E5%84%80%E5%B8%82%E5%A0%B4%E6%B4%9E%E5%AF%9F.html)
 - [中國為何沒有DNS根伺服器-歷史技術與現況分析](https://wellstsai.com/single-page-conclusion/%E4%B8%AD%E5%9C%8B%E7%82%BA%E4%BD%95%E6%B2%92%E6%9C%89DNS%E6%A0%B9%E4%BC%BA%E6%9C%8D%E5%99%A8-%E6%AD%B7%E5%8F%B2%E6%8A%80%E8%A1%93%E8%88%87%E7%8F%BE%E6%B3%81%E5%88%86%E6%9E%90.html)
+- [中國行動電源新國標GB-47372-2026-針刺測試-智慧降壓與舊款能否上飛機](https://wellstsai.com/single-page-conclusion/%E4%B8%AD%E5%9C%8B%E8%A1%8C%E5%8B%95%E9%9B%BB%E6%BA%90%E6%96%B0%E5%9C%8B%E6%A8%99GB-47372-2026-%E9%87%9D%E5%88%BA%E6%B8%AC%E8%A9%A6-%E6%99%BA%E6%85%A7%E9%99%8D%E5%A3%93%E8%88%87%E8%88%8A%E6%AC%BE%E8%83%BD%E5%90%A6%E4%B8%8A%E9%A3%9B%E6%A9%9F.html)
 - [中國記憶體產業崛起-長鑫存儲-長江存儲-市場競爭力](https://wellstsai.com/single-page-conclusion/%E4%B8%AD%E5%9C%8B%E8%A8%98%E6%86%B6%E9%AB%94%E7%94%A2%E6%A5%AD%E5%B4%9B%E8%B5%B7-%E9%95%B7%E9%91%AB%E5%AD%98%E5%84%B2-%E9%95%B7%E6%B1%9F%E5%AD%98%E5%84%B2-%E5%B8%82%E5%A0%B4%E7%AB%B6%E7%88%AD%E5%8A%9B.html)
 - [主機板VRM供電相位-原理與選購指南](https://wellstsai.com/single-page-conclusion/%E4%B8%BB%E6%A9%9F%E6%9D%BFVRM%E4%BE%9B%E9%9B%BB%E7%9B%B8%E4%BD%8D-%E5%8E%9F%E7%90%86%E8%88%87%E9%81%B8%E8%B3%BC%E6%8C%87%E5%8D%97.html)
 - [互動式 iPerf3 指令速查表與輸出結果說明](https://wellstsai.com/single-page-conclusion/%E4%BA%92%E5%8B%95%E5%BC%8F%20iPerf3%20%E6%8C%87%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8%E8%88%87%E8%BC%B8%E5%87%BA%E7%B5%90%E6%9E%9C%E8%AA%AA%E6%98%8E.html)
