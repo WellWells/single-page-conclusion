@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/IP-KVM%E7%B5%82%E6%A5%B5%E5%85%A8%E6%99%AF%E6%8C%87%E5%8D%97-%E9%81%A0%E7%AB%AF%E7%A1%AC%E9%AB%94%E6%8E%A7%E5%88%B6%E8%A8%AD%E5%82%99%E6%8C%91%E9%81%B8.png">
+    <meta name="twitter:description" content="本文全面盤點12款 IP KVM（基於網際網路協定的鍵盤滑鼠顯示器切換器）遠端控制設備。探討獨立於作業系統之外的硬體級控制優勢、資安防禦守則，並對照 PiKVM、JetKVM 等熱門機型的規格與性價比，提供機房線材管理與預算配置的實務建議。">
+    <meta name="twitter:title" content="IP-KVM終極全景指南-遠端硬體控制設備挑選">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/IP-KVM%E7%B5%82%E6%A5%B5%E5%85%A8%E6%99%AF%E6%8C%87%E5%8D%97-%E9%81%A0%E7%AB%AF%E7%A1%AC%E9%AB%94%E6%8E%A7%E5%88%B6%E8%A8%AD%E5%82%99%E6%8C%91%E9%81%B8.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/IP-KVM%E7%B5%82%E6%A5%B5%E5%85%A8%E6%99%AF%E6%8C%87%E5%8D%97-%E9%81%A0%E7%AB%AF%E7%A1%AC%E9%AB%94%E6%8E%A7%E5%88%B6%E8%A8%AD%E5%82%99%E6%8C%91%E9%81%B8.html">
+    <meta property="og:description" content="本文全面盤點12款 IP KVM（基於網際網路協定的鍵盤滑鼠顯示器切換器）遠端控制設備。探討獨立於作業系統之外的硬體級控制優勢、資安防禦守則，並對照 PiKVM、JetKVM 等熱門機型的規格與性價比，提供機房線材管理與預算配置的實務建議。">
+    <meta property="og:title" content="IP-KVM終極全景指南-遠端硬體控制設備挑選">
+    <meta name="description" content="本文全面盤點12款 IP KVM（基於網際網路協定的鍵盤滑鼠顯示器切換器）遠端控制設備。探討獨立於作業系統之外的硬體級控制優勢、資安防禦守則，並對照 PiKVM、JetKVM 等熱門機型的規格與性價比，提供機房線材管理與預算配置的實務建議。">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP KVM 全景圖鑑：從開源先驅到百元神器的硬體遠端控制革命</title>
+  <!-- Tailwind CSS CDN -->
+  <style data-tailwind-built>*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{border:0 solid #e5e7eb;box-sizing:border-box}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-moz-tab-size:4;tab-size:4;-webkit-tap-highlight-color:transparent}body{line-height:inherit;margin:0}hr{border-top-width:1px;color:inherit;height:0}abbr:where([title]){text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-size:1em;font-variation-settings:normal}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{border-collapse:collapse;border-color:inherit;text-indent:0}button,input,optgroup,select,textarea{color:inherit;font-family:inherit;font-feature-settings:inherit;font-size:100%;font-variation-settings:inherit;font-weight:inherit;letter-spacing:inherit;line-height:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{color:#9ca3af;opacity:1}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{height:auto;max-width:100%}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.bottom-0{bottom:0}.left-0{left:0}.left-1\/2{left:50%}.left-10{left:2.5rem}.right-0{right:0}.right-4{right:1rem}.top-0{top:0}.top-1\/2{top:50%}.top-1\/4{top:25%}.top-4{top:1rem}.z-10{z-index:10}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:.25rem}.mb-12{margin-bottom:3rem}.mb-16{margin-bottom:4rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-2{margin-right:.5rem}.mr-2\.5{margin-right:.625rem}.mr-3{margin-right:.75rem}.mt-1{margin-top:.25rem}.mt-10{margin-top:2.5rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.block{display:block}.inline-block{display:inline-block}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-12{height:3rem}.h-16{height:4rem}.h-2{height:.5rem}.h-2\.5{height:.625rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-8{height:2rem}.h-80{height:20rem}.h-96{height:24rem}.h-\[500px\]{height:500px}.w-1\.5{width:.375rem}.w-1\/3{width:33.333333%}.w-10{width:2.5rem}.w-12{width:3rem}.w-16{width:4rem}.w-2{width:.5rem}.w-2\.5{width:.625rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-8{width:2rem}.w-80{width:20rem}.w-96{width:24rem}.w-\[500px\]{width:500px}.w-full{width:100%}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-5xl{max-width:64rem}.max-w-7xl{max-width:80rem}.max-w-md{max-width:28rem}.flex-grow{flex-grow:1}.border-collapse{border-collapse:collapse}.-translate-x-1\/2{--tw-translate-x:-50%}.-translate-x-1\/2,.-translate-y-1\/2{transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite}.list-inside{list-style-position:inside}.list-disc{list-style-type:disc}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-10{gap:2.5rem}.gap-2{gap:.5rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-x-2>:not([hidden])~:not([hidden]){--tw-space-x-reverse:0;margin-left:calc(.5rem*(1 - var(--tw-space-x-reverse)));margin-right:calc(.5rem*var(--tw-space-x-reverse))}.space-x-3>:not([hidden])~:not([hidden]){--tw-space-x-reverse:0;margin-left:calc(.75rem*(1 - var(--tw-space-x-reverse)));margin-right:calc(.75rem*var(--tw-space-x-reverse))}.space-x-6>:not([hidden])~:not([hidden]){--tw-space-x-reverse:0;margin-left:calc(1.5rem*(1 - var(--tw-space-x-reverse)));margin-right:calc(1.5rem*var(--tw-space-x-reverse))}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(.25rem*var(--tw-space-y-reverse));margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(.5rem*var(--tw-space-y-reverse));margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(.75rem*var(--tw-space-y-reverse));margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(1rem*var(--tw-space-y-reverse));margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(1.5rem*var(--tw-space-y-reverse));margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)))}.divide-y>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-bottom-width:calc(1px*var(--tw-divide-y-reverse));border-top-width:calc(1px*(1 - var(--tw-divide-y-reverse)))}.divide-slate-800>:not([hidden])~:not([hidden]){--tw-divide-opacity:1;border-color:rgb(30 41 59/var(--tw-divide-opacity,1))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.scroll-smooth{scroll-behavior:smooth}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-md{border-radius:.375rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-brand-accent\/30{border-color:rgba(16,185,129,.3)}.border-brand-danger\/20{border-color:rgba(239,68,68,.2)}.border-brand-danger\/30{border-color:rgba(239,68,68,.3)}.border-brand-warning\/30{border-color:rgba(245,158,11,.3)}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59/var(--tw-border-opacity,1))}.bg-amber-500\/15{background-color:rgba(245,158,11,.15)}.bg-blue-500\/15{background-color:rgba(59,130,246,.15)}.bg-brand-accent{--tw-bg-opacity:1;background-color:rgb(16 185 129/var(--tw-bg-opacity,1))}.bg-brand-accent\/10{background-color:rgba(16,185,129,.1)}.bg-brand-accent\/20{background-color:rgba(16,185,129,.2)}.bg-brand-accent\/5{background-color:rgba(16,185,129,.05)}.bg-brand-card{--tw-bg-opacity:1;background-color:rgb(22 31 48/var(--tw-bg-opacity,1))}.bg-brand-card\/60{background-color:rgba(22,31,48,.6)}.bg-brand-card\/80{background-color:rgba(22,31,48,.8)}.bg-brand-danger{--tw-bg-opacity:1;background-color:rgb(239 68 68/var(--tw-bg-opacity,1))}.bg-brand-danger\/10{background-color:rgba(239,68,68,.1)}.bg-brand-danger\/15{background-color:rgba(239,68,68,.15)}.bg-brand-danger\/20{background-color:rgba(239,68,68,.2)}.bg-brand-danger\/5{background-color:rgba(239,68,68,.05)}.bg-brand-dark{--tw-bg-opacity:1;background-color:rgb(11 15 25/var(--tw-bg-opacity,1))}.bg-brand-dark\/60{background-color:rgba(11,15,25,.6)}.bg-brand-dark\/80{background-color:rgba(11,15,25,.8)}.bg-brand-warning{--tw-bg-opacity:1;background-color:rgb(245 158 11/var(--tw-bg-opacity,1))}.bg-brand-warning\/20{background-color:rgba(245,158,11,.2)}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129/var(--tw-bg-opacity,1))}.bg-emerald-500\/10{background-color:rgba(16,185,129,.1)}.bg-emerald-500\/15{background-color:rgba(16,185,129,.15)}.bg-emerald-950\/40{background-color:rgba(2,44,34,.4)}.bg-indigo-500\/15{background-color:rgba(99,102,241,.15)}.bg-rose-500\/15{background-color:rgba(244,63,94,.15)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.bg-slate-800\/60{background-color:rgba(30,41,59,.6)}.bg-slate-800\/80{background-color:rgba(30,41,59,.8)}.bg-slate-900\/20{background-color:rgba(15,23,42,.2)}.bg-slate-900\/40{background-color:rgba(15,23,42,.4)}.bg-slate-900\/50{background-color:rgba(15,23,42,.5)}.bg-slate-900\/60{background-color:rgba(15,23,42,.6)}.bg-slate-900\/80{background-color:rgba(15,23,42,.8)}.bg-teal-500\/15{background-color:rgba(20,184,166,.15)}.bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gradient-stops))}.from-emerald-400{--tw-gradient-from:#34d399 var(--tw-gradient-from-position);--tw-gradient-to:rgba(52,211,153,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.to-teal-500{--tw-gradient-to:#14b8a6 var(--tw-gradient-to-position)}.bg-clip-text{background-clip:text}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-bottom:.125rem;padding-top:.125rem}.py-1{padding-bottom:.25rem;padding-top:.25rem}.py-1\.5{padding-bottom:.375rem;padding-top:.375rem}.py-10{padding-bottom:2.5rem;padding-top:2.5rem}.py-2{padding-bottom:.5rem;padding-top:.5rem}.py-20{padding-bottom:5rem;padding-top:5rem}.py-3{padding-bottom:.75rem;padding-top:.75rem}.py-6{padding-bottom:1.5rem;padding-top:1.5rem}.pb-16{padding-bottom:4rem}.pt-20{padding-top:5rem}.pt-4{padding-top:1rem}.pt-8{padding-top:2rem}.text-left{text-align:left}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-tight{letter-spacing:-.025em}.tracking-wide{letter-spacing:.025em}.tracking-wider{letter-spacing:.05em}.tracking-widest{letter-spacing:.1em}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-blue-400{--tw-text-opacity:1;color:rgb(96 165 250/var(--tw-text-opacity,1))}.text-brand-accent{--tw-text-opacity:1;color:rgb(16 185 129/var(--tw-text-opacity,1))}.text-brand-danger{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-brand-dark{--tw-text-opacity:1;color:rgb(11 15 25/var(--tw-text-opacity,1))}.text-brand-muted{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-brand-warning{--tw-text-opacity:1;color:rgb(245 158 11/var(--tw-text-opacity,1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity,1))}.text-indigo-400{--tw-text-opacity:1;color:rgb(129 140 248/var(--tw-text-opacity,1))}.text-rose-400{--tw-text-opacity:1;color:rgb(251 113 133/var(--tw-text-opacity,1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-teal-400{--tw-text-opacity:1;color:rgb(45 212 191/var(--tw-text-opacity,1))}.text-transparent{color:transparent}.underline{text-decoration-line:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-2xl,.shadow-lg{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-emerald-500\/20{--tw-shadow-color:rgba(16,185,129,.2);--tw-shadow:var(--tw-shadow-colored)}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-brand-accent{--tw-ring-opacity:1;--tw-ring-color:rgb(16 185 129/var(--tw-ring-opacity,1))}.ring-offset-4{--tw-ring-offset-width:4px}.ring-offset-brand-dark{--tw-ring-offset-color:#0b0f19}.blur-\[100px\]{--tw-blur:blur(100px)}.blur-\[100px\],.blur-\[120px\]{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.blur-\[120px\]{--tw-blur:blur(120px)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-duration:.15s;transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1)}.transition-colors{transition-duration:.15s;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1)}.duration-300{transition-duration:.3s}.selection\:bg-brand-accent ::selection{--tw-bg-opacity:1;background-color:rgb(16 185 129/var(--tw-bg-opacity,1))}.selection\:text-brand-dark ::selection{--tw-text-opacity:1;color:rgb(11 15 25/var(--tw-text-opacity,1))}.selection\:bg-brand-accent::selection{--tw-bg-opacity:1;background-color:rgb(16 185 129/var(--tw-bg-opacity,1))}.selection\:text-brand-dark::selection{--tw-text-opacity:1;color:rgb(11 15 25/var(--tw-text-opacity,1))}.hover\:border-brand-accent:hover{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.hover\:border-slate-700:hover{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.hover\:bg-emerald-600:hover{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity,1))}.hover\:bg-emerald-900\/30:hover{background-color:rgba(6,78,59,.3)}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85/var(--tw-bg-opacity,1))}.hover\:bg-slate-800\/30:hover{background-color:rgba(30,41,59,.3)}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.hover\:text-brand-accent:hover{--tw-text-opacity:1;color:rgb(16 185 129/var(--tw-text-opacity,1))}.hover\:underline:hover{text-decoration-line:underline}.hover\:shadow-xl:hover{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.hover\:shadow-emerald-500\/5:hover{--tw-shadow-color:rgba(16,185,129,.05);--tw-shadow:var(--tw-shadow-colored)}.focus\:border-brand-accent:focus{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.group:hover .group-hover\:text-brand-accent{--tw-text-opacity:1;color:rgb(16 185 129/var(--tw-text-opacity,1))}@media (min-width:640px){.sm\:w-auto{width:auto}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-5xl{font-size:3rem;line-height:1}.sm\:text-xl{font-size:1.25rem;line-height:1.75rem}}@media (min-width:768px){.md\:w-80{width:20rem}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:flex-row{flex-direction:row}.md\:p-12{padding:3rem}.md\:pb-24{padding-bottom:6rem}.md\:pt-32{padding-top:8rem}.md\:text-6xl{font-size:3.75rem;line-height:1}}@media (min-width:1024px){.lg\:flex{display:flex}.lg\:w-1\/3{width:33.333333%}.lg\:w-2\/3{width:66.666667%}.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:flex-row{flex-direction:row}.lg\:items-start{align-items:flex-start}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:text-left{text-align:left}}</style>
+  
+  <!-- Custom Scrollbar & Typography Styles -->
+  <style>
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0B0F19;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1F2937;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10B981;
+    }
+  </style>
+</head>
+<body class="bg-brand-dark text-slate-100 font-sans antialiased selection:bg-brand-accent selection:text-brand-dark">
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 backdrop-blur-md bg-brand-dark/80 border-b border-slate-800 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <!-- SVG Logo: Server-like icon -->
+        <svg class="w-8 h-8 text-brand-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+        </svg>
+        <span class="text-lg font-bold tracking-wider text-slate-100">IP KVM <span class="text-brand-accent">EXPLORER</span></span>
+      </div>
+      <nav class="hidden lg:flex space-x-6 text-sm font-medium">
+        <a href="#intro" class="text-slate-300 hover:text-brand-accent transition-colors">核心概念</a>
+        <a href="#security" class="text-slate-300 hover:text-brand-accent transition-colors">安全警示</a>
+        <a href="#directory" class="text-slate-300 hover:text-brand-accent transition-colors">設備目錄</a>
+        <a href="#tailscale" class="text-slate-300 hover:text-brand-accent transition-colors">Tailscale 專題</a>
+        <a href="#matrix" class="text-slate-300 hover:text-brand-accent transition-colors">規格矩陣</a>
+        <a href="#wizard" class="text-slate-300 hover:text-brand-accent transition-colors">智慧挑選</a>
+        <a href="#verdict" class="text-slate-300 hover:text-brand-accent transition-colors">實戰觀點</a>
+      </nav>
+      <div>
+        <a href="#wizard" class="bg-brand-accent hover:bg-emerald-600 text-brand-dark px-4 py-2 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-emerald-500/20">
+          開始挑選
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24 border-b border-slate-800">
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-accent/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <div class="inline-flex items-center space-x-2 bg-slate-800/60 border border-slate-700 px-3 py-1.5 rounded-full text-xs text-brand-accent font-medium mb-6">
+        <span class="flex h-2 w-2 rounded-full bg-brand-accent animate-pulse"></span>
+        <span>2017 - 2026：硬體層級遠端控制大爆發</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-100 tracking-tight leading-tight max-w-5xl mx-auto">
+        掌控每一台機架與主機：<br>
+        <span class="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">IP KVM 終極全景指南</span>
+      </h1>
+      <p class="mt-6 text-lg sm:text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+        自 PiKVM 橫空出世以來，市面上湧現了大量微型遠端控制盒。不論是系統死機、BIOS 調整還是效能測試，硬體層級的 KVM 都是您無可替代的「救命仙丹」。
+      </p>
+      <div class="mt-10 flex flex-col sm:flex-row justify-center items-center gap-4">
+        <a href="#directory" class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700 border border-slate-700 px-6 py-3 rounded-xl font-medium transition-all text-sm">
+          瀏覽 12 款設備
+        </a>
+        <a href="#tailscale" class="w-full sm:w-auto bg-emerald-950/40 text-brand-accent border border-brand-accent/30 hover:bg-emerald-900/30 px-6 py-3 rounded-xl font-bold transition-all text-sm">
+          Tailscale VPN 整合專題
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Concepts Section -->
+  <section id="intro" class="py-20 bg-slate-900/40 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl font-bold text-slate-100 tracking-wide">什麼是 IP KVM？為什麼您必須擁有一台？</h2>
+        <p class="mt-4 text-brand-muted">解答軟體遠端工具（VNC, RDP, SSH）無法企及的硬體控制黑科技</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-brand-card p-8 rounded-2xl border border-slate-800 hover:border-slate-700 transition-all">
+          <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-brand-accent mb-6">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-100 mb-3">獨立於作業系統之外</h3>
+          <p class="text-slate-400 leading-relaxed text-sm">
+            傳統的遠端桌面（如 RustDesk、VNC、Tailscale）依賴作業系統正常運行。而 IP KVM 則是透過外部硬體擷取影像信號、模擬鍵盤滑鼠，即便系統藍屏、當機或剛開機進入 BIOS，依然能完全掌控。
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-brand-card p-8 rounded-2xl border border-slate-800 hover:border-slate-700 transition-all">
+          <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-brand-accent mb-6">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-100 mb-3">效能測試與零資源消耗</h3>
+          <p class="text-slate-400 leading-relaxed text-sm">
+            進行系統跑分或極限測試時，任何在背景運作的軟體螢幕分享（如 macOS 內建螢幕共享）都會佔用寶貴的 CPU 與顯示卡資源。IP KVM 透過實體線材外接，實現「零耗損」監控。
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-brand-card p-8 rounded-2xl border border-slate-800 hover:border-slate-700 transition-all">
+          <div class="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-brand-accent mb-6">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          </div>
+          <h3 class="text-xl font-semibold text-slate-100 mb-3">平民版的 IPMI / iDRAC</h3>
+          <p class="text-slate-400 leading-relaxed text-sm">
+            高階伺服器主機板通常內建 OpenBMC、iDRAC 或 iLO 等遠端管理介面。但若使用的是一般消費級主機板、迷你電腦或 Mac Mini，外接 IP KVM 是唯一能提供同等硬體級控制的解決方案。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Advisory Section -->
+  <section id="security" class="py-20 bg-brand-danger/5 border-b border-brand-danger/20 relative">
+    <div class="absolute top-0 right-0 w-96 h-96 bg-brand-danger/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-slate-900/80 border border-brand-danger/30 rounded-3xl p-8 md:p-12 flex flex-col lg:flex-row items-center gap-10">
+        <div class="lg:w-1/3 flex flex-col items-center lg:items-start text-center lg:text-left">
+          <div class="w-16 h-16 bg-brand-danger/10 text-brand-danger rounded-2xl flex items-center justify-center mb-6">
+            <!-- Alert Badge / Icon -->
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+          </div>
+          <h2 class="text-3xl font-extrabold text-slate-100 tracking-tight">遠端硬體漏洞：不可忽視的資安風險</h2>
+          <span class="mt-2 inline-block bg-brand-danger/20 text-brand-danger px-3 py-1 rounded-full text-xs font-semibold">真實安全警示</span>
+        </div>
+        <div class="lg:w-2/3">
+          <p class="text-slate-300 leading-relaxed text-base mb-6">
+            資安領域曾指出，有安全研究人員在測試某款超低價 IP KVM（如 Sipeed NanoKVM 基礎版）時，因設備安全漏洞遭到駭客利用而遭遇了聯邦執法部門的調查與關切。原因是某些惡意組織利用這種極度便宜、不顯眼且具備完全物理控制能力的 USB 設備，企圖寄送給企業內部員工以竊取內部網路權限。
+          </p>
+          <div class="bg-brand-dark/60 p-5 rounded-xl border border-slate-800 space-y-4">
+            <h4 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center">
+              <span class="w-2 h-2 rounded-full bg-brand-danger mr-2"></span> IP KVM 的三大防禦安全守則：
+            </h4>
+            <ul class="text-sm text-slate-400 space-y-2 list-disc list-inside">
+              <li><strong class="text-slate-200">防火牆嚴格隔離：</strong> 絕對不要將 KVM 的控制介面直接暴露在公網，請務必將其置於專屬的安全 VLAN 或僅限區域網路（LAN）存取。</li>
+              <li><strong class="text-slate-200">信任您的硬體來源：</strong> 不要盲目購買未經審查或拒絕開源的廉價硬體。部分設備可能內建硬體組件（例如 NanoKVM 第一代自帶麥克風、硬編碼認證漏洞），若有安全顧慮應選擇可物理拆卸或受信任之品牌。</li>
+              <li><strong class="text-slate-200">強固憑證與漏洞修補：</strong> IP KVM 被入侵等同於攻擊者直接獲得 BIOS 的實體存取權。請務必修改預設密碼、啟用多因素認證（MFA）並隨時更新韌體。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KVM Showcase Directory Section -->
+  <section id="directory" class="py-20 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl font-bold text-slate-100">KVM 全系列機型解析</h2>
+        <p class="mt-4 text-brand-muted">從開源不妥協的經典款，到百元以下的極限性價比解決方案</p>
+      </div>
+
+      <!-- Categories Container -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 1. PiKVM -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-emerald-500/15 text-brand-accent text-xs font-semibold px-2.5 py-1 rounded-md">開源始祖 / 高階旗艦</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">PiKVM v3 & v4</h3>
+            </div>
+            <span class="text-brand-accent font-bold">$275 - $400</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              奠定整個 IP KVM 市場發展的殿堂級作品，軟體完全開源，社群極度龐大。雖價格高昂但功能頂規，且原生完美整合 Tailscale 安全遠端連線。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> Raspberry Pi 4 / CM4</p>
+              <p><strong class="text-slate-300">系統核心:</strong> Arch Linux ARM (systemd)</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> ✅ 原生套件安裝、MagicDNS</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-emerald-400 mr-2">優點:</span> 功能最頂、穩定度極佳、社群支援與 VPN 整合最完美。
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. BliKVM & PCIe -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-slate-800 text-slate-300 text-xs font-semibold px-2.5 py-1 rounded-md">硬體分支 / PCIe 可選</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">BliKVM & PCIe 版本</h3>
+            </div>
+            <span class="text-brand-accent font-bold">$200+</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              基於 PiKVM 軟體分支改良的硬體。亮點在於推出 PCIe 介面卡版本，可直接插在電腦機箱內部，v1/v2/v3 版本均可沿用 PiKVM 穩定的作業系統環境。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> Allwinner (v4) / RPi CM4 (v1-v3)</p>
+              <p><strong class="text-slate-300">系統核心:</strong> 自有 Linux / PiKVM 核心</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> 🔧 官方 Wiki 教學手動部署</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-amber-400 mr-2">缺點:</span> 對開源基金會無實質資金回饋，性價比漸漸被新秀取代。
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. GL-iNet Comet & Comet Pro -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-teal-500/15 text-teal-400 text-xs font-semibold px-2.5 py-1 rounded-md">路由器名門 / 4K 高畫質</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">Comet & Comet Pro</h3>
+            </div>
+            <span class="text-brand-accent font-bold">$99 - $180</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              知名路由器大廠跨界力作。採用 OpenWrt 嵌入式架構，完美在管理後台（Apps Center）一鍵整合 Tailscale 與 ZeroTier。支援罕見的 4K 擷取。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> Quad-core ARM Cortex-A7</p>
+              <p><strong class="text-slate-300">系統核心:</strong> OpenWrt-based Linux</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> ✅ 官方 UI 一鍵啟用與綁定</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-emerald-400 mr-2">優點:</span> Pro 版功能全面（4K 環出、WiFi、整合 Fingerbot），連網極便利。
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Sipeed NanoKVM 系列 -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-rose-500/15 text-brand-danger text-xs font-semibold px-2.5 py-1 rounded-md">超微型 / 性價比炸裂</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">NanoKVM / Pro / PCIe</h3>
+            </div>
+            <span class="text-brand-accent font-bold">$70 - $99</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              極小、極平價的款式。雖然軟硬體有些微安全顧慮與不完美，但其 RISC-V 系統依然提供了 Tailscale 整合指南，是百元內的極致玩具。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> Sophgo SG2002 RISC-V / AX630C</p>
+              <p><strong class="text-slate-300">系統核心:</strong> 輕量化 Linux (支援 RISC-V)</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> ✅ 官方內建整合 (設定較繁雜)</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-amber-400 mr-2">警告:</span> 基礎版硬體自帶麥克風且存在寫死認證漏洞，若部署至公網建議加強隔離。
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. JetKVM -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all ring-2 ring-brand-accent ring-offset-4 ring-offset-brand-dark">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-emerald-500 text-brand-dark text-xs font-extrabold px-2.5 py-1 rounded-md">極客首選 / 設計美學</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">JetKVM</h3>
+            </div>
+            <span class="text-brand-accent font-bold">~$100</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              高質感金屬外殼與極速 WebUI 體驗。早期因 Buildroot 核心缺少 TUN 模組無法執行 VPN，現已由官方發布一鍵自動化腳本支援 Tailscale。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> Rockchip RV1106G3 (ARM A7)</p>
+              <p><strong class="text-slate-300">系統核心:</strong> Buildroot (SysV init)</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> 🔧 官方一鍵安裝腳本 (重新整理韌體需重裝)</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-emerald-400 mr-2">優點:</span> 全介面在同側，極方便收納線材。官方腳本大幅降低手動門檻。
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Luckfox PicoKVM -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-slate-800 text-slate-300 text-xs font-semibold px-2.5 py-1 rounded-md">JetKVM 分支 / 正方形</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">PicoKVM</h3>
+            </div>
+            <span class="text-brand-accent font-bold"><$100</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              基於 JetKVM 釋出之軟體所打造。執行開源 Buildroot 系統，官方明確說明支援透過 Tailscale 或 ZeroTier 進行安全連線與 NAT 穿透。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> Rockchip RV1106 (ARM A7)</p>
+              <p><strong class="text-slate-300">系統核心:</strong> Buildroot Linux 5.10</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> 🔧 官方韌體支援，需 SSH 連線啟用</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-emerald-400 mr-2">優點:</span> 價格極具競爭力。支援手動設定虛擬 IP。
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. LeafKVM -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-teal-500/15 text-teal-400 text-xs font-semibold px-2.5 py-1 rounded-md">大顯示器 / 原生一鍵 VPN</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">LeafKVM</h3>
+            </div>
+            <span class="text-brand-accent font-bold">~$120</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              架構新穎的 JetKVM 延伸專案。其後端控制軟體以 Rust 重寫，並直接在 Dashboard 內建「一鍵下載與啟用 Tailscale」圖形化功能。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> Rockchip RV1126B (4核 A53)</p>
+              <p><strong class="text-slate-300">系統核心:</strong> Buildroot 2026.02 LTS (systemd)</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> ✅ 原生 UI 一鍵安裝，狀態同步至小螢幕</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-emerald-400 mr-2">優點:</span> 免終端機指令，Tailnet IP 與金鑰過期時間直接顯示於本機螢幕。
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. TinyPilot Voyager 3 -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-blue-500/15 text-blue-400 text-xs font-semibold px-2.5 py-1 rounded-md">企業首選 / 頂級保固</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">TinyPilot Voyager 3</h3>
+            </div>
+            <span class="text-brand-accent font-bold">$350+</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              針對商用與企業端打造。硬體基於樹莓派，自 TinyPilot Pro 2.8.0 版起，可在系統設置中直接圖形化一鍵部署 Tailscale。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> Raspberry Pi 4B</p>
+              <p><strong class="text-slate-300">系統核心:</strong> Raspberry Pi OS (systemd)</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> ✅ Pro UI 原生面板一鍵部署</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-emerald-400 mr-2">優點:</span> 完全免去命令列操作，提供極高安全性與穩定企業售後。
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Openterface KVM-GO -->
+        <div class="bg-brand-card rounded-2xl border border-slate-800 overflow-hidden flex flex-col hover:shadow-xl hover:shadow-emerald-500/5 transition-all">
+          <div class="p-6 border-b border-slate-800 flex justify-between items-start">
+            <div>
+              <span class="bg-indigo-500/15 text-indigo-400 text-xs font-semibold px-2.5 py-1 rounded-md">現場偵錯車 / USB-C 直連</span>
+              <h3 class="text-xl font-bold text-slate-100 mt-2">Openterface KVM-GO</h3>
+            </div>
+            <span class="text-brand-accent font-bold">$120 / 套</span>
+          </div>
+          <div class="p-6 flex-grow space-y-4">
+            <p class="text-sm text-slate-400 leading-relaxed">
+              「無網連線（Network-Free）」純 USB-C 硬體直連設備。本質上是為了代替笨重的實體除錯推車（Crash Cart），其硬體本身不提供任何網路介面。
+            </p>
+            <div class="text-xs space-y-1">
+              <p><strong class="text-slate-300">核心晶片:</strong> 無獨立網路 SoC / 純橋接晶片</p>
+              <p><strong class="text-slate-300">系統核心:</strong> 無（依賴操作端軟體）</p>
+              <p><strong class="text-slate-300">Tailscale 支援:</strong> ❌ 無網路硬體架構（不支援也無此需求）</p>
+            </div>
+          </div>
+          <div class="p-6 bg-slate-900/60 border-t border-slate-800">
+            <div class="flex items-center text-xs text-slate-400">
+              <span class="font-semibold text-amber-400 mr-2">說明:</span> 虛擬局域網需運行於「接收控制端」之電腦或筆電上，而非本硬體上。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tailscale Deep Dive Section -->
+  <section id="tailscale" class="py-20 bg-slate-900/40 border-b border-slate-800 relative">
+    <div class="absolute top-1/2 left-10 w-96 h-96 bg-brand-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-brand-accent font-semibold tracking-wider uppercase text-xs">安全連線專題</span>
+        <h2 class="text-3xl font-bold text-slate-100 mt-2">IP KVM Tailscale 支援深度剖析報告</h2>
+        <p class="mt-4 text-brand-muted">分析 12 款主流硬體的虛擬私人網路（VPN）相容性、系統架構與安全門檻</p>
+      </div>
+
+      <!-- Comparison Grid (Three Tiers) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+        <!-- Tier 1 -->
+        <div class="bg-brand-card/80 border border-brand-accent/30 rounded-3xl p-6 relative">
+          <div class="absolute top-4 right-4 bg-brand-accent/20 text-brand-accent text-xs font-bold px-2 py-0.5 rounded-full">第一類</div>
+          <h3 class="text-xl font-bold text-slate-100 mb-4 flex items-center">
+            <span class="w-2.5 h-2.5 bg-brand-accent rounded-full mr-2.5"></span>
+            原生內建支援（官方 UI 整合）
+          </h3>
+          <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+            這類設備在其作業系統或 Web Dashboard 中直接整合了 Tailscale 控制面板，不需進入 SSH 命令列，開箱即可在網頁端完成驗證並在世界各地安全連線。
+          </p>
+          <ul class="text-xs text-slate-300 space-y-3 border-t border-slate-800 pt-4">
+            <li><strong class="text-emerald-400">PiKVM:</strong> 官方套件庫提供 <code>tailscale-pikvm</code>，完美相容 MagicDNS 與 HTTPS 憑證。</li>
+            <li><strong class="text-emerald-400">GL-iNet Comet 系列:</strong> 基於 OpenWrt 路由技術，於 Apps Center 內置一鍵啟用開關。</li>
+            <li><strong class="text-emerald-400">TinyPilot:</strong> Pro 2.8.0 版本以上內建，於系統網路頁面一鍵點擊驗證與安裝。</li>
+            <li><strong class="text-emerald-400">LeafKVM:</strong> 使用 systemd 的先進 Buildroot 核心，IP 位址與連線狀態會同步顯示在本機螢幕上。</li>
+          </ul>
+        </div>
+
+        <!-- Tier 2 -->
+        <div class="bg-brand-card/80 border border-brand-warning/30 rounded-3xl p-6 relative">
+          <div class="absolute top-4 right-4 bg-brand-warning/20 text-brand-warning text-xs font-bold px-2 py-0.5 rounded-full">第二類</div>
+          <h3 class="text-xl font-bold text-slate-100 mb-4 flex items-center">
+            <span class="w-2.5 h-2.5 bg-brand-warning rounded-full mr-2.5"></span>
+            可手動安裝（需要 SSH 指令）
+          </h3>
+          <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+            設備硬體搭載了標準 Linux 架構（如 ARM Buildroot），但因資源精簡、不含 systemd 守護行程（採用 SysV init），需要手動下載二進位檔案或執行官方釋出的自動化腳本。
+          </p>
+          <ul class="text-xs text-slate-300 space-y-3 border-t border-slate-800 pt-4">
+            <li><strong class="text-amber-400">JetKVM:</strong> 早期缺乏 TUN 模組。現官方已釋出專用一鍵 curl 安裝指令，並支援自訂 Headscale。更新韌體時需留意重新佈署。</li>
+            <li><strong class="text-amber-400">BliKVM v1/v2/v3 & Pi-Cast:</strong> 本質上基於 PiKVM 生態，依照標準 Arch Linux ARM 安裝程序即可。</li>
+            <li><strong class="text-amber-400">Luckfox PicoKVM:</strong> 執行 Buildroot 系統並相容於 ARM 專屬二進位檔，官方手冊明列支援 NAT 穿透。</li>
+          </ul>
+        </div>
+
+        <!-- Tier 3 -->
+        <div class="bg-brand-card/80 border border-brand-danger/30 rounded-3xl p-6 relative">
+          <div class="absolute top-4 right-4 bg-brand-danger/20 text-brand-danger text-xs font-bold px-2 py-0.5 rounded-full">第三類</div>
+          <h3 class="text-xl font-bold text-slate-100 mb-4 flex items-center">
+            <span class="w-2.5 h-2.5 bg-brand-danger rounded-full mr-2.5"></span>
+            硬體不支援（本質架構限制）
+          </h3>
+          <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+            這類設備不屬於「IP 連網式 KVM」，而是「USB 式 KVM」或純前端網頁模擬。硬體本身沒有實體網卡，也沒有獨立的 Linux 作業系統可以執行 Tailscale 背景服務。
+          </p>
+          <ul class="text-xs text-slate-300 space-y-3 border-t border-slate-800 pt-4">
+            <li><strong class="text-rose-400">Openterface KVM-GO:</strong> 物理結構為 KVM-over-USB 轉換器。設計理念是完全免網（Network-Free），主要將受控訊號轉入筆電中，VPN 應部署於您的電腦端。</li>
+            <li><strong class="text-rose-400">DezKVM Go:</strong> 極低成本設計，硬體為純影像擷取與模擬鍵鼠晶片，連線與操作全由瀏覽器的 Web Serial API 完成，不具備獨立網路通訊能力。</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Technical Insight -->
+      <div class="bg-slate-900/60 border border-slate-800 rounded-3xl p-8">
+        <h4 class="text-sm font-extrabold uppercase tracking-widest text-slate-300 mb-4 flex items-center">
+          <svg class="w-5 h-5 text-brand-accent mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          工程師技術備忘錄：
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-slate-400 leading-relaxed">
+          <div>
+            <strong class="text-slate-200 block mb-1">關於系統架構 (Buildroot vs systemd)</strong>
+            在選購時必須考量作業系統底層。PiKVM 或 TinyPilot 執行帶有標準 <code>systemd</code> 的完整作業系統，背景服務生命週期由系統自動管理。而 JetKVM 系列使用精簡的 <code>Buildroot</code>，不具備 systemd，重開機或更版後需特別留意 init 啟動腳本是否遭覆蓋。
+          </div>
+          <div>
+            <strong class="text-slate-200 block mb-1">關於 RISC-V 架構 (NanoKVM)</strong>
+            許多玩家擔心 NanoKVM 的 RISC-V 晶片（如 SG2002）會有軟體斷層。事實上，Tailscale 官方已釋出穩定的 RISC-V Linux 編譯二進位檔。其主要效能瓶頸在於設備內部記憶體（RAM）極為有限，較不適合進行複雜的流量轉送。
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Spec Matrix Section with Interactive Search/Filter -->
+  <section id="matrix" class="py-20 bg-slate-900/20 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-3xl font-bold text-slate-100">KVM 全系列規格對照表</h2>
+        <p class="mt-4 text-brand-muted">透過搜尋或分類標籤快速篩選適合的機型</p>
+      </div>
+
+      <!-- Interactive Controls -->
+      <div class="mb-8 flex flex-col md:flex-row gap-4 justify-between items-center">
+        <!-- Filter Tags -->
+        <div class="flex flex-wrap gap-2 justify-center" id="filter-buttons">
+          <button onclick="filterKVMs('all')" class="kvm-btn px-4 py-2 text-xs font-bold rounded-lg bg-brand-accent text-brand-dark transition-all">全部機型</button>
+          <button onclick="filterKVMs('open')" class="kvm-btn px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">開源優先</button>
+          <button onclick="filterKVMs('budget')" class="kvm-btn px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">百元預算級 (&lt;$120)</button>
+          <button onclick="filterKVMs('tailscale')" class="kvm-btn px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">Tailscale 友善</button>
+          <button onclick="filterKVMs('direct')" class="kvm-btn px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">直連偵錯型</button>
+        </div>
+        <!-- Search Box -->
+        <div class="w-full md:w-80">
+          <input type="text" id="search-input" onkeyup="searchKVMs()" placeholder="搜尋產品名稱或規格..." class="w-full bg-slate-800 border border-slate-700 px-4 py-2 rounded-xl text-sm focus:outline-none focus:border-brand-accent text-slate-100 transition-all">
+        </div>
+      </div>
+
+      <!-- Table Wrapper -->
+      <div class="overflow-x-auto rounded-2xl border border-slate-800 shadow-xl bg-slate-900/60">
+        <table class="w-full text-left border-collapse" id="kvm-table">
+          <thead>
+            <tr class="bg-slate-800/80 border-b border-slate-700 text-xs font-bold tracking-wider text-slate-300">
+              <th class="p-4">產品名稱</th>
+              <th class="p-4">預估售價 (USD)</th>
+              <th class="p-4">作業系統核心</th>
+              <th class="p-4">影像最高畫質</th>
+              <th class="p-4">Tailscale 支援度</th>
+              <th class="p-4 text-center">硬體同側介面</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800 text-sm text-slate-300">
+            <!-- PiKVM -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="open tailscale">
+              <td class="p-4 font-bold text-slate-100">PiKVM v4</td>
+              <td class="p-4 text-brand-accent">$275 - $400</td>
+              <td class="p-4">Arch Linux ARM</td>
+              <td class="p-4">1080p 60Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-brand-accent">
+                  ● 官方原生支援
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-danger">✕</td>
+            </tr>
+            <!-- BliKVM -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="open tailscale">
+              <td class="p-4 font-bold text-slate-100">BliKVM PCIe</td>
+              <td class="p-4 text-brand-accent">$200+</td>
+              <td class="p-4">Arch Linux / 自有 OS</td>
+              <td class="p-4">1080p 60Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-brand-warning">
+                  ● 可手動/指令部署
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-accent">✓</td>
+            </tr>
+            <!-- GL-iNet Comet Pro -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="budget tailscale">
+              <td class="p-4 font-bold text-slate-100">GL-iNet Comet Pro</td>
+              <td class="p-4 text-brand-accent">~$180</td>
+              <td class="p-4">OpenWrt-based Linux</td>
+              <td class="p-4 text-emerald-400 font-semibold">4K 擷取</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-brand-accent">
+                  ● 官方後台整合
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-danger">✕</td>
+            </tr>
+            <!-- Sipeed NanoKVM Pro -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="budget tailscale">
+              <td class="p-4 font-bold text-slate-100">Sipeed NanoKVM Pro</td>
+              <td class="p-4 text-brand-accent">$99</td>
+              <td class="p-4">輕量化 Linux (RISC-V)</td>
+              <td class="p-4">1080p 60Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-brand-accent">
+                  ● 官方引導設定
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-danger">✕</td>
+            </tr>
+            <!-- JetKVM -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="budget open tailscale">
+              <td class="p-4 font-bold text-slate-100">JetKVM</td>
+              <td class="p-4 text-brand-accent">~$100</td>
+              <td class="p-4">Buildroot (ARM A7)</td>
+              <td class="p-4">1080p 60Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-brand-warning">
+                  ● 官方一鍵腳本
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-accent">✓</td>
+            </tr>
+            <!-- LeafKVM -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="budget open tailscale">
+              <td class="p-4 font-bold text-slate-100">LeafKVM</td>
+              <td class="p-4 text-brand-accent">~$120</td>
+              <td class="p-4">Buildroot (systemd)</td>
+              <td class="p-4">1080p 60Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-brand-accent">
+                  ● 原生面板整合
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-danger">✕</td>
+            </tr>
+            <!-- TinyPilot Voyager 3 -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="tailscale">
+              <td class="p-4 font-bold text-slate-100">TinyPilot Voyager 3</td>
+              <td class="p-4 text-brand-accent">$350+</td>
+              <td class="p-4">Raspberry Pi OS</td>
+              <td class="p-4">1080p 60Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-brand-accent">
+                  ● 官方原生支援
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-accent">✓</td>
+            </tr>
+            <!-- Openterface KVM-GO -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="direct">
+              <td class="p-4 font-bold text-slate-100">Openterface KVM-GO</td>
+              <td class="p-4 text-brand-accent">$120</td>
+              <td class="p-4">無 (純 USB 橋接硬體)</td>
+              <td class="p-4">1080p 60Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-danger/15 text-brand-danger">
+                  ✕ 硬體無網路不支援
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-accent">✓</td>
+            </tr>
+            <!-- DezKVM Go -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="budget open direct">
+              <td class="p-4 font-bold text-slate-100">DezKVM Go</td>
+              <td class="p-4 text-brand-accent">$25</td>
+              <td class="p-4">純網頁 JS 控制端</td>
+              <td class="p-4">1080p 30Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-danger/15 text-brand-danger">
+                  ✕ 無 OS 架構不支援
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-accent">✓</td>
+            </tr>
+            <!-- ArkKVM -->
+            <tr class="kvm-row hover:bg-slate-800/30 transition-colors" data-tags="budget open tailscale">
+              <td class="p-4 font-bold text-slate-100">ArkKVM</td>
+              <td class="p-4 text-brand-accent">~$110</td>
+              <td class="p-4">Buildroot-like Linux</td>
+              <td class="p-4">1080p 60Hz</td>
+              <td class="p-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-brand-warning">
+                  ● 推估手動相容 (待開源)
+                </span>
+              </td>
+              <td class="p-4 text-center text-brand-accent">✓</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Wizard: Find Your Best KVM -->
+  <section id="wizard" class="py-20 bg-slate-900/60 border-b border-slate-800">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <span class="text-brand-accent font-semibold tracking-wider uppercase text-xs">智慧診斷</span>
+        <h2 class="text-3xl font-bold text-slate-100 mt-2">尋找您的完美 IP KVM 幫手</h2>
+        <p class="mt-2 text-slate-400">回答三個簡單問題，獲取最客觀的硬體推薦</p>
+      </div>
+
+      <!-- Wizard Box -->
+      <div class="bg-brand-card border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 h-1.5 bg-brand-accent w-1/3" id="progress-bar"></div>
+        
+        <!-- Step 1 -->
+        <div id="step-1" class="space-y-6">
+          <h3 class="text-xl font-bold text-slate-100 flex items-center">
+            <span class="w-7 h-7 rounded-full bg-brand-accent text-brand-dark flex items-center justify-center font-extrabold mr-3 text-sm">1</span>
+            您的核心預算大約落在什麼區間？
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <button onclick="selectAnswer(1, 'low')" class="p-5 text-left rounded-2xl border border-slate-800 hover:border-brand-accent bg-slate-900/50 hover:bg-slate-900 transition-all group">
+              <p class="font-bold text-slate-200 group-hover:text-brand-accent">省錢玩家級</p>
+              <p class="text-xs text-slate-500 mt-1">預算低於 $100 USD，追求最高 C/P 值</p>
+            </button>
+            <button onclick="selectAnswer(1, 'mid')" class="p-5 text-left rounded-2xl border border-slate-800 hover:border-brand-accent bg-slate-900/50 hover:bg-slate-900 transition-all group">
+              <p class="font-bold text-slate-200 group-hover:text-brand-accent">主流進階級</p>
+              <p class="text-xs text-slate-500 mt-1">預算 $100 - $200 USD，要美觀且穩定</p>
+            </button>
+            <button onclick="selectAnswer(1, 'high')" class="p-5 text-left rounded-2xl border border-slate-800 hover:border-brand-accent bg-slate-900/50 hover:bg-slate-900 transition-all group">
+              <p class="font-bold text-slate-200 group-hover:text-brand-accent">企業/不設限</p>
+              <p class="text-xs text-slate-500 mt-1">高階專用，預算充足，追求頂規開源或保固</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2 (Hidden initially) -->
+        <div id="step-2" class="space-y-6 hidden">
+          <h3 class="text-xl font-bold text-slate-100 flex items-center">
+            <span class="w-7 h-7 rounded-full bg-brand-accent text-brand-dark flex items-center justify-center font-extrabold mr-3 text-sm">2</span>
+            最主要的遠端連線應用情境是？
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <button onclick="selectAnswer(2, 'lan')" class="p-5 text-left rounded-2xl border border-slate-800 hover:border-brand-accent bg-slate-900/50 hover:bg-slate-900 transition-all group">
+              <p class="font-bold text-slate-200 group-hover:text-brand-accent">網路遠端部署</p>
+              <p class="text-xs text-slate-500 mt-1">置於機房/家中，透過網際網路或虛擬網路進行管理</p>
+            </button>
+            <button onclick="selectAnswer(2, 'cart')" class="p-5 text-left rounded-2xl border border-slate-800 hover:border-brand-accent bg-slate-900/50 hover:bg-slate-900 transition-all group">
+              <p class="font-bold text-slate-200 group-hover:text-brand-accent">現場直接除錯</p>
+              <p class="text-xs text-slate-500 mt-1">帶著筆電至機器前隨插隨用、進行硬體維護</p>
+            </button>
+            <button onclick="selectAnswer(2, 'rack')" class="p-5 text-left rounded-2xl border border-slate-800 hover:border-brand-accent bg-slate-900/50 hover:bg-slate-900 transition-all group">
+              <p class="font-bold text-slate-200 group-hover:text-brand-accent">專業機架埋線</p>
+              <p class="text-xs text-slate-500 mt-1">需要嚴格的線材同側管理與機架鎖附螺絲孔</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3 (Hidden initially) -->
+        <div id="step-3" class="space-y-6 hidden">
+          <h3 class="text-xl font-bold text-slate-100 flex items-center">
+            <span class="w-7 h-7 rounded-full bg-brand-accent text-brand-dark flex items-center justify-center font-extrabold mr-3 text-sm">3</span>
+            您對「安全外網存取（如 Tailscale VPN）」的需求是？
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button onclick="selectAnswer(3, 'yes')" class="p-5 text-left rounded-2xl border border-slate-800 hover:border-brand-accent bg-slate-900/50 hover:bg-slate-900 transition-all group">
+              <p class="font-bold text-slate-200 group-hover:text-brand-accent">高度需要，要原生整合一鍵部署</p>
+              <p class="text-xs text-slate-500 mt-1">不喜歡敲終端機，希望能在網頁管理後台直接點擊連網</p>
+            </button>
+            <button onclick="selectAnswer(3, 'no')" class="p-5 text-left rounded-2xl border border-slate-800 hover:border-brand-accent bg-slate-900/50 hover:bg-slate-900 transition-all group">
+              <p class="font-bold text-slate-200 group-hover:text-brand-accent">能接受手動設定，或無需遠端 VPN</p>
+              <p class="text-xs text-slate-500 mt-1">願意透過 SSH 下指令配置，或是僅在本地局域網內使用</p>
+            </button>
+          </div>
+        </div>
+
+        <!-- Results Block (Hidden initially) -->
+        <div id="result-block" class="space-y-6 hidden text-center py-6">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-500/10 rounded-full text-brand-accent mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-100">分析完成！最推薦您的機型是</h3>
+          
+          <div class="max-w-md mx-auto bg-slate-900/80 border border-brand-accent/30 rounded-2xl p-6 mt-4">
+            <span class="text-xs bg-brand-accent/20 text-brand-accent font-extrabold px-3 py-1 rounded-full uppercase" id="rec-tag">RECOMMENDED</span>
+            <h4 class="text-2xl font-extrabold text-slate-100 mt-3" id="rec-title">JetKVM</h4>
+            <p class="text-sm text-slate-400 mt-3 leading-relaxed" id="rec-desc">載入中...</p>
+            <div class="mt-4 pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
+              <span id="rec-price">價格: ~$100</span>
+              <span id="rec-ports">同側接線: 支援</span>
+            </div>
+          </div>
+
+          <button onclick="resetWizard()" class="mt-6 text-xs text-brand-accent hover:underline focus:outline-none">重新測試</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Personal Verdict Section -->
+  <section id="verdict" class="py-20 border-b border-slate-800 relative">
+    <div class="absolute bottom-0 left-0 w-80 h-80 bg-brand-accent/5 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-brand-card/60 border border-slate-800 rounded-3xl p-8 md:p-12">
+        <h2 class="text-3xl font-bold text-slate-100 tracking-tight flex items-center mb-6">
+          <span class="text-brand-accent mr-3">✔</span> 專業機房管理與線材佈線美學
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-slate-300 leading-relaxed text-sm">
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-200 flex items-center">
+              <span class="w-1.5 h-6 bg-brand-accent mr-2.5"></span> 1. 同側介面的線材美學
+            </h3>
+            <p>
+              在機架管理（Rack Management）中，線材的走向至關重要。像 LeafKVM 雖然功能強大、帶有超讚的無源 VGA 方案，但是它的連接線從機身兩側四散開來，這對於完美主義工程師來說極具災難性。許多管理員在進行硬體配置時，強烈偏好使用 <strong class="text-brand-accent">JetKVM</strong> 或 <strong class="text-brand-accent">ArkKVM</strong> 的一大原因，就是因為它們的全部介面都在同一側，配合 PoE 分離器，能維持極度乾淨、井然有序的機房線路。
+            </p>
+          </div>
+          <div class="space-y-4">
+            <h3 class="text-lg font-bold text-slate-200 flex items-center">
+              <span class="w-1.5 h-6 bg-brand-accent mr-2.5"></span> 2. 避免盲目溢價：規格合適就好
+            </h3>
+            <p>
+              把一個高達 $400 USD 的 TinyPilot Voyager 3 或 PiKVM v4 裝在價值僅 $300 USD 的迷你主機（Mini PC）上，確實有點頭重腳輕。若是一般家用或次要測試設備，使用 <strong class="text-brand-accent">NanoKVM Pro</strong> 或 <strong class="text-brand-accent">DezKVM Go</strong> 是極佳的低成本選擇；只有在需要 5G 備用備援、原生 Tailscale 一鍵面板或專屬大廠保固的關鍵生產力架構中，才需要直上旗艦款。
+            </p>
+          </div>
+        </div>
+        <div class="mt-8 pt-8 border-t border-slate-800 text-center">
+          <p class="text-xs text-brand-muted italic">
+            「這個市場正以前所未有的速度在蓬勃發展。在您讀完這篇文章的同時，說不定又有全新的 KVM 機型誕生了。」—— 資深系統架構師
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sticky Footer -->
+  <footer class="bg-brand-dark border-t border-slate-800 py-10 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      <div class="text-xs text-slate-500 space-y-1">
+        <div>
+          <a href="https://wellstsai.com/" target="_blank" rel="noopener noreferrer" class="hover:text-brand-accent underline transition-colors">
+            Generated by wellstsai.com
+          </a>
+        </div>
+        <div>撰寫日期：2026年6月9日</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Simple Vanilla JavaScript for Search/Filter and Wizard logic -->
+  <script>
+    // Search Functionality
+    function searchKVMs() {
+      const input = document.getElementById('search-input');
+      const filter = input.value.toLowerCase();
+      const table = document.getElementById('kvm-table');
+      const tr = table.getElementsByClassName('kvm-row');
+
+      for (let i = 0; i < tr.length; i++) {
+        let tdName = tr[i].getElementsByTagName('td')[0];
+        let tdSpec = tr[i].getElementsByTagName('td')[4];
+        if (tdName || tdSpec) {
+          let nameValue = tdName.textContent || tdName.innerText;
+          let specValue = tdSpec.textContent || tdSpec.innerText;
+          if (nameValue.toLowerCase().indexOf(filter) > -1 || specValue.toLowerCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+
+    // Filter by Tag buttons
+    function filterKVMs(category) {
+      const table = document.getElementById('kvm-table');
+      const tr = table.getElementsByClassName('kvm-row');
+      const buttons = document.querySelectorAll('#filter-buttons button');
+
+      // Update button styling
+      buttons.forEach(btn => {
+        btn.className = "kvm-btn px-4 py-2 text-xs font-bold rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all";
+      });
+
+      // Target the active button (we find it by matching the event target)
+      event.target.className = "kvm-btn px-4 py-2 text-xs font-bold rounded-lg bg-brand-accent text-brand-dark transition-all";
+
+      for (let i = 0; i < tr.length; i++) {
+        const tags = tr[i].getAttribute('data-tags');
+        if (category === 'all') {
+          tr[i].style.display = "";
+        } else if (tags.includes(category)) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+
+    // Interactive Wizard State Management
+    let answers = {
+      1: null,
+      2: null,
+      3: null
+    };
+
+    function selectAnswer(step, val) {
+      answers[step] = val;
+      const progress = document.getElementById('progress-bar');
+
+      if (step === 1) {
+        progress.style.width = "66%";
+        document.getElementById('step-1').classList.add('hidden');
+        document.getElementById('step-2').classList.remove('hidden');
+      } else if (step === 2) {
+        progress.style.width = "100%";
+        document.getElementById('step-2').classList.add('hidden');
+        document.getElementById('step-3').classList.remove('hidden');
+      } else if (step === 3) {
+        document.getElementById('step-3').classList.add('hidden');
+        calculateRecommendation();
+      }
+    }
+
+    function calculateRecommendation() {
+      const recTitle = document.getElementById('rec-title');
+      const recDesc = document.getElementById('rec-desc');
+      const recPrice = document.getElementById('rec-price');
+      const recPorts = document.getElementById('rec-ports');
+      const resultBlock = document.getElementById('result-block');
+
+      // Enhanced Decision Tree with Tailscale Preference
+      if (answers[2] === 'cart') {
+        // Direct crash cart debugging scenario
+        if (answers[1] === 'low') {
+          recTitle.innerText = "DezKVM Go";
+          recDesc.innerText = "您最在乎超低預算且需要本地端實體直連。這是超實惠的方案，利用 Web Serial 技術在瀏覽器端直連操作，僅需約 $25 USD！(本機免網路，故無 Tailscale 需求)。";
+          recPrice.innerText = "價格: ~$25";
+          recPorts.innerText = "同側接線: 支援";
+        } else {
+          recTitle.innerText = "Openterface KVM-GO";
+          recDesc.innerText = "您最在乎便利的直連除錯。KVM-GO 能將筆電或平板化為專用管理控制台。不需要聯網、不需要外接電源，是巡檢實體機房的最佳隨身小幫手。";
+          recPrice.innerText = "價格: ~$120 / 套";
+          recPorts.innerText = "同側接線: 支援";
+        }
+      } else if (answers[3] === 'yes') {
+        // Highly desires native Tailscale VPN integration
+        if (answers[1] === 'low') {
+          recTitle.innerText = "LeafKVM";
+          recDesc.innerText = "您希望低預算且原生支援 Tailscale 圖形化部署。LeafKVM 在 Web Dashboard 內建一鍵啟用 Tailscale 功能，連線狀態可直接顯示於本機小螢幕上，是性價比與安全性兼具的新秀選擇。";
+          recPrice.innerText = "價格: ~$120";
+          recPorts.innerText = "同側接線: 不支援";
+        } else if (answers[1] === 'mid') {
+          recTitle.innerText = "GL-iNet Comet Pro";
+          recDesc.innerText = "您預算充足、重視外網存取且需要 4K 高畫質。GL-iNet 完美的 OpenWrt 路由器架構，在 Apps Center 中提供最平滑、最直覺的 Tailscale / ZeroTier 圖形一鍵綁定。";
+          recPrice.innerText = "價格: ~$180";
+          recPorts.innerText = "同側接線: 不支援";
+        } else {
+          recTitle.innerText = "PiKVM v4 (開源始祖)";
+          recDesc.innerText = "您預算不設限，且希望獲得最頂級的開源社群維護與 Tailscale 整合。PiKVM 生態系原生支援 Tailscale-pikvm 與 MagicDNS，在安全管理上是無可匹敵的業界標桿。";
+          recPrice.innerText = "價格: $275 - $400";
+          recPorts.innerText = "同側接線: 不支援";
+        }
+      } else {
+        // Decent with manual config / local use
+        if (answers[1] === 'low') {
+          recTitle.innerText = "Sipeed NanoKVM Pro";
+          recDesc.innerText = "您偏好平價遠端管理，NanoKVM 完美切中百元內市場。雖然基礎版曾有安全瑕疵，但若在受控的隔離網路環境下，透過官方 Wiki 依然可手動設定並享受精巧功能。";
+          recPrice.innerText = "價格: ~$99";
+          recPorts.innerText = "同側接線: 不支援";
+        } else if (answers[1] === 'high') {
+          recTitle.innerText = "TinyPilot Voyager 3";
+          recDesc.innerText = "您追求企業級別的穩定保固。TinyPilot Voyager 3 能透過 Pro UI 面板一鍵啟用 Tailscale，免去敲指令的煩惱，非常符合高階生產力機房的極致資安需求。";
+          recPrice.innerText = "價格: $350+";
+          recPorts.innerText = "同側接線: 支援";
+        } else {
+          // Middle range - JetKVM / ArkKVM
+          if (answers[2] === 'rack') {
+            recTitle.innerText = "ArkKVM (強烈推薦)";
+            recDesc.innerText = "您是極度在乎線材管理的機架玩家。ArkKVM 維持了接口全在同側的接線美學，並原生補上了「標準大尺寸 HDMI」與「PoE 供電」，且相容於 Buildroot 的手動 Tailscale 設定。";
+            recPrice.innerText = "價格: ~$110";
+            recPorts.innerText = "同側接線: 支援";
+          } else {
+            recTitle.innerText = "JetKVM (主流美學款)";
+            recDesc.innerText = "您看重高質感與極速反應。JetKVM 官方現已釋出一鍵 curl 安裝腳本以流暢執行 Tailscale，解決了早期 TUN 模組遺失的問題，深受廣大極客喜愛。";
+            recPrice.innerText = "價格: ~$100";
+            recPorts.innerText = "同側接線: 支援";
+          }
+        }
+      }
+
+      resultBlock.classList.remove('hidden');
+    }
+
+    function resetWizard() {
+      answers = { 1: null, 2: null, 3: null };
+      document.getElementById('progress-bar').style.width = "33%";
+      document.getElementById('result-block').classList.add('hidden');
+      document.getElementById('step-3').classList.add('hidden');
+      document.getElementById('step-2').classList.add('hidden');
+      document.getElementById('step-1').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

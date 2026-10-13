@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta name="twitter:image" content="https://wellstsai.com/single-page-conclusion/%E9%9B%B7%E9%81%94IQ%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%A0%A1%E6%AD%A3-%E5%8E%9F%E7%90%86%E8%88%87%E6%BC%94%E7%AE%97%E6%B3%95.png">
+    <meta name="twitter:description" content="探討雷達DCR架構之I/Q不平衡原理，比較幾何擬合與統計盲校正演算法優劣。文內闡述深度學習模型如PINN之應用，並分析毫米波雷達在FPGA上的硬體實現挑戰。">
+    <meta name="twitter:title" content="雷達IQ不平衡校正-原理與演算法">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="WellWells">
+    <meta property="og:image" content="https://wellstsai.com/single-page-conclusion/%E9%9B%B7%E9%81%94IQ%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%A0%A1%E6%AD%A3-%E5%8E%9F%E7%90%86%E8%88%87%E6%BC%94%E7%AE%97%E6%B3%95.png">
+    <meta property="og:url" content="https://wellstsai.com/single-page-conclusion/%E9%9B%B7%E9%81%94IQ%E4%B8%8D%E5%B9%B3%E8%A1%A1%E6%A0%A1%E6%AD%A3-%E5%8E%9F%E7%90%86%E8%88%87%E6%BC%94%E7%AE%97%E6%B3%95.html">
+    <meta property="og:description" content="探討雷達DCR架構之I/Q不平衡原理，比較幾何擬合與統計盲校正演算法優劣。文內闡述深度學習模型如PINN之應用，並分析毫米波雷達在FPGA上的硬體實現挑戰。">
+    <meta property="og:title" content="雷達IQ不平衡校正-原理與演算法">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雷達 I/Q 不平衡校正方法綜合分析</title>
+    <meta name="description" content="探討雷達DCR架構之I/Q不平衡原理，比較幾何擬合與統計盲校正演算法優劣。文內闡述深度學習模型如PINN之應用，並分析毫米波雷達在FPGA上的硬體實現挑戰。">
+
+    <!-- Google Fonts: Noto Sans TC for Traditional Chinese -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <style data-tailwind-built>*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{border:0 solid #e5e7eb;box-sizing:border-box}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;font-family:Noto Sans TC,sans-serif;font-feature-settings:normal;font-variation-settings:normal;-moz-tab-size:4;tab-size:4;-webkit-tap-highlight-color:transparent}body{line-height:inherit;margin:0}hr{border-top-width:1px;color:inherit;height:0}abbr:where([title]){text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:JetBrains Mono,monospace;font-feature-settings:normal;font-size:1em;font-variation-settings:normal}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{border-collapse:collapse;border-color:inherit;text-indent:0}button,input,optgroup,select,textarea{color:inherit;font-family:inherit;font-feature-settings:inherit;font-size:100%;font-variation-settings:inherit;font-weight:inherit;letter-spacing:inherit;line-height:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{color:#9ca3af;opacity:1}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{height:auto;max-width:100%}[hidden]:where(:not([hidden=until-found])){display:none}.absolute{position:absolute}.relative{position:relative}.bottom-4{bottom:1rem}.left-5{left:1.25rem}.left-8{left:2rem}.top-0{top:0}.top-4{top:1rem}.z-10{z-index:10}.mx-auto{margin-left:auto;margin-right:auto}.my-2{margin-top:.5rem}.mb-2,.my-2{margin-bottom:.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-8{margin-top:2rem}.mt-auto{margin-top:auto}.flex{display:flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-6{height:1.5rem}.min-h-screen{min-height:100vh}.w-0\.5{width:.125rem}.w-6{width:1.5rem}.w-full{width:100%}.min-w-\[150px\]{min-width:150px}.min-w-\[200px\]{min-width:200px}.max-w-5xl{max-width:64rem}.flex-1{flex:1 1 0%}.flex-grow{flex-grow:1}.list-inside{list-style-position:inside}.list-disc{list-style-type:disc}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(.25rem*var(--tw-space-y-reverse));margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(.5rem*var(--tw-space-y-reverse));margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(.75rem*var(--tw-space-y-reverse));margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(1rem*var(--tw-space-y-reverse));margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(1.5rem*var(--tw-space-y-reverse));margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)))}.space-y-8>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-bottom:calc(2rem*var(--tw-space-y-reverse));margin-top:calc(2rem*(1 - var(--tw-space-y-reverse)))}.divide-y>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-bottom-width:calc(1px*var(--tw-divide-y-reverse));border-top-width:calc(1px*(1 - var(--tw-divide-y-reverse)))}.divide-slate-700\/50>:not([hidden])~:not([hidden]){border-color:rgba(51,65,85,.5)}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l-2{border-left-width:2px}.border-l-4{border-left-width:4px}.border-t{border-top-width:1px}.border-amber-500{--tw-border-opacity:1;border-color:rgb(245 158 11/var(--tw-border-opacity,1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246/var(--tw-border-opacity,1))}.border-emerald-500{--tw-border-opacity:1;border-color:rgb(16 185 129/var(--tw-border-opacity,1))}.border-emerald-500\/20{border-color:rgba(16,185,129,.2)}.border-glassBorder{border-color:hsla(0,0%,100%,.1)}.border-gray-400{--tw-border-opacity:1;border-color:rgb(156 163 175/var(--tw-border-opacity,1))}.border-indigo-500{--tw-border-opacity:1;border-color:rgb(99 102 241/var(--tw-border-opacity,1))}.border-orange-500{--tw-border-opacity:1;border-color:rgb(249 115 22/var(--tw-border-opacity,1))}.border-orange-500\/20{border-color:rgba(249,115,22,.2)}.border-pink-500{--tw-border-opacity:1;border-color:rgb(236 72 153/var(--tw-border-opacity,1))}.border-purple-400{--tw-border-opacity:1;border-color:rgb(192 132 252/var(--tw-border-opacity,1))}.border-purple-500{--tw-border-opacity:1;border-color:rgb(168 85 247/var(--tw-border-opacity,1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68/var(--tw-border-opacity,1))}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-slate-700\/30{border-color:rgba(51,65,85,.3)}.border-slate-700\/50{border-color:rgba(51,65,85,.5)}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59/var(--tw-border-opacity,1))}.border-teal-500{--tw-border-opacity:1;border-color:rgb(20 184 166/var(--tw-border-opacity,1))}.bg-black\/20{background-color:rgba(0,0,0,.2)}.bg-black\/30{background-color:rgba(0,0,0,.3)}.bg-emerald-900{--tw-bg-opacity:1;background-color:rgb(6 78 59/var(--tw-bg-opacity,1))}.bg-glass{background-color:rgba(30,41,59,.7)}.bg-purple-900\/20{background-color:rgba(88,28,135,.2)}.bg-slate-700\/50{background-color:rgba(51,65,85,.5)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.bg-slate-800\/20{background-color:rgba(30,41,59,.2)}.bg-slate-800\/40{background-color:rgba(30,41,59,.4)}.bg-slate-900\/30{background-color:rgba(15,23,42,.3)}.bg-slate-900\/40{background-color:rgba(15,23,42,.4)}.bg-slate-900\/50{background-color:rgba(15,23,42,.5)}.bg-slate-900\/60{background-color:rgba(15,23,42,.6)}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23/var(--tw-bg-opacity,1))}.bg-gradient-to-b{background-image:linear-gradient(to bottom,var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gradient-stops))}.from-cyan-400{--tw-gradient-from:#22d3ee var(--tw-gradient-from-position);--tw-gradient-to:rgba(34,211,238,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-emerald-500\/50{--tw-gradient-from:rgba(16,185,129,.5) var(--tw-gradient-from-position);--tw-gradient-to:rgba(16,185,129,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-slate-800{--tw-gradient-from:#1e293b var(--tw-gradient-from-position);--tw-gradient-to:rgba(30,41,59,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.via-blue-400{--tw-gradient-to:rgba(96,165,250,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#60a5fa var(--tw-gradient-via-position),var(--tw-gradient-to)}.to-purple-400{--tw-gradient-to:#c084fc var(--tw-gradient-to-position)}.to-slate-900{--tw-gradient-to:#0f172a var(--tw-gradient-to-position)}.to-transparent{--tw-gradient-to:transparent var(--tw-gradient-to-position)}.bg-clip-text{background-clip:text}.p-2{padding:.5rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-8{padding:2rem}.px-4{padding-left:1rem;padding-right:1rem}.py-2{padding-bottom:.5rem;padding-top:.5rem}.py-8{padding-bottom:2rem;padding-top:2rem}.pb-0\.5{padding-bottom:.125rem}.pb-12{padding-bottom:3rem}.pb-8{padding-bottom:2rem}.pl-4{padding-left:1rem}.pl-8{padding-left:2rem}.pt-12{padding-top:3rem}.pt-6{padding-top:1.5rem}.text-left{text-align:left}.text-center{text-align:center}.font-mono{font-family:JetBrains Mono,monospace}.font-sans{font-family:Noto Sans TC,sans-serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-light{font-weight:300}.font-medium{font-weight:500}.font-semibold{font-weight:600}.leading-loose{line-height:2}.leading-relaxed{line-height:1.625}.leading-tight{line-height:1.25}.tracking-wide{letter-spacing:.025em}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-blue-300{--tw-text-opacity:1;color:rgb(147 197 253/var(--tw-text-opacity,1))}.text-cyan-300{--tw-text-opacity:1;color:rgb(103 232 249/var(--tw-text-opacity,1))}.text-cyan-400{--tw-text-opacity:1;color:rgb(34 211 238/var(--tw-text-opacity,1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity,1))}.text-emerald-500{--tw-text-opacity:1;color:rgb(16 185 129/var(--tw-text-opacity,1))}.text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252/var(--tw-text-opacity,1))}.text-orange-300{--tw-text-opacity:1;color:rgb(253 186 116/var(--tw-text-opacity,1))}.text-pink-300{--tw-text-opacity:1;color:rgb(249 168 212/var(--tw-text-opacity,1))}.text-purple-100{--tw-text-opacity:1;color:rgb(243 232 255/var(--tw-text-opacity,1))}.text-purple-200{--tw-text-opacity:1;color:rgb(233 213 255/var(--tw-text-opacity,1))}.text-purple-300{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.text-red-300{--tw-text-opacity:1;color:rgb(252 165 165/var(--tw-text-opacity,1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-teal-300{--tw-text-opacity:1;color:rgb(94 234 212/var(--tw-text-opacity,1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-black\/40{--tw-shadow-color:rgba(0,0,0,.4);--tw-shadow:var(--tw-shadow-colored)}.ring-1{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-white\/5{--tw-ring-color:hsla(0,0%,100%,.05)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-duration:.15s;transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1)}.transition-colors{transition-duration:.15s;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-timing-function:cubic-bezier(.4,0,.2,1)}.duration-300{transition-duration:.3s}.selection\:bg-cyan-500\/30 ::selection{background-color:rgba(6,182,212,.3)}.selection\:text-cyan-100 ::selection{--tw-text-opacity:1;color:rgb(207 250 254/var(--tw-text-opacity,1))}.selection\:bg-cyan-500\/30::selection{background-color:rgba(6,182,212,.3)}.selection\:text-cyan-100::selection{--tw-text-opacity:1;color:rgb(207 250 254/var(--tw-text-opacity,1))}.before\:absolute:before{content:var(--tw-content);position:absolute}.before\:bottom-0:before{bottom:0;content:var(--tw-content)}.before\:left-0:before{content:var(--tw-content);left:0}.before\:top-0:before{content:var(--tw-content);top:0}.before\:w-1:before{content:var(--tw-content);width:.25rem}.before\:bg-pink-500\/50:before{background-color:rgba(236,72,153,.5);content:var(--tw-content)}.before\:content-\[\'\'\]:before{--tw-content:"";content:var(--tw-content)}.hover\:border-cyan-400:hover{--tw-border-opacity:1;border-color:rgb(34 211 238/var(--tw-border-opacity,1))}.hover\:border-emerald-500\/30:hover{border-color:rgba(16,185,129,.3)}.hover\:bg-slate-700\/30:hover{background-color:rgba(51,65,85,.3)}.hover\:bg-slate-800\/60:hover{background-color:rgba(30,41,59,.6)}.hover\:text-cyan-400:hover{--tw-text-opacity:1;color:rgb(34 211 238/var(--tw-text-opacity,1))}@media (min-width:768px){.md\:block{display:block}.md\:flex{display:flex}.md\:grid{display:grid}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-\[1fr\]{grid-template-columns:1fr}.md\:flex-row{flex-direction:row}.md\:p-8{padding:2rem}.md\:pl-0{padding-left:0}.md\:pl-20{padding-left:5rem}.md\:text-5xl{font-size:3rem;line-height:1}.md\:text-xl{font-size:1.25rem;line-height:1.75rem}}</style>
+
+    <!-- KaTeX for Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+        xintegrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+        xintegrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnuzemU38X+035"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        xintegrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05"
+        crossorigin="anonymous"></script>
+
+    
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        body {
+            /* Gradient: Light Top (Slate-800) to Dark Bottom (Slate-950/Black) */
+            background: linear-gradient(to bottom, #1e293b, #020617);
+            min-height: 100vh;
+        }
+
+        .katex-display {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding: 1rem 0;
+        }
+    </style>
+</head>
+
+<body
+    class="text-slate-300 font-sans antialiased selection:bg-cyan-500/30 selection:text-cyan-100 flex flex-col min-h-screen">
+
+    <!-- Header Section -->
+    <header class="w-full max-w-5xl mx-auto px-4 pt-12 pb-8 text-center">
+        <h1
+            class="text-3xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 leading-tight">
+            雷達 I/Q 不平衡校正方法綜合分析
+        </h1>
+        <p class="text-lg md:text-xl text-slate-400 font-light tracking-wide">
+            模型、演算法與新興技術之深入探討
+        </p>
+    </header>
+
+    <!-- Main Content Stack -->
+    <main class="flex-grow w-full max-w-5xl mx-auto px-4 pb-12 space-y-8">
+
+        <!-- 0. Executive Summary Card -->
+        <section
+            class="bg-glass backdrop-blur-md border border-glassBorder rounded-2xl p-6 md:p-8 shadow-lg shadow-black/40 ring-1 ring-white/5">
+            <h2 class="text-xl font-bold text-cyan-300 mb-4 flex items-center gap-2">
+                <span>📝</span> 重點摘要
+            </h2>
+            <p class="leading-relaxed text-slate-300">
+                現代雷達系統正經歷向高頻、大頻寬及<strong>單晶片系統（System-on-Chip, SoC）</strong>整合的典範轉移，其中<strong>直接轉換接收器（Direct Conversion
+                    Receiver, DCR）</strong>架構因具備體積小、功耗低之優勢而成為主流。然而，DCR 架構固有的<strong>正交不平衡（I/Q
+                    Imbalance）</strong>會導致嚴重的鏡像干擾，進而影響目標偵測的準確性與訊號完整性。本文全面探討從傳統基於硬體配置的校正方法，到現今最先進的幾何盲校正、統計學習以及<strong>深度學習（Deep
+                    Learning）</strong>輔助技術，並分析毫米波與光子雷達面臨的挑戰。
+            </p>
+        </section>
+
+        <!-- 1. Introduction -->
+        <section class="flex flex-col md:grid md:grid-cols-[1fr] gap-6">
+            <div
+                class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+                <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-blue-500 pl-4">
+                    <span>📡</span> 1. 緒論：架構演進與挑戰
+                </h2>
+                <div class="space-y-4">
+                    <p>
+                        雷達技術的演進致力於追求更高的頻率與整合度。從早期的大型離散元件架構，轉型為將射頻（RF）前端、類比數位轉換器（ADC）與數位訊號處理（DSP）單元整合於單一矽晶片的 SoC
+                        解決方案。這種微型化推動了雷達在<strong>先進駕駛輔助系統（Advanced Driver Assistance Systems,
+                            ADAS）</strong>、無人機（UAV）及非接觸式生命徵象監測中的普及。
+                    </p>
+                    <p>
+                        此技術轉變的核心在於採用<strong>零中頻（Zero-Intermediate Frequency,
+                            Zero-IF）</strong>或稱為零差架構。不同於傳統超外差架構需多級混頻，DCR 直接將 RF 載波轉換至基頻。此舉消除了龐大的鏡像抑制濾波器（如 SAW
+                        元件），利於實現高角解析度成像所需的<strong>大規模多輸入多輸出（Massive MIMO）</strong>陣列。
+                    </p>
+                    <p>
+                        然而，移除中頻級引入了<strong>正交不平衡</strong>問題。半導體製程的物理極限造成 I/Q
+                        路徑的電晶體、電容與電阻無法完美匹配，產生增益誤差與相位偏差。這會破壞複數訊號的完整性，導致能量洩漏至共軛鏡像頻率，產生「鬼影」目標，嚴重降低<strong>訊雜比（Signal-to-Noise
+                            Ratio, SNR）</strong>並引發虛警。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Theoretical Fundamentals -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-indigo-500 pl-4">
+                <span>📐</span> 2. 正交不平衡之理論基礎
+            </h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-indigo-300">2.1 數學模型</h3>
+                    <p>
+                        在理想狀態下，I/Q 路徑應正交且增益相等。然而，硬體缺陷引入了振幅不平衡因子 $g$ 與相位不平衡 $\phi$。若以 I 通道為參考，失真的本地振盪器（LO）訊號可表示為：
+                    </p>
+                    <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700">
+                        $$LO_I(t) = \cos(\omega_c t)$$
+                        $$LO_Q(t) = -(1 + g)\sin(\omega_c t + \phi)$$
+                    </div>
+                    <p>
+                        這導致實際量測的 $Q'(t)$ 受到 $I(t)$ 的串擾（Crosstalk）汙染。
+                    </p>
+                </div>
+                <div class="space-y-4">
+                    <h3 class="text-lg font-semibold text-indigo-300">2.2 共軛訊號模型與 IRR</h3>
+                    <p>
+                        利用<strong>共軛訊號模型</strong>，受損訊號 $y(t)$ 可表示為理想訊號 $x(t)$ 與其複數共軛 $x^*(t)$ 的加權和：
+                    </p>
+                    <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700 text-center">
+                        $$y(t) = \mu x(t) + \nu x^*(t)$$
+                    </div>
+                    <p>
+                        其中 $\nu x^*(t)$ 代表鏡像干擾。<strong>鏡像抑制比（Image Rejection Ratio, IRR）</strong>定義為所需訊號功率與鏡像訊號功率之比：
+                    </p>
+                    <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700">
+                        $$IRR_{dB} = 10 \log_{10} \left( \frac{1 + \alpha^2 + 2\alpha\cos(\phi)}{1 + \alpha^2 -
+                        2\alpha\cos(\phi)} \right)$$
+                    </div>
+                    <p class="text-sm text-slate-400">
+                        一般未校正硬體的 IRR 僅約 20-40 dB，而高效能雷達通常需要 60-80 dB 以上。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Impact Analysis -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-red-500 pl-4">
+                <span>⚠️</span> 3. 雷達效能之影響分析
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-slate-900/40 p-4 rounded-lg border border-slate-700/30">
+                    <h3 class="text-red-300 font-bold mb-2">都卜勒模糊與鬼影</h3>
+                    <p class="text-sm">
+                        I/Q 不平衡會混淆正負頻率。例如，速度為 $+v$ 的目標會產生一個 $-v$ 的鬼影目標。在交通繁忙環境中，真實目標與鬼影疊加，導致追蹤演算法運算負荷增加及錯誤關聯。
+                    </p>
+                </div>
+                <div class="bg-slate-900/40 p-4 rounded-lg border border-slate-700/30">
+                    <h3 class="text-red-300 font-bold mb-2">動態範圍限制</h3>
+                    <p class="text-sm">
+                        鏡像訊號表現為結構性干擾。若 IRR 為 30 dB，雷達便無法可靠偵測比強反射體弱 30 dB 以上的鄰近目標。這迫使恆虛警率（CFAR）檢測器提高門檻，降低了最大探測距離。
+                    </p>
+                </div>
+                <div class="bg-slate-900/40 p-4 rounded-lg border border-slate-700/30">
+                    <h3 class="text-red-300 font-bold mb-2">生命徵象監測失真</h3>
+                    <p class="text-sm">
+                        在生理感測中，不平衡使基頻訊號軌跡從圓形變為橢圓，產生非線性相位失真與諧波。這可能導致呼吸訊號掩蓋心跳訊號，造成位移振幅估測錯誤。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Setup-Dependent Calibration -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-amber-500 pl-4">
+                <span>🛠️</span> 4. 基於配置之校正技術
+            </h2>
+            <div class="space-y-4">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <h3 class="font-bold text-amber-300 mb-2">外部測試音注入 (External Test Tone)</h3>
+                        <p class="text-slate-400 text-sm mb-2">
+                            黃金標準方法。利用高階訊號產生器注入精確的<strong>連續波（Continuous Wave,
+                                CW）</strong>。透過比較訊號峰值與鏡像峰值計算不平衡參數。缺點是需昂貴設備且無法進行線上（On-line）校正。
+                        </p>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-amber-300 mb-2">內部迴路架構 (Internal Loopback)</h3>
+                        <p class="text-slate-400 text-sm mb-2">
+                            現代 SoC（如 TI AWR 系列）內建將發射端（Tx）路由回接收端（Rx）的路徑。可在啟動時（Boot-time）或幀間閒置時（Inter-frame）進行校正。限制在於假設 Tx
+                            訊號完美，且內部洩漏路徑可能與實際路徑不同。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Geometric & Time-Domain Blind Calibration -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-emerald-500 pl-4">
+                <span>🟢</span> 5. 幾何與時域盲校正
+            </h2>
+            <p class="mb-4">
+                幾何方法的基礎在於：理想移動目標的 I/Q 軌跡為圓形，而不平衡將其扭曲為橢圓。
+                二次曲線方程式為 $A x^2 + B xy + C y^2 + D x + E y + F = 0$。
+            </p>
+            <div class="grid gap-4 md:grid-cols-2 mb-8">
+                <div class="p-4 bg-slate-900/50 rounded-lg border border-emerald-500/20">
+                    <h3 class="font-bold text-emerald-300">代數擬合 (Algebraic Fitting)</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-400 mt-2 space-y-1">
+                        <li><strong>Kåsa Fit：</strong> 線性化最小平方法，速度極快，但在資料僅呈現「部分圓弧」時會有嚴重偏差（低估半徑）。</li>
+                        <li><strong>Pratt / Taubin Fit：</strong> 改良版，引入約束條件確保擬合結果為橢圓，強健性較佳。</li>
+                    </ul>
+                </div>
+                <div class="p-4 bg-slate-900/50 rounded-lg border border-emerald-500/20">
+                    <h3 class="font-bold text-emerald-300">幾何擬合 (Geometric Fitting)</h3>
+                    <ul class="list-disc list-inside text-sm text-slate-400 mt-2 space-y-1">
+                        <li><strong>Levenberg-Marquardt (LM)：</strong> 迭代優化演算法，最小化正交歐幾里得距離。</li>
+                        <li><strong>優勢：</strong> 精確度最高，能處理高雜訊與部分圓弧問題。</li>
+                        <li><strong>劣勢：</strong> 運算成本高，非確定性執行時間，挑戰即時系統。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- New DSP Section added as requested -->
+            <div class="pt-6 border-t border-slate-700/50">
+                <h3 class="text-xl font-bold text-emerald-300 mb-6 flex items-center gap-2">
+                    <span>⚙️</span> 5.1 DSP 實作流程與架構詳解
+                </h3>
+
+                <div class="space-y-6 relative pl-4 md:pl-0">
+                    <!-- Vertical Line for Pipeline -->
+                    <div
+                        class="hidden md:block absolute left-8 top-4 bottom-4 w-0.5 bg-gradient-to-b from-emerald-500/50 to-transparent">
+                    </div>
+
+                    <!-- Step 1 -->
+                    <div class="relative md:pl-20">
+                        <div
+                            class="hidden md:flex absolute left-5 top-0 w-6 h-6 bg-emerald-900 border-2 border-emerald-500 rounded-full items-center justify-center text-xs font-bold text-emerald-300 z-10">
+                            1</div>
+                        <div
+                            class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
+                            <h4 class="font-bold text-slate-200 mb-2">資料獲取與緩衝 (Buffering)</h4>
+                            <p class="text-sm text-slate-400 mb-2">
+                                數位訊號處理器 (DSP) 從 ADC 接收原始 I/Q 樣本流。由於橢圓擬合需要觀察訊號軌跡，必須先累積一幀長度為 $N$ 的樣本（例如 $N=1024$）。
+                            </p>
+                            <div
+                                class="text-xs bg-black/30 p-2 rounded border border-slate-800 font-mono text-emerald-400">
+                                Buffer: $\mathbf{I} = [I_1, \dots, I_N]^T, \quad \mathbf{Q} = [Q_1, \dots, Q_N]^T$
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative md:pl-20">
+                        <div
+                            class="hidden md:flex absolute left-5 top-0 w-6 h-6 bg-emerald-900 border-2 border-emerald-500 rounded-full items-center justify-center text-xs font-bold text-emerald-300 z-10">
+                            2</div>
+                        <div
+                            class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
+                            <h4 class="font-bold text-slate-200 mb-2">有效性檢測與預處理 (Preprocessing)</h4>
+                            <p class="text-sm text-slate-400 mb-2">
+                                為避免雜訊或靜止目標造成擬合發散，需計算樣本變異數。若 $\text{Var}(I) + \text{Var}(Q) <
+                                    \text{Threshold}$，則跳過本次校正。同時可先移除直流偏移（DC Offset）以簡化後續擬合。 </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative md:pl-20">
+                        <div
+                            class="hidden md:flex absolute left-5 top-0 w-6 h-6 bg-emerald-900 border-2 border-emerald-500 rounded-full items-center justify-center text-xs font-bold text-emerald-300 z-10">
+                            3</div>
+                        <div
+                            class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
+                            <h4 class="font-bold text-slate-200 mb-2">擬合矩陣建構 (Matrix Construction)</h4>
+                            <p class="text-sm text-slate-400 mb-2">
+                                以 Kåsa 代數擬合為例，將問題轉化為線性最小平方問題 $\mathbf{D}\mathbf{p} = \mathbf{s}$。
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                                <div class="bg-black/30 p-2 rounded border border-slate-800 font-mono text-slate-300">
+                                    <span class="text-emerald-500">Design Matrix $\mathbf{D}$</span>:<br>
+                                    $[I_n, Q_n, 1]$ for $n=1 \dots N$
+                                </div>
+                                <div class="bg-black/30 p-2 rounded border border-slate-800 font-mono text-slate-300">
+                                    <span class="text-emerald-500">Target Vector $\mathbf{s}$</span>:<br>
+                                    $-[I_n^2 + Q_n^2]$
+                                </div>
+                            </div>
+                            <p class="text-sm text-slate-400 mt-2">
+                                利用 Cholesky 分解或 QR 分解求解參數向量 $\mathbf{p}$，避免直接矩陣求逆帶來的數值不穩定。
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="relative md:pl-20">
+                        <div
+                            class="hidden md:flex absolute left-5 top-0 w-6 h-6 bg-emerald-900 border-2 border-emerald-500 rounded-full items-center justify-center text-xs font-bold text-emerald-300 z-10">
+                            4</div>
+                        <div
+                            class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
+                            <h4 class="font-bold text-slate-200 mb-2">參數提取與映射 (Parameter Mapping)</h4>
+                            <p class="text-sm text-slate-400 mb-2">
+                                將代數參數 $(A, B, C, \dots)$ 映射回物理不平衡參數：
+                                <br>• <strong>直流偏移 (Offset):</strong> 橢圓中心 $(o_I, o_Q)$
+                                <br>• <strong>增益誤差 (Gain):</strong> 橢圓長短軸比值
+                                <br>• <strong>相位誤差 (Phase):</strong> 橢圓旋轉角度
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Step 5 -->
+                    <div class="relative md:pl-20">
+                        <div
+                            class="hidden md:flex absolute left-5 top-0 w-6 h-6 bg-emerald-900 border-2 border-emerald-500 rounded-full items-center justify-center text-xs font-bold text-emerald-300 z-10">
+                            5</div>
+                        <div
+                            class="bg-slate-900/60 p-4 rounded-lg border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
+                            <h4 class="font-bold text-slate-200 mb-2">即時補償應用 (Compensation)</h4>
+                            <p class="text-sm text-slate-400 mb-2">
+                                計算出的校正矩陣 $\mathbf{W}$ 與偏移向量 $\mathbf{c}$ 應用於後續輸入的即時樣本流：
+                            </p>
+                            <div
+                                class="text-center bg-black/30 p-3 rounded border border-slate-800 font-mono text-emerald-300 text-sm">
+                                $$\begin{bmatrix} I_{corr} \\ Q_{corr} \end{bmatrix} = \begin{bmatrix} 1 & 0 \\
+                                -\tan(\phi) & 1/\cos(\phi) \end{bmatrix} \begin{bmatrix} 1/g & 0 \\ 0 & 1 \end{bmatrix}
+                                \left( \begin{bmatrix} I_{raw} \\ Q_{raw} \end{bmatrix} - \begin{bmatrix} o_I \\ o_Q
+                                \end{bmatrix} \right)$$
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Statistical & Adaptive Blind Calibration -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-purple-500 pl-4">
+                <span>📊</span> 6. 統計與自適應盲校正
+            </h2>
+            <div class="space-y-4">
+                <p>
+                    針對動態寬頻訊號，利用 I 與 Q 的統計獨立性進行校正。
+                </p>
+
+                <div class="flex flex-col gap-4">
+                    <div class="border-l-2 border-purple-400 pl-4">
+                        <h3 class="text-lg font-semibold text-purple-200">盲源分離 (BSS) 與 ICA</h3>
+                        <p class="text-sm mt-1">
+                            將接收訊號視為原始 I/Q 的線性混合。<strong>獨立成分分析（Independent Component Analysis,
+                                ICA）</strong>透過最大化非高斯性來分離訊號。適用於抗干擾，但存在排列與縮放模糊性。
+                        </p>
+                    </div>
+
+                    <div class="border-l-2 border-purple-400 pl-4">
+                        <h3 class="text-lg font-semibold text-purple-200">廣義線性濾波 (Widely Linear Filtering) 與正當性</h3>
+                        <p class="text-sm mt-1">
+                            目標是恢復訊號的「正當性（Properness）」，即讓偽協方差（Pseudo-covariance）$E[yy]$ 歸零。廣義線性濾波器形式為：
+                        </p>
+                        <div class="my-2 text-center text-purple-100 bg-purple-900/20 py-2 rounded">
+                            $$\hat{y}[n] = \mathbf{w}_1^H \mathbf{x}[n] + \mathbf{w}_2^H \mathbf{x}^*[n]$$
+                        </div>
+                    </div>
+
+                    <div class="border-l-2 border-purple-400 pl-4">
+                        <h3 class="text-lg font-semibold text-purple-200">自適應演算法：LMS 與 RLS</h3>
+                        <p class="text-sm mt-1">
+                            <strong>最小均方（LMS）</strong>運算量低（$O(N)$），適合持續追蹤熱漂移；<strong>遞迴最小平光（RLS）</strong>收斂極快但運算複雜（$O(N^2)$）。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Frequency-Dependent Calibration -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-teal-500 pl-4">
+                <span>🌊</span> 7. 頻率相依（寬頻）校正
+            </h2>
+            <p class="mb-4">
+                在高解析度成像雷達（如 4 GHz 頻寬）中，不平衡參數隨頻率變化。主要來源為類比濾波器不匹配及 ADC 時序歪斜（IQ Timing Mismatch, IQTM）。
+            </p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-slate-900/30 p-5 rounded-lg">
+                    <h3 class="font-bold text-teal-300 mb-2">IQ 時序歪斜 (IQTM)</h3>
+                    <p class="text-sm">
+                        即便是皮秒級的延遲差，在毫米波頻段也會造成線性頻率相依的相位誤差 $\phi(f) = 2\pi f \Delta \tau$。必須使用分數延遲濾波器校正，否則將限制奈米級振動的偵測能力。
+                    </p>
+                </div>
+                <div class="bg-slate-900/30 p-5 rounded-lg">
+                    <h3 class="font-bold text-teal-300 mb-2">分治策略 (Divide and Conquer)</h3>
+                    <p class="text-sm">
+                        先進演算法將估測分為兩步：先估測並校正頻率相依的頻譜波紋（FD Estimation），再利用純量旋轉校正剩餘的常數增益與相位偏移（FI Estimation）。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. AI & Deep Learning -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-pink-500 pl-4">
+                <span>🤖</span> 8. 人工智慧與深度學習途徑
+            </h2>
+            <p class="mb-6">
+                2018-2025 年間最具破壞性的趨勢。神經網路能建模解析模型難以捕捉的非線性特徵。
+            </p>
+
+            <div class="space-y-6">
+                <div
+                    class="relative pl-8 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pink-500/50">
+                    <h3 class="text-lg font-bold text-pink-300">CNN 架構與指紋辨識</h3>
+                    <p class="text-slate-400 text-sm mt-1">
+                        <strong>摺積神經網路（CNN）</strong>直接從原始時域資料估測參數。研究顯示其在低 SNR 環境下優於傳統統計量。此外，I/Q
+                        不平衡的獨特「指紋」可用於特定輻射源識別（SEI），增強雷達安全性。
+                    </p>
+                </div>
+
+                <div
+                    class="relative pl-8 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pink-500/50">
+                    <h3 class="text-lg font-bold text-pink-300">物理導引神經網路 (PINNs)</h3>
+                    <p class="text-slate-400 text-sm mt-1">
+                        解決了對大量標註資料的需求。PINNs 將接收器的物理模型（正交性約束）嵌入損失函數中。這限制了搜索空間，確保輸出在物理上合理，並大幅提升弱訊號檢測能力。
+                    </p>
+                </div>
+
+                <div
+                    class="relative pl-8 before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:bg-pink-500/50">
+                    <h3 class="text-lg font-bold text-pink-300">深度展開網路 (Deep Unfolding)</h3>
+                    <p class="text-slate-400 text-sm mt-1">
+                        將迭代演算法（如梯度下降）「展開」為固定層數的神經網路。結合了數學演算法的可解釋性與神經網路的優化效能，具備確定性的低延遲，極適合即時雷達應用。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Advanced Radar Paradigms -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-orange-500 pl-4">
+                <span>🚀</span> 9. 先進雷達典範
+            </h2>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="bg-black/20 p-4 rounded border border-orange-500/20">
+                    <h3 class="font-bold text-orange-300 text-sm mb-2">毫米波與太赫茲 (mmWave / THz)</h3>
+                    <p class="text-xs text-slate-400">
+                        在 60-300 GHz，相位雜訊與 I/Q 不平衡耦合嚴重。高精度干涉雷達需校正微小相位誤差以實現奈米級振動檢測。
+                    </p>
+                </div>
+                <div class="bg-black/20 p-4 rounded border border-orange-500/20">
+                    <h3 class="font-bold text-orange-300 text-sm mb-2">微波光子雷達 (MWP)</h3>
+                    <p class="text-xs text-slate-400">
+                        利用光學元件（如 DD-MZM）進行 I/Q 混頻。不平衡源於偏壓漂移或光纖極化誤差。需調整調節器直流偏壓進行校正。
+                    </p>
+                </div>
+                <div class="bg-black/20 p-4 rounded border border-orange-500/20">
+                    <h3 class="font-bold text-orange-300 text-sm mb-2">通感一體化 (ISAC)</h3>
+                    <p class="text-xs text-slate-400">
+                        需在傳輸資料時同時進行校正（波形無關性）。有效的 I/Q 校正是消除自我干擾（Self-Interference Cancellation）的先決條件。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. Hardware Implementation -->
+        <section
+            class="bg-slate-800/40 border border-slate-700/50 rounded-xl p-6 hover:bg-slate-800/60 transition-all duration-300">
+            <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-3 border-l-4 border-gray-400 pl-4">
+                <span>💻</span> 10. 硬體實現與即時限制
+            </h2>
+            <p class="text-slate-300 mb-4">
+                演算法從 MATLAB 轉移至矽晶片（FPGA/ASIC）是關鍵步驟。
+            </p>
+            <ul class="space-y-3 text-sm">
+                <li class="flex items-start gap-2">
+                    <span class="text-cyan-400 mt-1">➤</span>
+                    <div>
+                        <strong class="text-slate-200">FPGA 資源利用：</strong>
+                        寬頻 I/Q 補償模組雖消耗邏輯閘與功耗（如 16.2 mW），但對於高速光同調接收器，需採用並行架構（如 32 路並行）與簡化的 Gram-Schmidt 正交化。
+                    </div>
+                </li>
+                <li class="flex items-start gap-2">
+                    <span class="text-cyan-400 mt-1">➤</span>
+                    <div>
+                        <strong class="text-slate-200">延遲與管線化：</strong>
+                        橢圓擬合通常需要緩衝「批次」樣本，引入延遲。自適應濾波器（LMS）與深度展開網路採「串流」方式運作，幾無演算法延遲，更適合車用安全迴路。
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Comparison Table -->
+        <section class="overflow-hidden rounded-xl border border-slate-700 shadow-lg">
+            <div class="bg-slate-800 p-4 border-b border-slate-700">
+                <h3 class="font-bold text-white">📊 表 1：校正方法比較摘要</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-700/50 text-slate-100 font-medium">
+                        <tr>
+                            <th class="p-4 min-w-[150px]">校正類別</th>
+                            <th class="p-4 min-w-[200px]">主要演算法</th>
+                            <th class="p-4 min-w-[200px]">關鍵優勢</th>
+                            <th class="p-4 min-w-[200px]">主要限制</th>
+                            <th class="p-4 min-w-[200px]">最佳應用領域</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/50 bg-slate-800/20">
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 font-semibold text-amber-300">基於配置</td>
+                            <td class="p-4">測試音注入, 內部迴路</td>
+                            <td class="p-4">高準確度, 已知真值</td>
+                            <td class="p-4">需離線時間, 額外設備</td>
+                            <td class="p-4">工廠校正, 開機自檢</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 font-semibold text-emerald-300">幾何盲校正</td>
+                            <td class="p-4">Kåsa, Pratt, LM</td>
+                            <td class="p-4">直觀, 無統計假設</td>
+                            <td class="p-4">部分圓弧偏差, 對雜訊敏感</td>
+                            <td class="p-4">窄頻生命徵象, CW 雷達</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 font-semibold text-purple-300">統計盲校正</td>
+                            <td class="p-4">BSS/ICA, WL 濾波, GSO</td>
+                            <td class="p-4">抗雜訊, 支援寬頻</td>
+                            <td class="p-4">複雜度較高, 收斂時間</td>
+                            <td class="p-4">寬頻成像, FMCW, ISAC</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 font-semibold text-blue-300">自適應濾波</td>
+                            <td class="p-4">LMS, RLS</td>
+                            <td class="p-4">持續追蹤, 低記憶體</td>
+                            <td class="p-4">梯度雜訊, 收斂速度</td>
+                            <td class="p-4">即時熱漂移追蹤</td>
+                        </tr>
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 font-semibold text-pink-300">深度學習</td>
+                            <td class="p-4">CNN, PINN, Deep Unfolding</td>
+                            <td class="p-4">處理非線性, 資料驅動</td>
+                            <td class="p-4">需訓練資料 (除非 PINN), 高算力</td>
+                            <td class="p-4">認知雷達, SEI, 弱訊號檢測</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 11. Conclusion -->
+        <section
+            class="bg-gradient-to-r from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-8 shadow-lg mt-8">
+            <h2 class="text-2xl font-bold text-white mb-4">🏁 結論</h2>
+            <p class="text-slate-300 leading-loose">
+                I/Q 不平衡校正已從單純的優化步驟轉變為現代高效能雷達的基礎賦能技術。隨著系統轉向 DCR
+                架構、毫米波頻段及大頻寬，校正的重要性與日俱增。雖然幾何方法在窄頻應用仍具價值，但基於廣義線性濾波與正當性恢復的統計方法已成為寬頻動態系統的穩健標準。研究的前沿在於深度學習，特別是
+                <strong>PINNs</strong> 與<strong>深度展開網路</strong>，它們打破了複雜度與效能的權衡，提供了適應性強的高精度校正。隨著 6G 與 ISAC
+                時代的來臨，自主校正能力將成為下一代智慧雷達系統的決定性特徵。
+            </p>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 mt-auto bg-slate-950 border-t border-slate-800 text-center">
+        <div class="text-xs text-slate-500 space-y-2">
+            <p>
+                <a href="https://wellstsai.com/" target="_blank"
+                    class="hover:text-cyan-400 transition-colors border-b border-slate-800 hover:border-cyan-400 pb-0.5">
+                    Generated by wellstsai.com
+                </a>
+            </p>
+            <p id="dateDisplay"></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Date Display
+        const dateElement = document.getElementById('dateDisplay');
+        dateElement.textContent = `撰寫日期：2025 年 11 月 19 日`;
+
+        // Render Math
+        document.addEventListener("DOMContentLoaded", function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false }
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+</body>
+
+</html>
