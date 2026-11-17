@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-11-03 03:48:29Z
+更新日期：2026-11-17 16:26:03Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -198,6 +198,7 @@
 - [一次看懂交保是什麼](https://wellstsai.com/single-page-conclusion/%E4%B8%80%E6%AC%A1%E7%9C%8B%E6%87%82%E4%BA%A4%E4%BF%9D%E6%98%AF%E4%BB%80%E9%BA%BC.html)
 - [一集日本動畫如何誕生-從企劃到播出的完整製作流程](https://wellstsai.com/single-page-conclusion/%E4%B8%80%E9%9B%86%E6%97%A5%E6%9C%AC%E5%8B%95%E7%95%AB%E5%A6%82%E4%BD%95%E8%AA%95%E7%94%9F-%E5%BE%9E%E4%BC%81%E5%8A%83%E5%88%B0%E6%92%AD%E5%87%BA%E7%9A%84%E5%AE%8C%E6%95%B4%E8%A3%BD%E4%BD%9C%E6%B5%81%E7%A8%8B.html)
 - [世界巧克力蛋糕評比-九國經典甜點對決](https://wellstsai.com/single-page-conclusion/%E4%B8%96%E7%95%8C%E5%B7%A7%E5%85%8B%E5%8A%9B%E8%9B%8B%E7%B3%95%E8%A9%95%E6%AF%94-%E4%B9%9D%E5%9C%8B%E7%B6%93%E5%85%B8%E7%94%9C%E9%BB%9E%E5%B0%8D%E6%B1%BA.html)
+- [世界模型被想得太完美-從影片生成到物理模擬的能力缺口](https://wellstsai.com/single-page-conclusion/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B%E8%A2%AB%E6%83%B3%E5%BE%97%E5%A4%AA%E5%AE%8C%E7%BE%8E-%E5%BE%9E%E5%BD%B1%E7%89%87%E7%94%9F%E6%88%90%E5%88%B0%E7%89%A9%E7%90%86%E6%A8%A1%E6%93%AC%E7%9A%84%E8%83%BD%E5%8A%9B%E7%BC%BA%E5%8F%A3.html)
 - [世界盃賭球數學-賠率-抽水-套利與假球全解讀](https://wellstsai.com/single-page-conclusion/%E4%B8%96%E7%95%8C%E7%9B%83%E8%B3%AD%E7%90%83%E6%95%B8%E5%AD%B8-%E8%B3%A0%E7%8E%87-%E6%8A%BD%E6%B0%B4-%E5%A5%97%E5%88%A9%E8%88%87%E5%81%87%E7%90%83%E5%85%A8%E8%A7%A3%E8%AE%80.html)
 - [並行的假象.從單核切換到多核心實作](https://wellstsai.com/single-page-conclusion/%E4%B8%A6%E8%A1%8C%E7%9A%84%E5%81%87%E8%B1%A1.%E5%BE%9E%E5%96%AE%E6%A0%B8%E5%88%87%E6%8F%9B%E5%88%B0%E5%A4%9A%E6%A0%B8%E5%BF%83%E5%AF%A6%E4%BD%9C.html)
 - [中國eSIM換手機為何要跑營業廳-從蘇聯影印機-紅旗法到Carterfone-看補卡詐騙與各國解法](https://wellstsai.com/single-page-conclusion/%E4%B8%AD%E5%9C%8BeSIM%E6%8F%9B%E6%89%8B%E6%A9%9F%E7%82%BA%E4%BD%95%E8%A6%81%E8%B7%91%E7%87%9F%E6%A5%AD%E5%BB%B3-%E5%BE%9E%E8%98%87%E8%81%AF%E5%BD%B1%E5%8D%B0%E6%A9%9F-%E7%B4%85%E6%97%97%E6%B3%95%E5%88%B0Carterfone-%E7%9C%8B%E8%A3%9C%E5%8D%A1%E8%A9%90%E9%A8%99%E8%88%87%E5%90%84%E5%9C%8B%E8%A7%A3%E6%B3%95.html)
