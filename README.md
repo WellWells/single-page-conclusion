@@ -1,6 +1,6 @@
 # 推薦文章
 
-更新日期：2026-11-20 13:51:38Z
+更新日期：2026-11-24 17:22:51Z
 
 - [120GHz-240GHz-毫米波雷達技術應用與FMCW原理](https://wellstsai.com/single-page-conclusion/120GHz-240GHz-%E6%AF%AB%E7%B1%B3%E6%B3%A2%E9%9B%B7%E9%81%94%E6%8A%80%E8%A1%93%E6%87%89%E7%94%A8%E8%88%87FMCW%E5%8E%9F%E7%90%86.html)
 - [12400F-DDR4與DDR5效能評測-對決7500F](https://wellstsai.com/single-page-conclusion/12400F-DDR4%E8%88%87DDR5%E6%95%88%E8%83%BD%E8%A9%95%E6%B8%AC-%E5%B0%8D%E6%B1%BA7500F.html)
@@ -124,6 +124,7 @@
 - [Neocloud-AI基礎設施-HPC算力比較](https://wellstsai.com/single-page-conclusion/Neocloud-AI%E5%9F%BA%E7%A4%8E%E8%A8%AD%E6%96%BD-HPC%E7%AE%97%E5%8A%9B%E6%AF%94%E8%BC%83.html)
 - [Netflix併購HBO-台灣訂閱價格與帳號轉移](https://wellstsai.com/single-page-conclusion/Netflix%E4%BD%B5%E8%B3%BCHBO-%E5%8F%B0%E7%81%A3%E8%A8%82%E9%96%B1%E5%83%B9%E6%A0%BC%E8%88%87%E5%B8%B3%E8%99%9F%E8%BD%89%E7%A7%BB.html)
 - [Netflix自由與責任文化指南](https://wellstsai.com/single-page-conclusion/Netflix%E8%87%AA%E7%94%B1%E8%88%87%E8%B2%AC%E4%BB%BB%E6%96%87%E5%8C%96%E6%8C%87%E5%8D%97.html)
+- [OLED螢幕是怎麼做的-從發光層到可摺疊面板](https://wellstsai.com/single-page-conclusion/OLED%E8%9E%A2%E5%B9%95%E6%98%AF%E6%80%8E%E9%BA%BC%E5%81%9A%E7%9A%84-%E5%BE%9E%E7%99%BC%E5%85%89%E5%B1%A4%E5%88%B0%E5%8F%AF%E6%91%BA%E7%96%8A%E9%9D%A2%E6%9D%BF.html)
 - [Overfitting-Regularization-and-Occams-Razor](https://wellstsai.com/single-page-conclusion/Overfitting-Regularization-and-Occams-Razor.html)
 - [Ozempic-減重熱潮-癌症風險與健保倫理](https://wellstsai.com/single-page-conclusion/Ozempic-%E6%B8%9B%E9%87%8D%E7%86%B1%E6%BD%AE-%E7%99%8C%E7%97%87%E9%A2%A8%E9%9A%AA%E8%88%87%E5%81%A5%E4%BF%9D%E5%80%AB%E7%90%86.html)
 - [PC-選購與組裝指南-2025-年終極平衡術](https://wellstsai.com/single-page-conclusion/PC-%E9%81%B8%E8%B3%BC%E8%88%87%E7%B5%84%E8%A3%9D%E6%8C%87%E5%8D%97-2025-%E5%B9%B4%E7%B5%82%E6%A5%B5%E5%B9%B3%E8%A1%A1%E8%A1%93.html)
